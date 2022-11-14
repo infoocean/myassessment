@@ -44,6 +44,13 @@ class RegistrationComponent extends Component {
 
   render() {
     //console.log(this.state.number);
+
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0");
+    var yyyy = today.getFullYear();
+    today = yyyy + "-" + mm + "-" + dd;
+
     return (
       <>
         <Flex minH={"90vh"} align={"center"} justify={"center"}>
@@ -64,7 +71,7 @@ class RegistrationComponent extends Component {
                     confirmpassword: "",
                     age: "",
                     addressofarea: "",
-                    dateofbirth: "",
+                    dateofbirth: today,
                   }}
                   validate={(values) => {
                     const errors = {};
@@ -109,6 +116,7 @@ class RegistrationComponent extends Component {
                           "password and confirm password are not match **";
                       }
                     }
+
                     return errors;
                   }}
                   onSubmit={async (values, { setSubmitting, resetForm }) => {
@@ -411,7 +419,13 @@ class RegistrationComponent extends Component {
                                 *
                               </Text>
                             </FormLabel>
-                            <Input type="date" value={this.state.date} />
+                            <Input
+                              type="date"
+                              name="dob"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              value={values.dateofbirth}
+                            />
                           </FormControl>
                         </Box>
                         <Box>
