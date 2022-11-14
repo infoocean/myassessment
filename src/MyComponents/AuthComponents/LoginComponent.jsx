@@ -13,18 +13,19 @@ import {
   Button,
   Heading,
   Text,
-  HStack,
   Spinner,
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { connect } from "react-redux";
+import { login } from "../../Redux/Actions/useractions";
 
 class LoginComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showsnipper: false,
+      showPassword: false,
       showsnipper: false,
     };
   }
@@ -45,63 +46,61 @@ class LoginComponent extends Component {
     return (
       <>
         <Flex minH={"90vh"} align={"center"} justify={"center"}>
-          <Stack spacing={5} mx={"auto"} maxW={"lg"} py={5} px={6}>
+          <Stack spacing={5} mx={"auto"} maxW={"md"} py={5} px={6}>
             <Stack align={"center"}>
-              <Heading fontSize={"4xl"}>Login your account</Heading>
+              <Heading fontSize={"3xl"}>Receptionist Login account</Heading>
             </Stack>
             <Box rounded={"lg"} boxShadow={"lg"} p={8}>
               <Stack spacing={4}>
                 <Formik
                   initialValues={{
-                    username: "",
-                    email: "",
+                    usernameemail: "",
                     password: "",
                   }}
                   validate={(values) => {
                     const errors = {};
-                    if (!values.username) {
-                      errors.username = "username feils is required  **";
+                    if (!values.usernameemail) {
+                      errors.usernameemail =
+                        "username / email feild is required  **";
                     }
-                    if (!values.email) {
-                      errors.email = "email feild is required  **";
-                    } else if (
-                      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
-                        values.email
-                      )
-                    ) {
-                      errors.email = "Invalid email address **";
-                    }
+                    // if (!values.email) {
+                    //   errors.email = " feild is required  **";
+                    // } else if (
+                    //   !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+                    //     values.email
+                    //   )
+                    // ) {
+                    //   errors.email = "Invalid email address **";
+                    // }
                     if (!values.password) {
                       errors.password = "password feild is required  **";
                     }
                     return errors;
                   }}
                   onSubmit={async (values, { setSubmitting, resetForm }) => {
-                    console.log(values);
+                    this.setState({ showsnipper: true });
+                    //console.log(values);
                     //alert(JSON.stringify(values, null, 2));
-                    //   return false;
-                    //   this.props.register(reqdata, (response) => {
-                    //     //console.log(response);
-                    //     //console.log(response.status);
-                    //     if (response.status === 200) {
-                    //       toast.warning("Email allready registred");
-                    //       this.setState({ showsnipper: false });
-                    //     } else if (response.status === 201) {
-                    //       this.props.emailstore(values.email, (res) => {});
-                    //       toast.success("Registration Successfull !");
-                    //       this.setState({ showsnipper: false });
-                    //       resetForm({ values: "" });
-                    //       setTimeout(() => {
-                    //         this.props.history.push("/loginpage");
-                    //       }, "2000");
-                    //     }
-                    //     if (response.status === 500) {
-                    //       this.setState({ showsnipper: false });
-                    //       toast.error("server not responding");
-                    //     }
-                    //     this.setState({ showsnipper: false });
-                    //   });
-                    //   setSubmitting(false);
+                    //return false;
+                    const reqdata = {
+                      usernameemail: values.usernameemail,
+                      password: values.password,
+                    };
+                    this.props.login(reqdata, (response) => {
+                      if (response.status === 200) {
+                        toast.success("Login Successfull !");
+                        resetForm({ values: "" });
+                        this.setState({ showsnipper: false });
+                        setTimeout(() => {
+                          this.props.history.push("/dashboard");
+                        }, "1000");
+                      } else {
+                        toast.error("invalid crendentials!");
+                        this.setState({ showsnipper: false });
+                      }
+                      this.setState({ showsnipper: false });
+                    });
+                    setSubmitting(false);
                   }}
                 >
                   {({
@@ -114,55 +113,19 @@ class LoginComponent extends Component {
                     isSubmitting,
                   }) => (
                     <form onSubmit={handleSubmit}>
-                      <HStack>
-                        <FormControl id="username" mt={2}>
-                          <FormLabel>
-                            UserName{" "}
-                            <Text as={"span"} style={{ color: "red" }}>
-                              *
-                            </Text>
-                          </FormLabel>
-                          <Input
-                            type="text"
-                            name="username"
-                            value={values.username}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                          />
-                        </FormControl>
-                      </HStack>
-                      <Stack>
-                        <Box>
-                          <span
-                            style={{
-                              color: "red",
-                              fontSize: "13px",
-                              paddingBottom: "10px",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            {errors.username &&
-                              touched.username &&
-                              errors.username}
-                          </span>
-                        </Box>
-                      </Stack>
-                      <div class="divider d-flex align-items-center my-4">
-                        <p class="text-center fw-bold mx-3 mb-0">Or</p>
-                      </div>
-                      <FormControl id="email" mt={2}>
+                      <FormControl id="usernameemail" mt={2}>
                         <FormLabel>
-                          Email Address{" "}
+                          UserName / Email Address
                           <Text as={"span"} style={{ color: "red" }}>
                             *
                           </Text>
                         </FormLabel>
                         <Input
-                          type="email"
-                          name="email"
+                          type="text"
+                          name="usernameemail"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.email}
+                          value={values.usernameemail}
                         />
                         <span
                           style={{
@@ -172,12 +135,14 @@ class LoginComponent extends Component {
                             fontWeight: "bold",
                           }}
                         >
-                          {errors.email && touched.email && errors.email}
+                          {errors.usernameemail &&
+                            touched.usernameemail &&
+                            errors.usernameemail}
                         </span>
                       </FormControl>
                       <FormControl id="password" mt={2}>
                         <FormLabel>
-                          Password{" "}
+                          Password
                           <Text as={"span"} style={{ color: "red" }}>
                             *
                           </Text>
@@ -231,15 +196,15 @@ class LoginComponent extends Component {
                           disabled={isSubmitting}
                         >
                           Login
-                          {/* {this.state.showsnipper === true ? (
-                          <Spinner
-                            color="white.500"
-                            size="sm"
-                            style={{ marginLeft: "10px" }}
-                          />
-                        ) : (
-                          ""
-                        )} */}
+                          {this.state.showsnipper === true ? (
+                            <Spinner
+                              color="white.500"
+                              size="sm"
+                              style={{ marginLeft: "10px" }}
+                            />
+                          ) : (
+                            ""
+                          )}
                         </Button>
                       </Stack>
                       <Stack pt={1}>
@@ -265,4 +230,10 @@ class LoginComponent extends Component {
   }
 }
 
-export default LoginComponent;
+const mapDispatchToProps = (store) => {
+  var registerData = store;
+  return registerData;
+};
+export default connect(mapDispatchToProps, {
+  login,
+})(LoginComponent);

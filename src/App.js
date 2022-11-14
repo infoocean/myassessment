@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import LoginComponent from "./MyComponents/AuthComponents/LoginComponent";
 import Logoutpage from "./MyComponents/AuthComponents/Logout";
 import RegistrationComponent from "./MyComponents/AuthComponents/RegistrationComponent";
@@ -10,20 +10,25 @@ import VisitorsPage from "./MyComponents/DashboardComponent/VisitorsCpomponent";
 function App() {
   return (
     <div className="App">
-      <Routes>
-        <Route path="/" element={<LoginComponent />} />
-        <Route path="/loginpage" element={<LoginComponent />} />
-        <Route path="/registrationpage" element={<RegistrationComponent />} />
-        <Route path="/logout" element={<Logoutpage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/dashboard/home" element={<Dashboard />} />
-        <Route path="/dashboard/visitors" element={<VisitorsPage />} />
-        <Route path="/dashboard/scanqrcode" element={<ScanQRCodePage />} />
+      <Switch>
+        <Route exact path="/" component={LoginComponent} />
+        <Route exact path="/loginpage" component={LoginComponent} />
         <Route
-          path="/dashboard/visitors/visitordetails"
-          element={<VisitorDetailsPage />}
+          exact
+          path="/registrationpage"
+          component={RegistrationComponent}
         />
-      </Routes>
+        <Route exact path="/logout" component={Logoutpage} />
+        <Route exact path="/dashboard" component={Dashboard} />
+        <Route exact path="/dashboard/home" component={Dashboard} />
+        <Route exact path="/dashboard/visitors" component={VisitorsPage} />
+        <Route exact path="/dashboard/scanqrcode" component={ScanQRCodePage} />
+        <Route
+          exact
+          path="/dashboard/visitors/visitordetails/:id"
+          component={VisitorDetailsPage}
+        />
+      </Switch>
     </div>
   );
 }

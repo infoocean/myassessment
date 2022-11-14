@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   IconButton,
   Avatar,
@@ -39,6 +39,9 @@ import { IconType } from "react-icons";
 import { IoIosPeople } from "react-icons/io";
 import { ImQrcode } from "react-icons/im";
 import { Link } from "react-router-dom";
+import auth_token, { api } from "../../API/APIToken";
+import axios from "axios";
+const getvisitorsendpoint = "getvisitors";
 
 const SideBarLinkItems = [
   {
@@ -65,6 +68,30 @@ const SideBarLinkItems = [
 
 function VisitorsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [totalrecentvisitors, settotalrecentvisitors] = useState(0);
+  const getvisitorsdata = () => {
+    var config = {
+      method: "get",
+      url: `${api}${getvisitorsendpoint}`,
+      headers: {
+        token: auth_token,
+      },
+    };
+    axios(config)
+      .then(function (response) {
+        //console.log(response.data);
+        settotalrecentvisitors(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getvisitorsdata();
+  }, []);
+
+  //console.log(totalrecentvisitors);
+
   return (
     <>
       <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
@@ -129,49 +156,61 @@ function VisitorsPage() {
                 <tr>
                   <th>Visitor Name</th>
                   <th>Visitor Email</th>
-                  <th>Phone Number</th>
                   <th>Age</th>
-                  <th>Date Of Birth</th>
+                  <th>Address</th>
+                  <th>Purpose to visit</th>
+                  <th>Date</th>
+                  <th>Time</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    <div className="d-flex align-items-center">
-                      <img
-                        src="https://mdbootstrap.com/img/new/avatars/8.jpg"
-                        alt=""
-                        style={{ width: "45px", height: "45px" }}
-                        className="rounded-circle"
-                      />
-                      <div className="ms-3">
-                        <p className="fw-bold mb-1">John Doe</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <p className="text-muted mb-0">john.doe@gmail.com</p>
-                  </td>
-                  <td>
-                    <span className="">7089413024</span>
-                  </td>
-                  <td>18</td>
-                  <td>02/11/1999</td>
-                  <td>
-                    <Link to="/dashboard/visitors/visitordetails">
-                      <button
-                        type="button"
-                        className="btn btn-link btn-sm btn-danger btn-rounded"
-                        _hover={{
-                          bg: "blue.500",
-                        }}
-                      >
-                        Details
-                      </button>
-                    </Link>
-                  </td>
-                </tr>
+                {totalrecentvisitors &&
+                  totalrecentvisitors.map((visitordata, key) => {
+                    return (
+                      <tr key={key}>
+                        <td>
+                          <div className="d-flex align-items-center">
+                            <img
+                              src="https://mdbootstrap.com/img/new/avatars/8.jpg"
+                              alt=""
+                              style={{ width: "45px", height: "45px" }}
+                              className="rounded-circle"
+                            />
+                            <div className="ms-3">
+                              <p className="fw-bold mb-1">{visitordata.name}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <p className="text-muted mb-0">{visitordata.email}</p>
+                        </td>
+                        <td>
+                          <span className="">{visitordata.age}</span>
+                        </td>
+                        <td>{visitordata.address}</td>
+                        <td>{visitordata.purposetovisit}</td>
+                        <td></td>
+                        <td></td>
+
+                        <td>
+                          <Link
+                            to={`/dashboard/visitors/visitordetails/${visitordata._id}`}
+                          >
+                            <button
+                              type="button"
+                              className="btn btn-link btn-sm btn-danger btn-rounded"
+                              _hover={{
+                                bg: "blue.500",
+                              }}
+                            >
+                              Details
+                            </button>
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </div>

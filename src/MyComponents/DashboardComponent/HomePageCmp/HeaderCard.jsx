@@ -1,6 +1,55 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { api } from "../../../API/APIToken";
+import auth_token from "../../../API/APIToken";
+import axios from "axios";
+const getreceptionistendpoint = "getreceptionist";
+const getvisitorsendpoint = "getvisitors";
 
 function Headercard() {
+  const [totalreceptionist, settotalreceptionist] = useState(0);
+  const [totalrecentvisitors, settotalrecentvisitors] = useState(0);
+
+  const getreceptionistdata = () => {
+    var config = {
+      method: "get",
+      url: `${api}${getreceptionistendpoint}`,
+      headers: {
+        token: auth_token,
+      },
+    };
+    axios(config)
+      .then(function (response) {
+        //console.log(response.data);
+        settotalreceptionist(response.data.data.length);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const getvisitorsdata = () => {
+    var config = {
+      method: "get",
+      url: `${api}${getvisitorsendpoint}`,
+      headers: {
+        token: auth_token,
+      },
+    };
+    axios(config)
+      .then(function (response) {
+        //console.log(response.data);
+        settotalrecentvisitors(response.data.data.length);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getreceptionistdata();
+    getvisitorsdata();
+  }, []);
+
   return (
     <>
       <div className="row ">
@@ -15,11 +64,13 @@ function Headercard() {
               </div>
               <div className="row align-items-center mb-2 d-flex">
                 <div className="col-8">
-                  <h2 className="d-flex align-items-center mb-0">3,243</h2>
+                  <h2 className="d-flex align-items-center mb-0">
+                    {totalreceptionist}
+                  </h2>
                 </div>
                 <div className="col-4 text-right">
                   <span>
-                    12% <i className="fa fa-arrow-up"></i>
+                    {totalreceptionist}% <i className="fa fa-arrow-up"></i>
                   </span>
                 </div>
               </div>
@@ -31,11 +82,11 @@ function Headercard() {
                 <div
                   className="progress-bar l-bg-cyan"
                   role="progressbar"
-                  data-width="25%"
+                  data-width={totalreceptionist + "%"}
                   aria-valuenow="25"
                   aria-valuemin="0"
                   aria-valuemax="100"
-                  style={{ width: "25%" }}
+                  style={{ width: totalreceptionist + "%" }}
                 ></div>
               </div>
             </div>
@@ -52,11 +103,13 @@ function Headercard() {
               </div>
               <div className="row align-items-center mb-2 d-flex">
                 <div className="col-8">
-                  <h2 className="d-flex align-items-center mb-0">15.07k</h2>
+                  <h2 className="d-flex align-items-center mb-0">
+                    {totalrecentvisitors}
+                  </h2>
                 </div>
                 <div className="col-4 text-right">
                   <span>
-                    9% <i className="fa fa-arrow-up"></i>
+                    {totalrecentvisitors}% <i className="fa fa-arrow-up"></i>
                   </span>
                 </div>
               </div>
@@ -72,7 +125,7 @@ function Headercard() {
                   aria-valuenow="25"
                   aria-valuemin="0"
                   aria-valuemax="100"
-                  style={{ width: "25%" }}
+                  style={{ width: totalrecentvisitors + "%" }}
                 ></div>
               </div>
             </div>
