@@ -41,6 +41,7 @@ import { ImQrcode } from "react-icons/im";
 import { Link } from "react-router-dom";
 import auth_token, { api } from "../../API/APIToken";
 import axios from "axios";
+import moment from "moment";
 const getvisitorsendpoint = "getvisitors";
 
 const SideBarLinkItems = [
@@ -118,10 +119,27 @@ function VisitorsPage() {
         {/*main data component*/}
         <Box ml={{ base: 0, md: 60 }} p="4">
           {/*main data part */}
-          <Container mt={2} mb={5} maxW="6xl">
+          <Container mb={5} maxW="6xl">
+            <Flex mb={4}>
+              <Spacer />
+              <Box>
+                <Link to="/dashboard/visitors/addvisitor">
+                  <Button
+                    type="submit"
+                    bg={"blue.400"}
+                    color={"white"}
+                    _hover={{
+                      bg: "blue.500",
+                    }}
+                  >
+                    Add Visitor
+                  </Button>
+                </Link>
+              </Box>
+            </Flex>
             <div class="row text-center" style={{ backgroundColor: "#ffffff" }}>
               <div className="col-lg-9 p-4">
-                <HStack pt={5}>
+                <HStack>
                   <FormControl id="email">
                     <FormLabel>Visitor Name</FormLabel>
                     <Input type="email" size="sm" />
@@ -154,13 +172,13 @@ function VisitorsPage() {
             <table className="table align-middle mb-0 bg-white">
               <thead className="bg-light">
                 <tr>
-                  <th>Visitor Name</th>
-                  <th>Visitor Email</th>
+                  <th>Name</th>
+                  <th>Email</th>
                   <th>Age</th>
                   <th>Address</th>
                   <th>Purpose to visit</th>
-                  <th>Date</th>
-                  <th>Time</th>
+                  <th>Check In Date - Time</th>
+                  <th>Check Out Date - Time</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -190,8 +208,24 @@ function VisitorsPage() {
                         </td>
                         <td>{visitordata.address}</td>
                         <td>{visitordata.purposetovisit}</td>
-                        <td></td>
-                        <td></td>
+                        <td>
+                          {moment(visitordata.checkindatetime).format(
+                            "DD/MM/YYYY"
+                          ) +
+                            " - " +
+                            moment(visitordata.checkindatetime).format(
+                              "h:mm a"
+                            )}
+                        </td>
+                        <td>
+                          {moment(visitordata.checkoutdatetime).format(
+                            "DD/MM/YYYY"
+                          ) +
+                            " - " +
+                            moment(visitordata.checkindatetime).format(
+                              "h:mm a"
+                            )}
+                        </td>
 
                         <td>
                           <Link

@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { Component } from "react";
 import {
   IconButton,
   Avatar,
-  Box,
   CloseButton,
   Flex,
   HStack,
@@ -12,16 +11,22 @@ import {
   Drawer,
   DrawerContent,
   Text,
-  useDisclosure,
-  BoxProps,
   FlexProps,
+  Input,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Image,
+  Container,
+  Spacer,
+  Box,
+  Select,
+  FormControl,
+  FormLabel,
   Stack,
-  Heading,
+  Button,
+  Textarea,
+  Spinner,
 } from "@chakra-ui/react";
 import {
   FiHome,
@@ -30,12 +35,19 @@ import {
   FiChevronDown,
   FiLogOut,
 } from "react-icons/fi";
+import { Heading } from "@chakra-ui/react";
+import { CheckCircleIcon } from "@chakra-ui/icons";
 import { IconType } from "react-icons";
-import { IoIosPeople } from "react-icons/io";
+import { IoIosPeople, IoMdArrowRoundBack } from "react-icons/io";
 import { ImQrcode } from "react-icons/im";
 import { Link } from "react-router-dom";
+import { Formik } from "formik";
+import { updatevisitor } from "../../../Redux/Actions/useractions";
+import { connect } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import auth_token, { api } from "../../API/APIToken";
+import auth_token, { api } from "../../../API/APIToken";
 
 const SideBarLinkItems = [
   {
@@ -60,129 +72,115 @@ const SideBarLinkItems = [
   },
 ];
 
-function ScanQRCodePage(props) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const id = props.match.params.id;
-  const [visitor_det, setvisitors_det] = useState("");
-
-  const getvisitordet = () => {
-    var config = {
-      method: "post",
-      url: `${api}generateqrcodevisitor/${id}`,
-      // headers: {
-      //   token: auth_token,
-      // },
+class Checkoutvisitor extends Component {
+  constructor(props) {
+    //console.log(props.match.params.id);
+    super(props);
+    this.state = {
+      showsnipper: false,
+      id: props.match.params.id,
+      data: [],
     };
-    axios(config)
-      .then(function (response) {
-        //console.log(response.data);
-        setvisitors_det(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
+  }
+  async componentDidMount() {
+    let visitordata = await axios.get(`${api}getvisitorbyid/${this.state.id}`, {
+      headers: {
+        token: auth_token,
+      },
+    });
+    //console.log(visitordata.data.data[0]);
+    visitordata = visitordata.data.data[0];
+    this.setState({ data: visitordata });
+  }
 
-  const data = {
-    name: "shubham",
-  };
-  const sendmail = () => {
-    var config = {
-      method: "post",
-      url: `${api}sendmail`,
-      // headers: {
-      //   token: auth_token,
-      // },
-      data: data,
-    };
-    axios(config)
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    getvisitordet();
-    sendmail();
-  }, []);
-
-  //console.log(visitor_det);
-
-  return (
-    <>
-      <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
-        {/*sidebar data component */}
-        <SidebarContent
-          onClose={() => onClose}
-          display={{ base: "none", md: "block" }}
-        />
-        <Drawer
-          autoFocus={false}
-          isOpen={isOpen}
-          placement="left"
-          onClose={onClose}
-          returnFocusOnClose={false}
-          onOverlayClick={onClose}
-          size="full"
-        >
-          <DrawerContent>
-            <SidebarContent onClose={onClose} />
-          </DrawerContent>
-        </Drawer>
-        {/* mobile nav */}
-        <MobileNav onOpen={onOpen} />
-        {/*main data component*/}
-        <Box ml={{ base: 0, md: 60 }} p="4">
-          {/*main data part */}
-          <Flex align={"center"} justify={"center"} py={12}>
-            <Stack
-              boxShadow={"2xl"}
-              bg={useColorModeValue("white", "gray.700")}
-              rounded={"xl"}
-              p={10}
-              spacing={8}
-              align={"center"}
-            >
-              <Stack align={"center"} spacing={2}>
-                <Heading
-                  textTransform={"uppercase"}
-                  fontSize={"3xl"}
-                  color={useColorModeValue("gray.800", "gray.200")}
-                >
-                  Scan QR code and get details
-                </Heading>
-                <Box
-                  bg={useColorModeValue("white", "gray.800")}
-                  borderWidth="1px"
-                  rounded="lg"
-                  shadow="lg"
-                  position="relative"
-                >
-                  <Image
-                    src={visitor_det}
-                    roundedTop="lg"
-                    style={{ width: "145px;" }}
-                  />
+  render() {
+    console.log(this.state.data.name);
+    return (
+      <>
+        <Box minH="100vh" style={{ backgroundColor: "#efefef" }}>
+          {/*sidebar data component */}
+          <SidebarContent
+            // onClose={() => onClose}
+            display={{ base: "none", md: "block" }}
+          />
+          <Drawer
+            autoFocus={false}
+            // isOpen={isOpen}
+            placement="left"
+            // onClose={onClose}
+            returnFocusOnClose={false}
+            // onOverlayClick={onClose}
+            size="full"
+          >
+            <DrawerContent>
+              <SidebarContent />
+            </DrawerContent>
+          </Drawer>
+          {/* mobile nav */}
+          <MobileNav />
+          {/*main data component*/}
+          <Box ml={{ base: 0, md: 60 }} p="4">
+            {/*main data part */}
+            <Container mb={5} maxW="6xl">
+              <Flex mb={4}>
+                <Box>
+                  <Link to="/dashboard/visitors">
+                    <Button
+                      type="submit"
+                      bg={"blue.400"}
+                      color={"white"}
+                      _hover={{
+                        bg: "blue.500",
+                      }}
+                      size={"md"}
+                    >
+                      <IoMdArrowRoundBack />
+                      Show Visitor List
+                    </Button>
+                  </Link>
                 </Box>
-              </Stack>
-              <Stack
-                spacing={4}
-                direction={{ base: "column", md: "row" }}
-                w={"full"}
-              ></Stack>
-            </Stack>
-          </Flex>
+                <Spacer />
+              </Flex>
+              <hr />
+              <Flex
+                align={"center"}
+                justify={"center"}
+                // bg={useColorModeValue("gray.50", "gray.800")}
+              >
+                <Stack maxW={"9xl"}>
+                  {" "}
+                  <Box textAlign="center" py={10} px={6}>
+                    <CheckCircleIcon boxSize={"50px"} color={"green.500"} />
+                    <Heading as="h2" size="xl" mt={6} mb={2}>
+                      Checkout Successfully
+                    </Heading>
+                    <Text size="md">
+                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                      sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                      magna aliquyam erat, sed diam voluptua.
+                    </Text>
+                  </Box>
+                  <Heading textAlign="center" as="h2" size="xl" mt={6} mb={2}>
+                    Thanks! and visit again
+                  </Heading>
+                </Stack>
+              </Flex>
+            </Container>
+          </Box>
         </Box>
-      </Box>
-    </>
-  );
+        <ToastContainer />
+      </>
+    );
+  }
 }
-export default ScanQRCodePage;
 
-const SidebarContent = ({ onClose }) => {
+const mapDispatchToProps = (store) => {
+  var registerData = store;
+  return registerData;
+};
+export default connect(mapDispatchToProps, { updatevisitor })(Checkoutvisitor);
+
+const SidebarContent = () => {
   return (
     <Box
       transition="3s ease"
@@ -197,7 +195,7 @@ const SidebarContent = ({ onClose }) => {
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
           Dashboard
         </Text>
-        <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
+        <CloseButton display={{ base: "flex", md: "none" }} />
       </Flex>
       {SideBarLinkItems.map((link) => (
         <NavItem

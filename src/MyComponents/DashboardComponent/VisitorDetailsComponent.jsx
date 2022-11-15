@@ -230,9 +230,11 @@ function VisitorDetailsPage(props) {
                         <span class="text-primary font-italic me-1">
                           Generate
                         </span>
-                        OR Code Link
+                        QR Code
                       </p>
-                      <Button className="btn">Click</Button>
+                      <Link to={`/dashboard/scanqrcode/${id}`}>
+                        <Button className="btn">Click</Button>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -241,9 +243,11 @@ function VisitorDetailsPage(props) {
                     <div class="card-body">
                       <p class="mb-4">
                         <span class="text-primary font-italic me-1">Edit</span>
-                        Visitor Link
+                        Visitor
                       </p>
-                      <Button className="btn">Click</Button>
+                      <Link to={`/dashboard/visitor/editvisitor/${id}`}>
+                        <Button className="btn">Click</Button>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -252,11 +256,13 @@ function VisitorDetailsPage(props) {
                     <div class="card-body">
                       <p class="mb-4">
                         <span class="text-primary font-italic me-1">
-                          checkout
+                          Checkout
                         </span>
-                        Visitor Link
+                        Visitor
                       </p>
-                      <Button className="btn">Click</Button>
+                      <Link to={`/dashboard/visitor/checkout/${id}`}>
+                        <Button className="btn">Click</Button>
+                      </Link>
                     </div>
                   </div>
                 </div>
