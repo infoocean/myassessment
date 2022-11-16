@@ -54,34 +54,22 @@ class LoginComponent extends Component {
               <Stack spacing={4}>
                 <Formik
                   initialValues={{
-                    usernameemail: "",
+                    usernameemail: autofillemail,
                     password: "",
                   }}
                   validate={(values) => {
                     const errors = {};
                     if (!values.usernameemail) {
                       errors.usernameemail =
-                        "username / email feild is required  **";
+                        "User Name / Email feild is required  **";
                     }
-                    // if (!values.email) {
-                    //   errors.email = " feild is required  **";
-                    // } else if (
-                    //   !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
-                    //     values.email
-                    //   )
-                    // ) {
-                    //   errors.email = "Invalid email address **";
-                    // }
                     if (!values.password) {
-                      errors.password = "password feild is required  **";
+                      errors.password = "Password feild is required  **";
                     }
                     return errors;
                   }}
                   onSubmit={async (values, { setSubmitting, resetForm }) => {
                     this.setState({ showsnipper: true });
-                    //console.log(values);
-                    //alert(JSON.stringify(values, null, 2));
-                    //return false;
                     const reqdata = {
                       usernameemail: values.usernameemail,
                       password: values.password,
@@ -115,7 +103,7 @@ class LoginComponent extends Component {
                     <form onSubmit={handleSubmit}>
                       <FormControl id="usernameemail" mt={2}>
                         <FormLabel>
-                          UserName / Email Address
+                          User Name / Email Address
                           <Text as={"span"} style={{ color: "red" }}>
                             *
                           </Text>

@@ -15,6 +15,7 @@ import {
   Textarea,
   InputGroup,
   InputRightElement,
+  Select,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
@@ -25,6 +26,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { register } from "../../Redux/Actions/useractions";
 import { connect } from "react-redux";
+import { woocemmerceapi } from "../../API/APIToken";
 
 class RegistrationComponent extends Component {
   constructor(props) {
@@ -33,15 +35,57 @@ class RegistrationComponent extends Component {
       showsnipper: false,
       showPassword: false,
       showConfirmPassword: false,
+      charLengthValid: false,
+      specialCharValid: false,
+      uppercaseValid: false,
+      lowecaseValid: false,
+      numberValid: false,
       number: "",
       number_val: "",
       country_code: "",
+      counrtries: "",
+      counrtriesbystates: "",
+      country: "",
+      state: "",
     };
+    this.handlecountryChange = this.handlecountryChange.bind(this);
+    this.handlestateChange = this.handlestateChange.bind(this);
   }
   handleNumberChange = (value, data, event, formattedValue) => {
     this.setState({ country_code: data.dialCode });
     this.setState({ number_val: value.slice(data.dialCode.length) });
   };
+
+  async handlecountryChange(event) {
+    this.setState({ country: event.target.value });
+    console.log(this.state.country);
+    try {
+      let counrtriesstates = await woocemmerceapi.get(
+        `data/countries/${event.target.value}`,
+        {}
+      );
+      console.log(counrtriesstates.data.states);
+      this.setState({ counrtriesbystates: counrtriesstates.data.states });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async componentDidMount() {
+    try {
+      let counrtries = await woocemmerceapi.get("data/countries", {});
+      //console.log(visitordata);
+      this.setState({ counrtries: counrtries.data });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  handlestateChange(event) {
+    this.setState({ state: event.target.value });
+  }
+  async componentDidUpdate() {}
+
   render() {
     return (
       <>
@@ -62,34 +106,29 @@ class RegistrationComponent extends Component {
                     password: "",
                     confirmpassword: "",
                     dob: "",
-                    age: 0,
+                    age: "",
                     address1: "",
                     address2: "",
                     city: "",
-                    state: "",
-                    country: "",
                   }}
                   validate={(values) => {
                     const errors = {};
 
                     if (!values.firstname) {
-                      errors.firstname = "feild is required  **";
+                      errors.firstname = "First Name feild is required  **";
                     }
-
                     if (!values.lastname) {
-                      errors.lastname = "feild is required  **";
+                      errors.lastname = "Last Name feild is required  **";
                     }
-
                     const usernameRegex = new RegExp(
                       "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{7,})"
                     );
                     if (!values.username) {
-                      errors.username = "username feild is required  **";
+                      errors.username = "User Name feild is required  **";
                     } else if (!usernameRegex.test(values.username)) {
                       errors.username =
                         "username should have at least 7 character and contain one uppercase, one lowercase, one number and one special character**";
                     }
-
                     if (!values.email) {
                       errors.email = "email feild is required **";
                     } else if (
@@ -99,20 +138,75 @@ class RegistrationComponent extends Component {
                     ) {
                       errors.email = "Invalid email address **";
                     }
-
                     if (!this.state.number_val) {
                       errors.number = " number feild is mandatory **";
                     }
-
-                    const strongRegex = new RegExp(
-                      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{10,})"
-                    );
+                    //password validation
                     if (!values.password) {
-                      errors.password = "password feild is required  **";
-                    } else if (!strongRegex.test(values.password)) {
-                      errors.password =
-                        "Password should have at least 10 character and contain one uppercase, one lowercase, one number and one special character**";
+                      errors.password = " Password feild is mandatory **";
                     }
+                    // Check the length of the input
+                    if (values.password.length >= 10) {
+                      this.setState({
+                        charLengthValid: true,
+                      });
+                    } else {
+                      this.setState({
+                        charLengthValid: false,
+                      });
+                    }
+                    // Check for special characters
+                    const specialcharacterspattern = /[ !@#$%^&*]/g;
+                    if (specialcharacterspattern.test(values.password)) {
+                      this.setState({
+                        specialCharValid: true,
+                      });
+                    } else {
+                      this.setState({
+                        specialCharValid: false,
+                      });
+                    }
+                    // Check for an uppercase lowecase character
+                    const uppercasecharacterpattern = /[A-Z]/;
+                    if (uppercasecharacterpattern.test(values.password)) {
+                      this.setState({
+                        uppercaseValid: true,
+                      });
+                    } else {
+                      this.setState({
+                        uppercaseValid: false,
+                      });
+                    }
+                    const lowercasecharacterpattern = /[a-z]/;
+                    if (lowercasecharacterpattern.test(values.password)) {
+                      this.setState({
+                        lowecaseValid: true,
+                      });
+                    } else {
+                      this.setState({
+                        lowecaseValid: false,
+                      });
+                    }
+                    // Check for a number
+                    const numberpattern = /[0-9]/;
+                    if (numberpattern.test(values.password)) {
+                      this.setState({
+                        numberValid: true,
+                      });
+                    } else {
+                      this.setState({
+                        numberValid: false,
+                      });
+                    }
+                    // const strongRegex = new RegExp(
+                    //   "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{10,})"
+                    // );
+                    // if (!values.password) {
+                    //   errors.password = "password feild is required  **";
+                    // } else if (!strongRegex.test(values.password)) {
+                    //   errors.password =
+                    //     "Password should have at least 10 character and contain one uppercase, one lowercase, one number and one special character**";
+                    // }
 
                     if (!values.confirmpassword) {
                       errors.confirmpassword =
@@ -134,8 +228,7 @@ class RegistrationComponent extends Component {
                       return Math.abs(age.getUTCFullYear() - 1970);
                     };
                     let age = calculate_age(values.dob);
-                    //console.log(age);
-                    values.age = Number(age);
+                    values.age = age;
 
                     if (!values.dob) {
                       errors.dob = "dob feild is required **";
@@ -143,26 +236,20 @@ class RegistrationComponent extends Component {
                       errors.dob =
                         "Only 18 year old person be can registred **";
                     }
-
                     if (!values.address1) {
                       errors.address1 = "address1 feild is required  **";
                     }
-
                     if (!values.city) {
                       errors.city = "city feild is required  **";
                     }
 
-                    if (!values.state) {
-                      errors.state = "state feild is required  **";
-                    }
+                    // if (!values.state) {
+                    //   errors.state = "state feild is required  **";
+                    // }
 
-                    if (!values.state) {
-                      errors.state = "state feild is required  **";
-                    }
-
-                    if (!values.country) {
-                      errors.country = "country feild is required  **";
-                    }
+                    // if (!values.country) {
+                    //   errors.country = "country feild is required  **";
+                    // }
 
                     return errors;
                   }}
@@ -229,8 +316,8 @@ class RegistrationComponent extends Component {
                       <HStack>
                         <Box>
                           <FormControl id="firstName">
-                            <FormLabel>
-                              First Name
+                            <FormLabel mb={0} pb={0}>
+                              First Name{" "}
                               <Text as={"span"} style={{ color: "red" }}>
                                 *
                               </Text>
@@ -246,8 +333,8 @@ class RegistrationComponent extends Component {
                         </Box>
                         <Box>
                           <FormControl id="lastName">
-                            <FormLabel>
-                              Last Name
+                            <FormLabel mb={0} pb={0}>
+                              Last Name{" "}
                               <Text as={"span"} style={{ color: "red" }}>
                                 *
                               </Text>
@@ -286,7 +373,7 @@ class RegistrationComponent extends Component {
                                 fontSize: "13px",
                                 paddingBottom: "10px",
                                 fontWeight: "bold",
-                                paddingRight: "83px",
+                                paddingRight: "12px",
                               }}
                             >
                               {errors.lastname &&
@@ -296,9 +383,9 @@ class RegistrationComponent extends Component {
                           </Box>
                         </Flex>
                       </Stack>
-                      <FormControl id="username" mt={1}>
-                        <FormLabel>
-                          UserName
+                      <FormControl id="username">
+                        <FormLabel mb={0} pb={0}>
+                          User Name{" "}
                           <Text as={"span"} style={{ color: "red" }}>
                             *
                           </Text>
@@ -323,8 +410,8 @@ class RegistrationComponent extends Component {
                             errors.username}
                         </span>
                       </FormControl>
-                      <FormControl id="email" mt={3}>
-                        <FormLabel>
+                      <FormControl id="email" mt={5}>
+                        <FormLabel mb={0} pb={0}>
                           Email address{" "}
                           <Text as={"span"} style={{ color: "red" }}>
                             *
@@ -349,8 +436,8 @@ class RegistrationComponent extends Component {
                         </span>
                       </FormControl>
                       <HStack>
-                        <FormControl id="numbers" mt={3}>
-                          <FormLabel>
+                        <FormControl id="numbers" mt={5}>
+                          <FormLabel mb={0} pb={0}>
                             Phone Number{" "}
                             <Text as={"span"} style={{ color: "red" }}>
                               *
@@ -375,14 +462,14 @@ class RegistrationComponent extends Component {
                           {errors.number && touched.number && errors.number}
                         </span>
                       </Stack>
-                      <FormControl id="password" mt={2}>
-                        <FormLabel>
-                          Password
+                      <FormControl id="password" mt={5}>
+                        <FormLabel mb={0} pb={0}>
+                          Password{" "}
                           <Text as={"span"} style={{ color: "red" }}>
                             *
                           </Text>
                         </FormLabel>
-                        <InputGroup>
+                        <InputGroup mb={2}>
                           <Input
                             type={this.state.showPassword ? "text" : "password"}
                             name="password"
@@ -419,10 +506,87 @@ class RegistrationComponent extends Component {
                             touched.password &&
                             errors.password}
                         </span>
+                        <ul class="list-unstyled">
+                          <li class="">
+                            <span class="eight-character">
+                              {this.state.charLengthValid === true ? (
+                                <i
+                                  style={{ color: "green" }}
+                                  class="fa-sharp fa-solid fa-circle-check"
+                                  aria-hidden="true"
+                                ></i>
+                              ) : (
+                                <i
+                                  style={{ color: "#232923" }}
+                                  class="fa-sharp fa-solid fa-circle-info"
+                                  aria-hidden="true"
+                                ></i>
+                              )}
+                            </span>
+                            &nbsp; Atleast 10 Character
+                          </li>
+                          <li class="">
+                            <span class="low-upper-case">
+                              {this.state.uppercaseValid === true &&
+                              this.state.lowecaseValid === true ? (
+                                <i
+                                  style={{ color: "green" }}
+                                  class="fa-sharp fa-solid fa-circle-check"
+                                  aria-hidden="true"
+                                ></i>
+                              ) : (
+                                <i
+                                  style={{ color: "#232923" }}
+                                  class="fa-sharp fa-solid fa-circle-info"
+                                  aria-hidden="true"
+                                ></i>
+                              )}
+                            </span>
+                            &nbsp; 1 lowercase &amp; 1 uppercase
+                          </li>
+
+                          <li class="">
+                            <span class="one-number">
+                              {this.state.numberValid === true ? (
+                                <i
+                                  style={{ color: "green" }}
+                                  class="fa-sharp fa-solid fa-circle-check"
+                                  aria-hidden="true"
+                                ></i>
+                              ) : (
+                                <i
+                                  style={{ color: "#232923" }}
+                                  class="fa-sharp fa-solid fa-circle-info"
+                                  aria-hidden="true"
+                                ></i>
+                              )}
+                            </span>{" "}
+                            &nbsp;1 number (0-9)
+                          </li>
+
+                          <li class="specialchar">
+                            <span class="one-special-char">
+                              {this.state.specialCharValid === true ? (
+                                <i
+                                  style={{ color: "green" }}
+                                  class="fa-sharp fa-solid fa-circle-check"
+                                  aria-hidden="true"
+                                ></i>
+                              ) : (
+                                <i
+                                  style={{ color: "#232923" }}
+                                  class="fa-sharp fa-solid fa-circle-info"
+                                  aria-hidden="true"
+                                ></i>
+                              )}
+                            </span>{" "}
+                            &nbsp;1 Special Character (!@#$%^&*).
+                          </li>
+                        </ul>
                       </FormControl>
-                      <FormControl id="confirmpassword" mt={3}>
-                        <FormLabel>
-                          Confirm Password
+                      <FormControl id="confirmpassword" mt={5}>
+                        <FormLabel mb={0} pb={0}>
+                          Confirm Password{" "}
                           <Text as={"span"} style={{ color: "red" }}>
                             *
                           </Text>
@@ -470,11 +634,11 @@ class RegistrationComponent extends Component {
                             errors.confirmpassword}
                         </span>
                       </FormControl>
-                      <HStack mt={2}>
+                      <HStack mt={5}>
                         <Box>
                           <FormControl id="dob" mt={2}>
-                            <FormLabel>
-                              Date of birth
+                            <FormLabel mb={0} pb={0}>
+                              Date of birth{" "}
                               <Text as={"span"} style={{ color: "red" }}>
                                 *
                               </Text>
@@ -490,16 +654,16 @@ class RegistrationComponent extends Component {
                         </Box>
                         <Box>
                           <FormControl id="firstName" mt={2}>
-                            <FormLabel>
+                            <FormLabel mb={0} pb={0}>
                               Age{" "}
                               <Text as={"span"} style={{ color: "red" }}>
                                 *
                               </Text>
                             </FormLabel>
                             <Input
-                              type="text"
+                              type="number"
                               name="age"
-                              value={Number(values.age)}
+                              value={values.age}
                               onChange={handleChange}
                               onBlur={handleBlur}
                               readOnly
@@ -523,14 +687,14 @@ class RegistrationComponent extends Component {
                           </Box>
                         </Flex>
                       </Stack>
-                      <FormControl id="address1" mt={2}>
-                        <FormLabel>
-                          Address1
+                      <FormControl id="address1" mt={5}>
+                        <FormLabel mb={0} pb={0}>
+                          Address1{" "}
                           <Text as={"span"} style={{ color: "red" }}>
                             *
                           </Text>
                         </FormLabel>
-                        <Textarea
+                        <Input
                           value={values.address1}
                           onChange={handleChange}
                           onBlur={handleBlur}
@@ -550,9 +714,11 @@ class RegistrationComponent extends Component {
                             errors.address1}
                         </span>
                       </FormControl>
-                      <FormControl id="address2" mt={2}>
-                        <FormLabel>Address2 </FormLabel>
-                        <Textarea
+                      <FormControl id="address2" mt={5}>
+                        <FormLabel mb={0} pb={0}>
+                          Address2{" "}
+                        </FormLabel>
+                        <Input
                           value={values.address2}
                           onChange={handleChange}
                           onBlur={handleBlur}
@@ -560,9 +726,69 @@ class RegistrationComponent extends Component {
                           rows="2"
                         />
                       </FormControl>
-                      <FormControl id="city" mt={3}>
-                        <FormLabel>
-                          City
+                      <FormControl id="country" mt={5}>
+                        <FormLabel mb={0} pb={0}>
+                          Country{" "}
+                          <Text as={"span"} style={{ color: "red" }}>
+                            *
+                          </Text>
+                        </FormLabel>
+                        <Select
+                          value={this.state.country}
+                          onChange={this.handlecountryChange}
+                        >
+                          {this.state.counrtries &&
+                            this.state.counrtries.map((data, key) => {
+                              return (
+                                <option value={data.code}>{data.name}</option>
+                              );
+                            })}
+                        </Select>
+                        <span
+                          style={{
+                            color: "red",
+                            fontSize: "13px",
+                            paddingBottom: "10px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {errors.country && touched.country && errors.country}
+                        </span>
+                      </FormControl>
+                      <FormControl id="state" mt={5}>
+                        <FormLabel mb={0} pb={0}>
+                          State{" "}
+                          <Text as={"span"} style={{ color: "red" }}>
+                            *
+                          </Text>
+                        </FormLabel>
+                        <Select
+                          value={this.state.country}
+                          onChange={this.handlestateChange}
+                        >
+                          {this.state.counrtriesbystates &&
+                            this.state.counrtriesbystates.map((stdata, key) => {
+                              return (
+                                <option value={stdata.code}>
+                                  {stdata.name}
+                                </option>
+                              );
+                            })}
+                        </Select>
+                        <span
+                          style={{
+                            color: "red",
+                            fontSize: "13px",
+                            paddingBottom: "10px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {errors.state && touched.state && errors.state}
+                        </span>
+                      </FormControl>
+                      <FormControl id="city" mt={5}>
+                        <FormLabel mb={0} pb={0}>
+                          City{" "}
                           <Text as={"span"} style={{ color: "red" }}>
                             *
                           </Text>
@@ -583,56 +809,6 @@ class RegistrationComponent extends Component {
                           }}
                         >
                           {errors.city && touched.city && errors.city}
-                        </span>
-                      </FormControl>
-                      <FormControl id="state" mt={3}>
-                        <FormLabel>
-                          State
-                          <Text as={"span"} style={{ color: "red" }}>
-                            *
-                          </Text>
-                        </FormLabel>
-                        <Input
-                          type="text"
-                          name="state"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.state}
-                        />
-                        <span
-                          style={{
-                            color: "red",
-                            fontSize: "13px",
-                            paddingBottom: "10px",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {errors.state && touched.state && errors.state}
-                        </span>
-                      </FormControl>
-                      <FormControl id="country" mt={3}>
-                        <FormLabel>
-                          Country
-                          <Text as={"span"} style={{ color: "red" }}>
-                            *
-                          </Text>
-                        </FormLabel>
-                        <Input
-                          type="text"
-                          name="country"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.country}
-                        />
-                        <span
-                          style={{
-                            color: "red",
-                            fontSize: "13px",
-                            paddingBottom: "10px",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {errors.country && touched.country && errors.country}
                         </span>
                       </FormControl>
                       <Stack spacing={10} mt={3}>
