@@ -12,7 +12,6 @@ import {
   HStack,
   Spinner,
   Spacer,
-  Textarea,
   InputGroup,
   InputRightElement,
   Select,
@@ -46,7 +45,7 @@ class RegistrationComponent extends Component {
       counrtries: "",
       counrtriesbystates: "",
       country: "",
-      state: "",
+      mystate: "",
     };
     this.handlecountryChange = this.handlecountryChange.bind(this);
     this.handlestateChange = this.handlestateChange.bind(this);
@@ -56,35 +55,34 @@ class RegistrationComponent extends Component {
     this.setState({ number_val: value.slice(data.dialCode.length) });
   };
 
-  async handlecountryChange(event) {
-    this.setState({ country: event.target.value });
-    console.log(this.state.country);
-    try {
-      let counrtriesstates = await woocemmerceapi.get(
-        `data/countries/${event.target.value}`,
-        {}
-      );
-      console.log(counrtriesstates.data.states);
-      this.setState({ counrtriesbystates: counrtriesstates.data.states });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   async componentDidMount() {
     try {
       let counrtries = await woocemmerceapi.get("data/countries", {});
-      //console.log(visitordata);
+      //console.log(counrtries);
       this.setState({ counrtries: counrtries.data });
     } catch (error) {
       console.log(error);
     }
   }
 
-  handlestateChange(event) {
-    this.setState({ state: event.target.value });
+  async handlecountryChange(event) {
+    console.log(event.target.value);
+    this.setState({ country: event.target.value });
+    try {
+      let counrtriesstates = await woocemmerceapi.get(
+        `data/countries/${event.target.value}`,
+        {}
+      );
+      //console.log(counrtriesstates.data.states);
+      this.setState({ counrtriesbystates: counrtriesstates.data.states });
+    } catch (error) {
+      console.log(error);
+    }
   }
-  async componentDidUpdate() {}
+
+  handlestateChange(event) {
+    this.setState({ mystate: event.target.value });
+  }
 
   render() {
     return (
@@ -109,7 +107,10 @@ class RegistrationComponent extends Component {
                     age: "",
                     address1: "",
                     address2: "",
+                    country: "",
+                    mystate: "",
                     city: "",
+                    postalcode: "",
                   }}
                   validate={(values) => {
                     const errors = {};
@@ -127,10 +128,10 @@ class RegistrationComponent extends Component {
                       errors.username = "User Name feild is required  **";
                     } else if (!usernameRegex.test(values.username)) {
                       errors.username =
-                        "username should have at least 7 character and contain one uppercase, one lowercase, one number and one special character**";
+                        "User Name should have at least 7 character and contain one uppercase, one lowercase, one number and one special character**";
                     }
                     if (!values.email) {
-                      errors.email = "email feild is required **";
+                      errors.email = "Email feild is required **";
                     } else if (
                       !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
                         values.email
@@ -138,9 +139,11 @@ class RegistrationComponent extends Component {
                     ) {
                       errors.email = "Invalid email address **";
                     }
+
                     if (!this.state.number_val) {
-                      errors.number = " number feild is mandatory **";
+                      errors.number = " Number feild is mandatory **";
                     }
+
                     //password validation
                     if (!values.password) {
                       errors.password = " Password feild is mandatory **";
@@ -210,13 +213,12 @@ class RegistrationComponent extends Component {
 
                     if (!values.confirmpassword) {
                       errors.confirmpassword =
-                        "confirm password feild is required  **";
+                        "Confirm password feild is required  **";
                     }
-
                     if (values.confirmpassword) {
                       if (values.password !== values.confirmpassword) {
                         errors.confirmpassword =
-                          "password and confirm password are not match **";
+                          "Password and Confirm Password are not match **";
                       }
                     }
 
@@ -231,25 +233,29 @@ class RegistrationComponent extends Component {
                     values.age = age;
 
                     if (!values.dob) {
-                      errors.dob = "dob feild is required **";
+                      errors.dob = "DOB feild is required **";
                     } else if (age < 18) {
                       errors.dob =
                         "Only 18 year old person be can registred **";
                     }
                     if (!values.address1) {
-                      errors.address1 = "address1 feild is required  **";
+                      errors.address1 = "Address1 feild is required  **";
                     }
                     if (!values.city) {
-                      errors.city = "city feild is required  **";
+                      errors.city = "City feild is required  **";
                     }
 
-                    // if (!values.state) {
-                    //   errors.state = "state feild is required  **";
-                    // }
+                    if (this.state.mystate) {
+                      errors.state = "State feild is required  **";
+                    }
 
-                    // if (!values.country) {
+                    // if (!this.state.country) {
                     //   errors.country = "country feild is required  **";
                     // }
+
+                    if (!values.postalcode) {
+                      errors.postalcode = "Postal code feild is required  **";
+                    }
 
                     return errors;
                   }}
@@ -275,8 +281,9 @@ class RegistrationComponent extends Component {
                       address1: values.address1,
                       address2: values.address2,
                       city: values.city,
-                      state: values.state,
-                      country: values.country,
+                      state: this.state.mystate,
+                      country: this.state.country,
+                      postalcode: values.postalcode,
                     };
                     // console.log(reqdata);
                     // return false;
@@ -383,20 +390,24 @@ class RegistrationComponent extends Component {
                           </Box>
                         </Flex>
                       </Stack>
-                      <FormControl id="username">
-                        <FormLabel mb={0} pb={0}>
-                          User Name{" "}
-                          <Text as={"span"} style={{ color: "red" }}>
-                            *
-                          </Text>
-                        </FormLabel>
-                        <Input
-                          type="text"
-                          name="username"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.username}
-                        />
+                      <HStack>
+                        <FormControl id="username">
+                          <FormLabel mb={0} pb={0}>
+                            User Name{" "}
+                            <Text as={"span"} style={{ color: "red" }}>
+                              *
+                            </Text>
+                          </FormLabel>
+                          <Input
+                            type="text"
+                            name="username"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.username}
+                          />
+                        </FormControl>
+                      </HStack>
+                      <Stack>
                         <span
                           style={{
                             color: "red",
@@ -409,7 +420,8 @@ class RegistrationComponent extends Component {
                             touched.username &&
                             errors.username}
                         </span>
-                      </FormControl>
+                      </Stack>
+
                       <FormControl id="email" mt={5}>
                         <FormLabel mb={0} pb={0}>
                           Email address{" "}
@@ -424,6 +436,8 @@ class RegistrationComponent extends Component {
                           onBlur={handleBlur}
                           value={values.email}
                         />
+                      </FormControl>
+                      <Stack h={2}>
                         <span
                           style={{
                             color: "red",
@@ -434,24 +448,24 @@ class RegistrationComponent extends Component {
                         >
                           {errors.email && touched.email && errors.email}
                         </span>
+                      </Stack>
+                      <FormControl id="numbers" mt={5}>
+                        <FormLabel mb={0} pb={0}>
+                          Phone Number{" "}
+                          <Text as={"span"} style={{ color: "red" }}>
+                            *
+                          </Text>
+                        </FormLabel>
+                        <PhoneInput
+                          country={"us"}
+                          value={this.state.number}
+                          onChange={this.handleNumberChange}
+                          onBlur={this.handleNumberBlur}
+                        />
                       </FormControl>
-                      <HStack>
-                        <FormControl id="numbers" mt={5}>
-                          <FormLabel mb={0} pb={0}>
-                            Phone Number{" "}
-                            <Text as={"span"} style={{ color: "red" }}>
-                              *
-                            </Text>
-                          </FormLabel>
-                          <PhoneInput
-                            country={"us"}
-                            value={this.state.number}
-                            onChange={this.handleNumberChange}
-                          />
-                        </FormControl>
-                      </HStack>
                       <Stack>
                         <span
+                          h={2}
                           style={{
                             color: "red",
                             fontSize: "13px",
@@ -462,7 +476,7 @@ class RegistrationComponent extends Component {
                           {errors.number && touched.number && errors.number}
                         </span>
                       </Stack>
-                      <FormControl id="password" mt={5}>
+                      <FormControl id="password" mt={4}>
                         <FormLabel mb={0} pb={0}>
                           Password{" "}
                           <Text as={"span"} style={{ color: "red" }}>
@@ -494,18 +508,20 @@ class RegistrationComponent extends Component {
                             </Button>
                           </InputRightElement>
                         </InputGroup>
-                        <span
-                          style={{
-                            color: "red",
-                            fontSize: "13px",
-                            paddingBottom: "10px",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {errors.password &&
-                            touched.password &&
-                            errors.password}
-                        </span>
+                        <Stack h={0.1} mb={5}>
+                          <span
+                            style={{
+                              color: "red",
+                              fontSize: "13px",
+                              paddingBottom: "10px",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {errors.password &&
+                              touched.password &&
+                              errors.password}
+                          </span>
+                        </Stack>
                         <ul class="list-unstyled">
                           <li class="">
                             <span class="eight-character">
@@ -621,6 +637,8 @@ class RegistrationComponent extends Component {
                             </Button>
                           </InputRightElement>
                         </InputGroup>
+                      </FormControl>
+                      <Stack h={2}>
                         <span
                           style={{
                             color: "red",
@@ -633,7 +651,7 @@ class RegistrationComponent extends Component {
                             touched.confirmpassword &&
                             errors.confirmpassword}
                         </span>
-                      </FormControl>
+                      </Stack>
                       <HStack mt={5}>
                         <Box>
                           <FormControl id="dob" mt={2}>
@@ -671,7 +689,7 @@ class RegistrationComponent extends Component {
                           </FormControl>
                         </Box>
                       </HStack>
-                      <Stack>
+                      <Stack h={2}>
                         <Flex>
                           <Box>
                             <span
@@ -701,6 +719,8 @@ class RegistrationComponent extends Component {
                           size="sm"
                           rows="2"
                         />
+                      </FormControl>
+                      <Stack h={2}>
                         <span
                           style={{
                             color: "red",
@@ -713,7 +733,7 @@ class RegistrationComponent extends Component {
                             touched.address1 &&
                             errors.address1}
                         </span>
-                      </FormControl>
+                      </Stack>
                       <FormControl id="address2" mt={5}>
                         <FormLabel mb={0} pb={0}>
                           Address2{" "}
@@ -783,7 +803,7 @@ class RegistrationComponent extends Component {
                             fontWeight: "bold",
                           }}
                         >
-                          {errors.state && touched.state && errors.state}
+                          {errors.mystate && touched.mystate && errors.mystate}
                         </span>
                       </FormControl>
                       <FormControl id="city" mt={5}>
@@ -800,6 +820,8 @@ class RegistrationComponent extends Component {
                           onBlur={handleBlur}
                           value={values.city}
                         />
+                      </FormControl>
+                      <Stack h={2}>
                         <span
                           style={{
                             color: "red",
@@ -810,8 +832,37 @@ class RegistrationComponent extends Component {
                         >
                           {errors.city && touched.city && errors.city}
                         </span>
+                      </Stack>
+                      <FormControl id="postalcode" mt={5}>
+                        <FormLabel mb={0} pb={0}>
+                          Postal Code{" "}
+                          <Text as={"span"} style={{ color: "red" }}>
+                            *
+                          </Text>
+                        </FormLabel>
+                        <Input
+                          type="text"
+                          name="postalcode"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.postalcode}
+                        />
                       </FormControl>
-                      <Stack spacing={10} mt={3}>
+                      <Stack h={2}>
+                        <span
+                          style={{
+                            color: "red",
+                            fontSize: "13px",
+                            paddingBottom: "10px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {errors.postalcode &&
+                            touched.postalcode &&
+                            errors.postalcode}
+                        </span>
+                      </Stack>
+                      <Stack spacing={10} mt={4}>
                         <Button
                           type="submit"
                           bg={"blue.400"}

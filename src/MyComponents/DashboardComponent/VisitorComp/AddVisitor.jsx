@@ -282,6 +282,35 @@ class Addvisitor extends Component {
                               </FormControl>
                             </Box>
                             <Box>
+                              <FormControl id="number">
+                                <FormLabel>
+                                  Number{" "}
+                                  <Text as={"span"} style={{ color: "red" }}>
+                                    *
+                                  </Text>
+                                  <span
+                                    style={{
+                                      color: "red",
+                                      fontSize: "13px",
+                                      paddingBottom: "10px",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {errors.number &&
+                                      touched.number &&
+                                      errors.number}
+                                  </span>
+                                </FormLabel>
+                                <Input
+                                  type="text"
+                                  name="email"
+                                  value={values.email}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                />
+                              </FormControl>
+                            </Box>
+                            <Box>
                               <FormControl id="age">
                                 <FormLabel>
                                   Age{" "}
@@ -308,6 +337,8 @@ class Addvisitor extends Component {
                                 />
                               </FormControl>
                             </Box>
+                          </HStack>
+                          <HStack mt={6}>
                             <Box>
                               <FormControl id="address">
                                 <FormLabel>
@@ -332,6 +363,91 @@ class Addvisitor extends Component {
                                   type="text"
                                   name="address"
                                   value={values.address}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                />
+                              </FormControl>
+                            </Box>
+                            <Box>
+                              <FormControl id="country">
+                                <FormLabel>
+                                  Country{" "}
+                                  <Text as={"span"} style={{ color: "red" }}>
+                                    *{" "}
+                                    <span
+                                      style={{
+                                        color: "red",
+                                        fontSize: "13px",
+                                        paddingBottom: "10px",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      {errors.name &&
+                                        touched.name &&
+                                        errors.name}
+                                    </span>
+                                  </Text>
+                                </FormLabel>
+                                <Input
+                                  type="text"
+                                  name="name"
+                                  value={values.name}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                />
+                              </FormControl>
+                            </Box>
+                            <Box>
+                              <FormControl id="state">
+                                <FormLabel>
+                                  State{" "}
+                                  <Text as={"span"} style={{ color: "red" }}>
+                                    *
+                                  </Text>
+                                  <span
+                                    style={{
+                                      color: "red",
+                                      fontSize: "13px",
+                                      paddingBottom: "10px",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {errors.email &&
+                                      touched.email &&
+                                      errors.email}
+                                  </span>
+                                </FormLabel>
+                                <Input
+                                  type="text"
+                                  name="email"
+                                  value={values.email}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                />
+                              </FormControl>
+                            </Box>
+                            <Box>
+                              <FormControl id="age">
+                                <FormLabel>
+                                  City{" "}
+                                  <Text as={"span"} style={{ color: "red" }}>
+                                    *{" "}
+                                    <span
+                                      style={{
+                                        color: "red",
+                                        fontSize: "13px",
+                                        paddingBottom: "10px",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      {errors.age && touched.age && errors.age}
+                                    </span>
+                                  </Text>
+                                </FormLabel>
+                                <Input
+                                  type="text"
+                                  name="age"
+                                  value={values.age}
                                   onChange={handleChange}
                                   onBlur={handleBlur}
                                 />
@@ -368,12 +484,12 @@ class Addvisitor extends Component {
                                 />
                               </FormControl>
                             </Box>
-                            {/* <Box>
-                            <FormControl id="firstName">
-                              <FormLabel>Date of birth </FormLabel>
-                              <Input type="date" />
-                            </FormControl>
-                          </Box> */}
+                            <Box>
+                              <FormControl id="firstName">
+                                <FormLabel>Date of birth </FormLabel>
+                                <Input type="date" />
+                              </FormControl>
+                            </Box>
                             <Box width={"250px"}>
                               <FormControl id="firstName">
                                 <FormLabel>Select Id </FormLabel>
@@ -403,6 +519,35 @@ class Addvisitor extends Component {
                           <FormControl id="purposetovisit" mt={6}>
                             <FormLabel>
                               Purpose To Visit{" "}
+                              <Text as={"span"} style={{ color: "red" }}>
+                                *
+                                <span
+                                  style={{
+                                    color: "red",
+                                    fontSize: "13px",
+                                    paddingBottom: "10px",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  {errors.purposetovisit &&
+                                    touched.purposetovisit &&
+                                    errors.purposetovisit}
+                                </span>
+                              </Text>
+                            </FormLabel>
+                            <Textarea
+                              placeholder="Here is a sample placeholder"
+                              size="sm"
+                              rows={2}
+                              name="purposetovisit"
+                              value={values.purposetovisit}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                            />
+                          </FormControl>
+                          <FormControl id="purposetovisit" mt={6}>
+                            <FormLabel>
+                              Assets{" "}
                               <Text as={"span"} style={{ color: "red" }}>
                                 *
                                 <span

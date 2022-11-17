@@ -102,8 +102,8 @@ class LoginComponent extends Component {
                   }) => (
                     <form onSubmit={handleSubmit}>
                       <FormControl id="usernameemail" mt={2}>
-                        <FormLabel>
-                          User Name / Email Address
+                        <FormLabel mb={0} pb={0}>
+                          User Name / Email Address {""}
                           <Text as={"span"} style={{ color: "red" }}>
                             *
                           </Text>
@@ -115,6 +115,8 @@ class LoginComponent extends Component {
                           onBlur={handleBlur}
                           value={values.usernameemail}
                         />
+                      </FormControl>
+                      <Stack h={2}>
                         <span
                           style={{
                             color: "red",
@@ -127,10 +129,10 @@ class LoginComponent extends Component {
                             touched.usernameemail &&
                             errors.usernameemail}
                         </span>
-                      </FormControl>
-                      <FormControl id="password" mt={2}>
-                        <FormLabel>
-                          Password
+                      </Stack>
+                      <FormControl id="password" mt={4}>
+                        <FormLabel mb={0} pb={0}>
+                          Password {""}
                           <Text as={"span"} style={{ color: "red" }}>
                             *
                           </Text>
@@ -160,6 +162,8 @@ class LoginComponent extends Component {
                             </Button>
                           </InputRightElement>
                         </InputGroup>
+                      </FormControl>
+                      <Stack h={2}> 
                         <span
                           style={{
                             color: "red",
@@ -172,8 +176,8 @@ class LoginComponent extends Component {
                             touched.password &&
                             errors.password}
                         </span>
-                      </FormControl>
-                      <Stack spacing={10} mt={3}>
+                      </Stack>
+                      <Stack spacing={10} mt={4}>
                         <Button
                           type="submit"
                           bg={"blue.400"}
