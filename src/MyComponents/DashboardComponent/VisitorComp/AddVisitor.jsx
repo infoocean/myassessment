@@ -45,6 +45,7 @@ import { visitorregistration } from "../../../Redux/Actions/useractions";
 import { connect } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 
 const SideBarLinkItems = [
   {
@@ -76,6 +77,7 @@ class Addvisitor extends Component {
       showsnipper: false,
     };
   }
+  
   render() {
     return (
       <>
@@ -137,10 +139,18 @@ class Addvisitor extends Component {
                     initialValues={{
                       name: "",
                       email: "",
+                      number: "",
                       age: "",
                       address: "",
-                      purposetovisit: "",
+                      country: "",
+                      state: "",
+                      city: "",
                       datetime: "",
+                      dob: "",
+                      idname: "",
+                      idnumber: "",
+                      purposetovisit: "",
+                      assets: "",
                     }}
                     validate={(values) => {
                       const errors = {};
@@ -149,7 +159,7 @@ class Addvisitor extends Component {
                         errors.name = " Required";
                       }
 
-                      if (!values.name) {
+                      if (!values.email) {
                         errors.email = " Required";
                       } else if (
                         !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
@@ -157,6 +167,10 @@ class Addvisitor extends Component {
                         )
                       ) {
                         errors.email = " Invalid email";
+                      }
+
+                      if (!values.number) {
+                        errors.number = "Required";
                       }
 
                       if (!values.age) {
@@ -171,8 +185,16 @@ class Addvisitor extends Component {
                         errors.datetime = "Required";
                       }
 
+                      if (!values.dob) {
+                        errors.dob = "Required";
+                      }
+
                       if (!values.purposetovisit) {
                         errors.purposetovisit = "Required";
+                      }
+
+                      if (!values.assets) {
+                        errors.assets = "Required";
                       }
 
                       return errors;
@@ -220,6 +242,19 @@ class Addvisitor extends Component {
                       isSubmitting,
                     }) => (
                       <form onSubmit={handleSubmit}>
+                        <CountryDropdown
+                          name="country"
+                          value={values.country}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                        />
+                        <RegionDropdown
+                          name="state"
+                          country={values.country}
+                          value={values.state}
+                          onChange={(_, e) => handleChange(e)}
+                          onBlur={handleBlur}
+                        />
                         <Box
                           rounded={"lg"}
                           boxShadow={"lg"}
@@ -378,7 +413,7 @@ class Addvisitor extends Component {
                                   Country{" "}
                                   <Text as={"span"} style={{ color: "red" }}>
                                     *{" "}
-                                    <span
+                                    {/* <span
                                       style={{
                                         color: "red",
                                         fontSize: "13px",
@@ -389,13 +424,13 @@ class Addvisitor extends Component {
                                       {errors.name &&
                                         touched.name &&
                                         errors.name}
-                                    </span>
+                                    </span> */}
                                   </Text>
                                 </FormLabel>
                                 <Input
                                   type="text"
-                                  name="name"
-                                  value={values.name}
+                                  name="country"
+                                  value={values.country}
                                   onChange={handleChange}
                                   onBlur={handleBlur}
                                 />
@@ -408,7 +443,7 @@ class Addvisitor extends Component {
                                   <Text as={"span"} style={{ color: "red" }}>
                                     *
                                   </Text>
-                                  <span
+                                  {/* <span
                                     style={{
                                       color: "red",
                                       fontSize: "13px",
@@ -419,7 +454,7 @@ class Addvisitor extends Component {
                                     {errors.email &&
                                       touched.email &&
                                       errors.email}
-                                  </span>
+                                  </span> */}
                                 </FormLabel>
                                 <Input
                                   type="text"
@@ -436,7 +471,7 @@ class Addvisitor extends Component {
                                   City{" "}
                                   <Text as={"span"} style={{ color: "red" }}>
                                     *{" "}
-                                    <span
+                                    {/* <span
                                       style={{
                                         color: "red",
                                         fontSize: "13px",
@@ -445,13 +480,13 @@ class Addvisitor extends Component {
                                       }}
                                     >
                                       {errors.age && touched.age && errors.age}
-                                    </span>
+                                    </span> */}
                                   </Text>
                                 </FormLabel>
                                 <Input
                                   type="text"
                                   name="age"
-                                  value={values.age}
+                                  value={values.city}
                                   onChange={handleChange}
                                   onBlur={handleBlur}
                                 />
@@ -490,7 +525,22 @@ class Addvisitor extends Component {
                             </Box>
                             <Box>
                               <FormControl id="firstName">
-                                <FormLabel>Date of birth </FormLabel>
+                                <FormLabel>
+                                  Date of birth{" "}
+                                  <Text as={"span"} style={{ color: "red" }}>
+                                    *
+                                    <span
+                                      style={{
+                                        color: "red",
+                                        fontSize: "13px",
+                                        paddingBottom: "10px",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      {errors.dob && touched.dob && errors.dob}
+                                    </span>
+                                  </Text>
+                                </FormLabel>
                                 <Input type="date" />
                               </FormControl>
                             </Box>
@@ -562,9 +612,9 @@ class Addvisitor extends Component {
                                     fontWeight: "bold",
                                   }}
                                 >
-                                  {errors.purposetovisit &&
-                                    touched.purposetovisit &&
-                                    errors.purposetovisit}
+                                  {errors.assets &&
+                                    touched.assets &&
+                                    errors.assets}
                                 </span>
                               </Text>
                             </FormLabel>

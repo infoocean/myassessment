@@ -42,6 +42,8 @@ import { Link } from "react-router-dom";
 import auth_token, { api } from "../../API/APIToken";
 import axios from "axios";
 import moment from "moment";
+import MaterialTable from "material-table";
+import { ThemeProvider, createTheme } from "@mui/material";
 const getvisitorsendpoint = "getvisitors";
 
 const SideBarLinkItems = [
@@ -67,9 +69,66 @@ const SideBarLinkItems = [
   },
 ];
 
+const columns = [
+  { title: "Name", field: "Name" },
+  { title: "Email", field: "authors" },
+  { title: "Age", field: "num_pages" },
+  { title: "Address", field: "num_pages" },
+  { title: "visit", field: "num_pages" },
+  { title: "Chk-In D-T", field: "num_pages" },
+  { title: "Chk-Out D-T", field: "num_pages" },
+  { title: "Status", field: "rating" },
+];
+
+const datas = [
+  {
+    id: 1,
+    title: "The Hunger Games",
+    authors: "Suzanne Collins",
+    num_pages: 374,
+    rating: 4.33,
+  },
+  {
+    id: 2,
+    title: "Harry Potter and the Order of the Phoenix",
+    authors: "J.K. Rowling",
+    num_pages: 870,
+    rating: 4.48,
+  },
+  {
+    id: 3,
+    title: "To Kill a Mockingbird",
+    authors: "Harper Lee",
+    num_pages: 324,
+    rating: 4.27,
+  },
+  {
+    id: 4,
+    title: "Pride and Prejudice",
+    authors: "Jane Austen",
+    num_pages: 279,
+    rating: 4.25,
+  },
+  {
+    id: 5,
+    title: "Twilight",
+    authors: "Stephenie Meyer",
+    num_pages: 498,
+    rating: 3.58,
+  },
+  {
+    id: 6,
+    title: "The Book Thief",
+    authors: "Markus Zusak",
+    num_pages: 552,
+    rating: 4.36,
+  },
+];
+
 function VisitorsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [totalrecentvisitors, settotalrecentvisitors] = useState(0);
+  const defaultMaterialTheme = createTheme();
   const getvisitorsdata = () => {
     var config = {
       method: "get",
@@ -91,7 +150,15 @@ function VisitorsPage() {
     getvisitorsdata();
   }, []);
 
-  //console.log(totalrecentvisitors);
+  console.log(totalrecentvisitors);
+
+  // const dt = totalrecentvisitors.map(getFullName);
+
+  // function getFullName(items) {
+  //   return [items.firstname, items.lastname];
+  // }
+
+  // console.log(dt);
 
   return (
     <>
@@ -119,7 +186,7 @@ function VisitorsPage() {
         {/*main data component*/}
         <Box ml={{ base: 0, md: 60 }} p="4">
           {/*main data part */}
-          <Container mb={5} maxW="6xl">
+          {/* <Container mb={5} maxW="6xl">
             <Flex mb={4}>
               <Spacer />
               <Box>
@@ -167,9 +234,9 @@ function VisitorsPage() {
                 </HStack>
               </div>
             </div>
-          </Container>
+          </Container> */}
           <div>
-            <table className="table align-middle mb-0 bg-white">
+            {/* <table className="table align-middle mb-0 bg-white">
               <thead className="bg-light">
                 <tr>
                   <th>Name</th>
@@ -246,7 +313,19 @@ function VisitorsPage() {
                     );
                   })}
               </tbody>
-            </table>
+            </table> */}
+            <div style={{ maxWidth: "100%" }}>
+              <ThemeProvider theme={defaultMaterialTheme}>
+                <MaterialTable
+                  columns={columns}
+                  data={datas}
+                  // other props
+                  options={{
+                    search: true,
+                  }}
+                />
+              </ThemeProvider>
+            </div>
           </div>
         </Box>
       </Box>
