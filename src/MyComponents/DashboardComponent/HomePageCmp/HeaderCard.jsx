@@ -68,11 +68,7 @@ function Headercard() {
             <th>Email</th>
             <th>Number</th>
             <th>Age</th>
-            <th>Address</th>
-            <th>Chk-In </th>
-            <th>Chk-Out </th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th>View</th>
           </tr>
         </thead>
         <tbody>
@@ -99,15 +95,15 @@ function Headercard() {
                   </td>
                   <td>{data.number}</td>
                   <td>{data.age}</td>
-                  <td>{data.address}</td>
-                  <td>
+                  {/* <td>{data.address}</td> */}
+                  {/* <td>
                     {" "}
                     {moment(data.checkindatetime).format("DD/MM/YYYY") +
                       " - " +
                       moment(data.checkindatetime).format("h:mm a")}
-                  </td>
-                  <td>{data.checkoutdatetime}</td>
-                  <td>
+                  </td> */}
+                  {/* <td>{data.checkoutdatetime}</td> */}
+                  {/* <td>
                     {data.status && data.status === 1 ? (
                       <span class="badge badge-success rounded-pill d-inline">
                         active
@@ -117,15 +113,20 @@ function Headercard() {
                         Not
                       </span>
                     )}
-                  </td>
-                  <td style={{ textAlign: " -webkit-center" }}>
-                    <Link
+                  </td> */}
+                  <td
+                  // style={{ textAlign: " -webkit-center" }}
+                  >
+                    {/* <Link
                       style={{ fontSize: "20px" }}
                       to={`/dashboard/visitor/editvisitor/${data._id}`}
                     >
                       <BiEdit />
-                    </Link>
-                    <Link to="/" style={{ fontSize: "20px" }}>
+                    </Link> */}
+                    <Link
+                      to={`/dashboard/visitors/visitordetails/${data._id}`}
+                      style={{ fontSize: "20px" }}
+                    >
                       <BiShow />
                     </Link>
                     {/* <AiTwotoneDelete /> */}

@@ -27,6 +27,7 @@ import {
   Button,
   Textarea,
   Spinner,
+  Heading,
 } from "@chakra-ui/react";
 import {
   FiHome,
@@ -123,6 +124,9 @@ class Addvisitor extends Component {
                 <Spacer />
               </Flex>
               <hr />
+              <Stack py={4} textAlign={"center"}>
+                <Heading size={"1xl"}>Visitor Registration Form</Heading>
+              </Stack>
               <Flex
                 align={"center"}
                 justify={"center"}

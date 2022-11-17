@@ -132,7 +132,7 @@ function VisitorsPage() {
                       bg: "blue.500",
                     }}
                   >
-                    Add Visitor
+                    Add Visitor +
                   </Button>
                 </Link>
               </Box>
@@ -149,7 +149,7 @@ function VisitorsPage() {
                     <Input type="email" size="sm" />
                   </FormControl>
                   <FormControl pt={8}>
-                    <Checkbox defaultChecked>Check</Checkbox>
+                    <Checkbox>Check In</Checkbox>
                   </FormControl>
                   <FormControl pt={8}>
                     <Button
@@ -176,9 +176,9 @@ function VisitorsPage() {
                   <th>Email</th>
                   <th>Age</th>
                   <th>Address</th>
-                  <th>Purpose to visit</th>
-                  <th>Check In Date - Time</th>
-                  <th>Check Out Date - Time</th>
+                  <th>visit</th>
+                  <th>Chk-In D-T</th>
+                  <th>Chk-Out D-T</th>
                   <th>Action</th>
                 </tr>
               </thead>
