@@ -282,8 +282,8 @@ class RegistrationComponent extends Component {
                       country: values.country,
                       postalcode: values.postalcode,
                     };
-                    console.log(reqdata);
-                    return false;
+                    //console.log(reqdata);
+                    //return false;
                     this.props.register(reqdata, (response) => {
                       //console.log(response);
                       //console.log(response.status);

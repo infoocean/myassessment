@@ -36,6 +36,7 @@ import { ImQrcode } from "react-icons/im";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import auth_token, { api } from "../../API/APIToken";
+import QRCode from "qrcode.react";
 
 const SideBarLinkItems = [
   {
@@ -63,51 +64,52 @@ const SideBarLinkItems = [
 function ScanQRCodePage(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const id = props.match.params.id;
-  const [visitor_det, setvisitors_det] = useState("");
+  //const [visitor_det, setvisitors_det] = useState("");
 
-  const getvisitordet = () => {
-    var config = {
-      method: "post",
-      url: `${api}generateqrcodevisitor/${id}`,
-      // headers: {
-      //   token: auth_token,
-      // },
-    };
-    axios(config)
-      .then(function (response) {
-        //console.log(response.data);
-        setvisitors_det(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
+  // const getvisitordet = () => {
+  //   var config = {
+  //     method: "post",
+  //     url: `${api}generateqrcodevisitor/${id}`,
+  //     // headers: {
+  //     //   token: auth_token,
+  //     // },
+  //   };
+  //   axios(config)
+  //     .then(function (response) {
+  //       //console.log(response.data);
+  //       setvisitors_det(response.data.data);
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // };
 
-  const data = {
-    name: "shubham",
-  };
-  const sendmail = () => {
-    var config = {
-      method: "post",
-      url: `${api}sendmail`,
-      // headers: {
-      //   token: auth_token,
-      // },
-      data: data,
-    };
-    axios(config)
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
+  // const data = {
+  //   name: "shubham",
+  // };
 
-  useEffect(() => {
-    getvisitordet();
-    sendmail();
-  }, []);
+  // const sendmail = () => {
+  //   var config = {
+  //     method: "post",
+  //     url: `${api}sendmail`,
+  //     // headers: {
+  //     //   token: auth_token,
+  //     // },
+  //     data: data,
+  //   };
+  //   axios(config)
+  //     .then(function (response) {
+  //       console.log(response.data);
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   getvisitordet();
+  //   sendmail();
+  // }, []);
 
   //console.log(visitor_det);
 
@@ -154,7 +156,7 @@ function ScanQRCodePage(props) {
                 >
                   Scan QR code and get details
                 </Heading>
-                <Box
+                {/* <Box
                   bg={useColorModeValue("white", "gray.800")}
                   borderWidth="1px"
                   rounded="lg"
@@ -166,7 +168,11 @@ function ScanQRCodePage(props) {
                     roundedTop="lg"
                     style={{ width: "145px;" }}
                   />
-                </Box>
+                </Box> */}
+                <QRCode
+                  value={`baseurl/dashboard/visitors/visitordetails/${id}`}
+                  style={{ marginRight: 50 }}
+                />
               </Stack>
               <Stack
                 spacing={4}

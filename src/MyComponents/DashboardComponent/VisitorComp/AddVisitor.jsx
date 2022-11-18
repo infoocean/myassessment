@@ -234,8 +234,8 @@ class Addvisitor extends Component {
                         purposetovisit: values.purposetovisit,
                         assets: values.assets,
                       };
-                      console.log(reqdata);
-                      return false;
+                      //console.log(reqdata);
+                      //return false;
                       this.props.visitorregistration(reqdata, (response) => {
                         //console.log(response);
                         //console.log(response.status);

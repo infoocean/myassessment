@@ -34,6 +34,7 @@ import { ImQrcode } from "react-icons/im";
 import { Link } from "react-router-dom";
 import auth_token, { api } from "../../API/APIToken";
 import axios from "axios";
+import moment from "moment";
 
 const SideBarLinkItems = [
   {
@@ -83,8 +84,27 @@ function VisitorDetailsPage(props) {
   useEffect(() => {
     getvisitordet();
   }, []);
-
   //console.log(visitor_det);
+
+  function Checkin(id) {
+    //alert(id);
+    const data = { status: 1, checkindatetime: Date.now() };
+    var config = {
+      method: "patch",
+      url: `${api}editvisitor/${id}`,
+      headers: {
+        token: auth_token,
+      },
+      data: data,
+    };
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   return (
     <>
@@ -117,10 +137,25 @@ function VisitorDetailsPage(props) {
               <div class="row">
                 <div class="col-lg-4">
                   <div class="card mb-4">
-                    <div class="card-body text-center">
-                      <h5 class="my-3">John Smith</h5>
-                      <p class="text-muted mb-1">Full Stack Developer</p>
-                      <p class="text-muted mb-4">Bay Area, San Francisco, CA</p>
+                    <div class="card-body ">
+                      <h5 class="my-3">
+                        Hii,{" "}
+                        {visitor_det && visitor_det[0] && visitor_det[0].name}
+                      </h5>
+                      <p class="text-muted mb-1">Welcome To Our Hotel</p>
+                      <p class="text-muted mb-4">Enjoy & Fun</p>
+                      <Button
+                        colorScheme="teal"
+                        variant="solid"
+                        size="sm"
+                        onClick={() =>
+                          Checkin(
+                            visitor_det && visitor_det[0] && visitor_det[0]._id
+                          )
+                        }
+                      >
+                        Check In Now
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -156,13 +191,28 @@ function VisitorDetailsPage(props) {
                       <hr />
                       <div class="row">
                         <div class="col-sm-3">
-                          <p class="mb-0">Address</p>
+                          <p class="mb-0">Number</p>
                         </div>
                         <div class="col-sm-9">
                           <p class="text-muted mb-0">
                             {visitor_det &&
                               visitor_det[0] &&
-                              visitor_det[0].address}
+                              visitor_det[0].number}
+                          </p>
+                        </div>
+                      </div>
+                      <hr />
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <p class="mb-0">DOB</p>
+                        </div>
+                        <div class="col-sm-9">
+                          <p class="text-muted mb-0">
+                            {moment(
+                              visitor_det &&
+                                visitor_det[0] &&
+                                visitor_det[0].dob
+                            ).format("DD/MM/YYYY")}
                           </p>
                         </div>
                       </div>
@@ -178,46 +228,84 @@ function VisitorDetailsPage(props) {
                               visitor_det[0].age}
                           </p>
                         </div>
-                        <hr />
-                        <div class="row">
-                          <div class="col-sm-3">
-                            <p class="mb-0">purpose to visit</p>
-                          </div>
-                          <div class="col-sm-9">
-                            <p class="text-muted mb-0">
-                              {visitor_det &&
-                                visitor_det[0] &&
-                                visitor_det[0].purposetovisit}
-                            </p>
-                          </div>
+                      </div>
+                      <hr />
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <p class="mb-0">Address</p>
                         </div>
-                        <hr />
-                        <div class="row">
-                          <div class="col-sm-3">
-                            <p class="mb-0">Date</p>
-                          </div>
-                          <div class="col-sm-9">
-                            <p class="text-muted mb-0">
-                              {visitor_det &&
-                                visitor_det[0] &&
-                                visitor_det[0].time}
-                            </p>
-                          </div>
-                        </div>
-                        <hr />
-                        <div class="row">
-                          <div class="col-sm-3">
-                            <p class="mb-0">Time</p>
-                          </div>
-                          <div class="col-sm-9">
-                            <p class="text-muted mb-0">
-                              {visitor_det &&
-                                visitor_det[0] &&
-                                visitor_det[0].time}
-                            </p>
-                          </div>
+                        <div class="col-sm-9">
+                          <p class="text-muted mb-0">
+                            {visitor_det &&
+                              visitor_det[0].address +
+                                " , " +
+                                visitor_det[0].city +
+                                " , " +
+                                visitor_det[0].state +
+                                " , " +
+                                visitor_det[0].country +
+                                " , " +
+                                visitor_det[0].postalcode}
+                          </p>
                         </div>
                       </div>
+                      <hr />
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <p class="mb-0">Check In date time</p>
+                        </div>
+                        <div class="col-sm-9">
+                          <p class="text-muted mb-0">
+                            {moment(
+                              visitor_det &&
+                                visitor_det[0] &&
+                                visitor_det[0].checkindatetime
+                            ).format("DD/MM/YYYY")}
+                          </p>
+                        </div>
+                      </div>
+                      <hr />
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <p class="mb-0">Check out date time</p>
+                        </div>
+                        <div class="col-sm-9">
+                          <p class="text-muted mb-0">
+                            {moment(
+                              visitor_det &&
+                                visitor_det[0] &&
+                                visitor_det[0].checkoutdatetime
+                            ).format("DD/MM/YYYY")}
+                          </p>
+                        </div>
+                      </div>
+                      <hr />
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <p class="mb-0">Purpose to visit</p>
+                        </div>
+                        <div class="col-sm-9">
+                          <p class="text-muted mb-0">
+                            {visitor_det &&
+                              visitor_det[0] &&
+                              visitor_det[0].purposetovisit}
+                          </p>
+                        </div>
+                      </div>
+                      <hr />
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <p class="mb-0">Assets</p>
+                        </div>
+                        <div class="col-sm-9">
+                          <p class="text-muted mb-0">
+                            {visitor_det &&
+                              visitor_det[0] &&
+                              visitor_det[0].assets}
+                          </p>
+                        </div>
+                      </div>
+                      <hr />
                     </div>
                   </div>
                 </div>
@@ -228,25 +316,12 @@ function VisitorDetailsPage(props) {
                     <div class="card-body">
                       <p class="mb-4">
                         <span class="text-primary font-italic me-1">
-                          Generate
+                          <b>Generate</b>
                         </span>
-                        QR Code
+                        QR Code For Detail
                       </p>
                       <Link to={`/dashboard/scanqrcode/${id}`}>
-                        <Button className="btn">Click</Button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="card mb-4 mb-md-0">
-                    <div class="card-body">
-                      <p class="mb-4">
-                        <span class="text-primary font-italic me-1">Edit</span>
-                        Visitor
-                      </p>
-                      <Link to={`/dashboard/visitor/editvisitor/${id}`}>
-                        <Button className="btn">Click</Button>
+                        <Button colorScheme="facebook">Click Now</Button>
                       </Link>
                     </div>
                   </div>
@@ -256,12 +331,28 @@ function VisitorDetailsPage(props) {
                     <div class="card-body">
                       <p class="mb-4">
                         <span class="text-primary font-italic me-1">
-                          Checkout
+                          {" "}
+                          <b>Edit</b>
                         </span>
-                        Visitor
+                        Visitor Here
+                      </p>
+                      <Link to={`/dashboard/visitor/editvisitor/${id}`}>
+                        <Button colorScheme="facebook">Click Now</Button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="card mb-4 mb-md-0">
+                    <div class="card-body">
+                      <p class="mb-4">
+                        <span class="text-primary font-italic me-1">
+                          <b>Checkout</b>
+                        </span>
+                        Visitor Here
                       </p>
                       <Link to={`/dashboard/visitor/checkout/${id}`}>
-                        <Button className="btn">Click</Button>
+                        <Button colorScheme="facebook">Click Now</Button>
                       </Link>
                     </div>
                   </div>
