@@ -35,6 +35,8 @@ import { Link } from "react-router-dom";
 import auth_token, { api } from "../../API/APIToken";
 import axios from "axios";
 import moment from "moment";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SideBarLinkItems = [
   {
@@ -99,7 +101,10 @@ function VisitorDetailsPage(props) {
     };
     axios(config)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
+        //console.log(JSON.stringify(response.data));
+        if (response.status === 200) {
+          toast.success("Visitor Check In Successfully !");
+        }
       })
       .catch(function (error) {
         console.log(error);
@@ -362,6 +367,7 @@ function VisitorDetailsPage(props) {
           </section>
         </Box>
       </Box>
+      <ToastContainer />
     </>
   );
 }
