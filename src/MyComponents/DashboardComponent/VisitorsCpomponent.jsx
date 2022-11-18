@@ -268,7 +268,7 @@ function VisitorsPage() {
                   })}
               </tbody>
             </table>
-            <div style={{ maxWidth: "100%" }}>
+            <div style={{ maxWidth: "100%", marginTop: "20px" }}>
               <>
                 <Search
                   onChange={(e) => setSearchVal(e.target.value)}

@@ -8,8 +8,8 @@ import ScanQRCodePage from "./MyComponents/DashboardComponent/ScanQRCodeComponen
 import Addvisitor from "./MyComponents/DashboardComponent/VisitorComp/AddVisitor";
 import VisitorDetailsPage from "./MyComponents/DashboardComponent/VisitorDetailsComponent";
 import VisitorsPage from "./MyComponents/DashboardComponent/VisitorsCpomponent";
-import Updatevisitor from "./MyComponents/DashboardComponent/VisitorComp/Editcisitor";
 import Checkoutvisitor from "./MyComponents/DashboardComponent/VisitorComp/Checkoutvisitor";
+import Editvisitor from "./MyComponents/DashboardComponent/VisitorComp/Editcisitor";
 
 function App() {
   return (
@@ -34,7 +34,7 @@ function App() {
         <Route
           exact
           path="/dashboard/visitor/editvisitor/:id"
-          component={Updatevisitor}
+          component={Editvisitor}
         />
         <Route
           exact

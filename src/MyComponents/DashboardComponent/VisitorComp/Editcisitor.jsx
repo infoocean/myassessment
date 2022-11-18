@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import {
   IconButton,
   Avatar,
@@ -27,6 +27,7 @@ import {
   Button,
   Textarea,
   Spinner,
+  Heading,
 } from "@chakra-ui/react";
 import {
   FiHome,
@@ -70,212 +71,192 @@ const SideBarLinkItems = [
   },
 ];
 
-class Updatevisitor extends Component {
-  constructor(props) {
-    //console.log(props.match.params.id);
-    super(props);
-    this.state = {
-      showsnipper: false,
-      id: props.match.params.id,
-      data: [],
-    };
-  }
-  async componentDidMount() {
-    let visitordata = await axios.get(`${api}getvisitorbyid/${this.state.id}`, {
+function Editvisitor(props) {
+  const id = props.match.params.id;
+  //console.log(id);
+  const [visitor_det, setvisitors_det] = useState([]);
+  let name;
+  const getvisitordet = () => {
+    var config = {
+      method: "get",
+      url: `${api}getvisitorbyid/${id}`,
       headers: {
         token: auth_token,
       },
-    });
-    //console.log(visitordata.data.data[0]);
-    visitordata = visitordata.data.data[0];
-    this.setState({ data: visitordata });
-  }
+    };
+    axios(config)
+      .then(function (response) {
+        //console.log(response.data);
+        setvisitors_det(response.data.data);
+        name = response.data.data[0].name;
+        console.log(name);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getvisitordet();
+  }, [id]);
 
-  render() {
-    console.log(this.state.data.name);
-    return (
-      <>
-        <Box minH="100vh" style={{ backgroundColor: "#efefef" }}>
-          {/*sidebar data component */}
-          <SidebarContent
-            // onClose={() => onClose}
-            display={{ base: "none", md: "block" }}
-          />
-          <Drawer
-            autoFocus={false}
-            // isOpen={isOpen}
-            placement="left"
-            // onClose={onClose}
-            returnFocusOnClose={false}
-            // onOverlayClick={onClose}
-            size="full"
-          >
-            <DrawerContent>
-              <SidebarContent />
-            </DrawerContent>
-          </Drawer>
-          {/* mobile nav */}
-          <MobileNav />
-          {/*main data component*/}
-          <Box ml={{ base: 0, md: 60 }} p="4">
-            {/*main data part */}
-            <Container mb={5} maxW="6xl">
-              <Flex mb={4}>
-                <Box>
-                  <Link to="/dashboard/visitors">
-                    <Button
-                      type="submit"
-                      bg={"blue.400"}
-                      color={"white"}
-                      _hover={{
-                        bg: "blue.500",
-                      }}
-                      size={"md"}
-                    >
-                      <IoMdArrowRoundBack />
-                      Show Visitor List
-                    </Button>
-                  </Link>
-                </Box>
-                <Spacer />
-              </Flex>
-              <hr />
-              <Flex
-                align={"center"}
-                justify={"center"}
-                // bg={useColorModeValue("gray.50", "gray.800")}
-              >
-                <Stack maxW={"9xl"}>
-                  <Formik
-                    initialValues={{
-                      name: "",
-                      email: "",
-                      age: "",
-                      address: "",
-                      purposetovisit: "",
-                      datetime: "",
+  console.log(visitor_det);
+  //console.log(visitor_det && visitor_det[0] && visitor_det[0].name);
+  return (
+    <>
+      <Box minH="100vh" style={{ backgroundColor: "#efefef" }}>
+        {/*sidebar data component */}
+        <SidebarContent
+          // onClose={() => onClose}
+          display={{ base: "none", md: "block" }}
+        />
+        <Drawer
+          autoFocus={false}
+          // isOpen={isOpen}
+          placement="left"
+          // onClose={onClose}
+          returnFocusOnClose={false}
+          // onOverlayClick={onClose}
+          size="full"
+        >
+          <DrawerContent>
+            <SidebarContent />
+          </DrawerContent>
+        </Drawer>
+        {/* mobile nav */}
+        <MobileNav />
+        {/*main data component*/}
+        <Box ml={{ base: 0, md: 60 }} p="4">
+          {/*main data part */}
+          <Container mb={5} maxW="6xl">
+            <Flex mb={4}>
+              <Box>
+                <Link to="/dashboard/visitors">
+                  <Button
+                    type="submit"
+                    bg={"blue.400"}
+                    color={"white"}
+                    _hover={{
+                      bg: "blue.500",
                     }}
-                    validate={(values) => {
-                      const errors = {};
-
-                      if (!values.name) {
-                        errors.name = " Required";
-                      }
-
-                      if (!values.name) {
-                        errors.email = " Required";
-                      } else if (
-                        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
-                          values.email
-                        )
-                      ) {
-                        errors.email = " Invalid email";
-                      }
-
-                      if (!values.age) {
-                        errors.age = "Required";
-                      }
-
-                      if (!values.address) {
-                        errors.address = "Required";
-                      }
-
-                      if (!values.datetime) {
-                        errors.datetime = "Required";
-                      }
-
-                      if (!values.purposetovisit) {
-                        errors.purposetovisit = "Required";
-                      }
-
-                      return errors;
-                    }}
-                    onSubmit={(values, { setSubmitting, resetForm }) => {
-                      this.setState({ showsnipper: true });
-                      //console.log(values);
-                      const reqdata = {
-                        name: values.name,
-                        email: values.email,
-                        age: Number(values.age),
-                        address: values.address,
-                        purposetovisit: values.purposetovisit,
-                        checkindatetime: values.datetime,
-                      };
-                      // console.log(reqdata);
-                      // return false;
-                      this.props.visitorregistration(reqdata, (response) => {
-                        //console.log(response);
-                        //console.log(response.status);
-                        if (response.status === 200) {
-                          toast.warning("Email allready registred");
-                          this.setState({ showsnipper: false });
-                        } else if (response.status === 201) {
-                          toast.success(" Visitor Registration Successfull !");
-                          this.setState({ showsnipper: false });
-                          resetForm({ values: "" });
-                        }
-                        if (response.status === 500) {
-                          this.setState({ showsnipper: false });
-                          toast.error("server not responding");
-                        }
-                        this.setState({ showsnipper: false });
-                      });
-                      setSubmitting(false);
-                    }}
+                    size={"md"}
                   >
-                    {({
-                      values,
-                      errors,
-                      touched,
-                      handleChange,
-                      handleBlur,
-                      handleSubmit,
-                      isSubmitting,
-                    }) => (
-                      <form onSubmit={handleSubmit}>
-                        <Box
-                          rounded={"lg"}
-                          boxShadow={"lg"}
-                          p={10}
-                          style={{ backgroundColor: "white" }}
-                        >
-                          <HStack>
-                            <Box>
-                              <FormControl id="Name">
-                                <FormLabel>
-                                  Name{" "}
-                                  <Text as={"span"} style={{ color: "red" }}>
-                                    *{" "}
-                                    <span
-                                      style={{
-                                        color: "red",
-                                        fontSize: "13px",
-                                        paddingBottom: "10px",
-                                        fontWeight: "bold",
-                                      }}
-                                    >
-                                      {errors.name &&
-                                        touched.name &&
-                                        errors.name}
-                                    </span>
-                                  </Text>
-                                </FormLabel>
-                                <Input
-                                  type="text"
-                                  name="name"
-                                  value={values.name}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                />
-                              </FormControl>
-                            </Box>
-                            <Box>
-                              <FormControl id="Email">
-                                <FormLabel>
-                                  Email{" "}
-                                  <Text as={"span"} style={{ color: "red" }}>
-                                    *
-                                  </Text>
+                    <IoMdArrowRoundBack />
+                    Show Visitor List
+                  </Button>
+                </Link>
+              </Box>
+              <Spacer />
+            </Flex>
+            <hr />
+            <Stack py={4} textAlign={"center"}>
+              <Heading size={"1xl"}>Update Visitor Form</Heading>
+            </Stack>
+            <Flex
+              align={"center"}
+              justify={"center"}
+              // bg={useColorModeValue("gray.50", "gray.800")}
+            >
+              <Stack maxW={"9xl"}>
+                <Formik
+                  initialValues={{
+                    name: name,
+                    email: "sj2585097@gmail.com",
+                    age: "",
+                    address: "",
+                    purposetovisit: "",
+                    datetime: "",
+                  }}
+                  validate={(values) => {
+                    const errors = {};
+
+                    if (!values.name) {
+                      errors.name = " Required";
+                    }
+
+                    if (!values.name) {
+                      errors.email = " Required";
+                    } else if (
+                      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+                        values.email
+                      )
+                    ) {
+                      errors.email = " Invalid email";
+                    }
+
+                    if (!values.age) {
+                      errors.age = "Required";
+                    }
+
+                    if (!values.address) {
+                      errors.address = "Required";
+                    }
+
+                    if (!values.datetime) {
+                      errors.datetime = "Required";
+                    }
+
+                    if (!values.purposetovisit) {
+                      errors.purposetovisit = "Required";
+                    }
+
+                    return errors;
+                  }}
+                  onSubmit={(values, { setSubmitting, resetForm }) => {
+                    this.setState({ showsnipper: true });
+                    //console.log(values);
+                    const reqdata = {
+                      name: values.name,
+                      email: values.email,
+                      age: Number(values.age),
+                      address: values.address,
+                      purposetovisit: values.purposetovisit,
+                      checkindatetime: values.datetime,
+                    };
+                    console.log(reqdata);
+                    // return false;
+                    // this.props.visitorregistration(reqdata, (response) => {
+                    //   //console.log(response);
+                    //   //console.log(response.status);
+                    //   if (response.status === 200) {
+                    //     toast.warning("Email allready registred");
+                    //     this.setState({ showsnipper: false });
+                    //   } else if (response.status === 201) {
+                    //     toast.success(" Visitor Registration Successfull !");
+                    //     this.setState({ showsnipper: false });
+                    //     resetForm({ values: "" });
+                    //   }
+                    //   if (response.status === 500) {
+                    //     this.setState({ showsnipper: false });
+                    //     toast.error("server not responding");
+                    //   }
+                    //   this.setState({ showsnipper: false });
+                    // });
+                    setSubmitting(false);
+                  }}
+                >
+                  {({
+                    values,
+                    errors,
+                    touched,
+                    handleChange,
+                    handleBlur,
+                    handleSubmit,
+                    isSubmitting,
+                  }) => (
+                    <form onSubmit={handleSubmit}>
+                      <Box
+                        rounded={"lg"}
+                        boxShadow={"lg"}
+                        p={10}
+                        style={{ backgroundColor: "white" }}
+                      >
+                        <HStack>
+                          <Box>
+                            <FormControl id="Name">
+                              <FormLabel>
+                                Name{" "}
+                                <Text as={"span"} style={{ color: "red" }}>
+                                  *{" "}
                                   <span
                                     style={{
                                       color: "red",
@@ -284,144 +265,26 @@ class Updatevisitor extends Component {
                                       fontWeight: "bold",
                                     }}
                                   >
-                                    {errors.email &&
-                                      touched.email &&
-                                      errors.email}
+                                    {errors.name && touched.name && errors.name}
                                   </span>
-                                </FormLabel>
-                                <Input
-                                  type="text"
-                                  name="email"
-                                  value={values.email}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                />
-                              </FormControl>
-                            </Box>
-                            <Box>
-                              <FormControl id="age">
-                                <FormLabel>
-                                  Age{" "}
-                                  <Text as={"span"} style={{ color: "red" }}>
-                                    *{" "}
-                                    <span
-                                      style={{
-                                        color: "red",
-                                        fontSize: "13px",
-                                        paddingBottom: "10px",
-                                        fontWeight: "bold",
-                                      }}
-                                    >
-                                      {errors.age && touched.age && errors.age}
-                                    </span>
-                                  </Text>
-                                </FormLabel>
-                                <Input
-                                  type="text"
-                                  name="age"
-                                  value={values.age}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                />
-                              </FormControl>
-                            </Box>
-                            <Box>
-                              <FormControl id="address">
-                                <FormLabel>
-                                  Address{" "}
-                                  <Text as={"span"} style={{ color: "red" }}>
-                                    *
-                                    <span
-                                      style={{
-                                        color: "red",
-                                        fontSize: "13px",
-                                        paddingBottom: "10px",
-                                        fontWeight: "bold",
-                                      }}
-                                    >
-                                      {errors.address &&
-                                        touched.address &&
-                                        errors.address}
-                                    </span>
-                                  </Text>
-                                </FormLabel>
-                                <Input
-                                  type="text"
-                                  name="address"
-                                  value={values.address}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                />
-                              </FormControl>
-                            </Box>
-                          </HStack>
-                          <HStack mt={6}>
-                            <Box>
-                              <FormControl id="firstName">
-                                <FormLabel>
-                                  Date,Time{" "}
-                                  <Text as={"span"} style={{ color: "red" }}>
-                                    *
-                                    <span
-                                      style={{
-                                        color: "red",
-                                        fontSize: "13px",
-                                        paddingBottom: "10px",
-                                        fontWeight: "bold",
-                                      }}
-                                    >
-                                      {errors.datetime &&
-                                        touched.datetime &&
-                                        errors.datetime}
-                                    </span>
-                                  </Text>
-                                </FormLabel>
-                                <Input
-                                  type="datetime-local"
-                                  name="datetime"
-                                  value={values.datetime}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                />
-                              </FormControl>
-                            </Box>
-                            {/* <Box>
-                            <FormControl id="firstName">
-                              <FormLabel>Date of birth </FormLabel>
-                              <Input type="date" />
+                                </Text>
+                              </FormLabel>
+                              <Input
+                                type="text"
+                                name="name"
+                                value={values.name}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
                             </FormControl>
-                          </Box> */}
-                            <Box width={"250px"}>
-                              <FormControl id="firstName">
-                                <FormLabel>Select Id </FormLabel>
-                                <Select>
-                                  <option value="option1">Aadhar Card</option>
-                                  <option value="option2">Pan card </option>
-                                  <option value="option3">
-                                    Votar Id Card{" "}
-                                  </option>
-                                  <option value="option3">Passport </option>
-                                </Select>
-                              </FormControl>
-                            </Box>
-                            <Box>
-                              <FormControl id="firstName">
-                                <FormLabel>Id Number</FormLabel>
-                                <Input type="text" />
-                              </FormControl>
-                            </Box>
-                            {/* <Box>
-                            <FormControl id="firstName">
-                              <FormLabel>Visitor Photo</FormLabel>
-                              <Input type="file" />
-                            </FormControl>
-                          </Box> */}
-                          </HStack>
-                          <FormControl id="purposetovisit" mt={6}>
-                            <FormLabel>
-                              Purpose To Visit{" "}
-                              <Text as={"span"} style={{ color: "red" }}>
-                                *
+                          </Box>
+                          <Box>
+                            <FormControl id="Email">
+                              <FormLabel>
+                                Email{" "}
+                                <Text as={"span"} style={{ color: "red" }}>
+                                  *
+                                </Text>
                                 <span
                                   style={{
                                     color: "red",
@@ -430,66 +293,205 @@ class Updatevisitor extends Component {
                                     fontWeight: "bold",
                                   }}
                                 >
-                                  {errors.purposetovisit &&
-                                    touched.purposetovisit &&
-                                    errors.purposetovisit}
+                                  {errors.email &&
+                                    touched.email &&
+                                    errors.email}
                                 </span>
-                              </Text>
-                            </FormLabel>
-                            <Textarea
-                              placeholder="Here is a sample placeholder"
-                              size="sm"
-                              rows={2}
-                              name="purposetovisit"
-                              value={values.purposetovisit}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                            />
-                          </FormControl>
-                          <Stack pt={5}>
-                            <Button
-                              loadingText="Submitting"
-                              size="md"
-                              bg={"blue.400"}
-                              color={"white"}
-                              _hover={{
-                                bg: "blue.500",
-                              }}
-                              type="submit"
-                              disabled={isSubmitting}
-                            >
-                              Update Visitor
-                              {this.state.showsnipper === true ? (
-                                <Spinner
-                                  color="white.500"
-                                  size="sm"
-                                  style={{ marginLeft: "10px" }}
-                                />
-                              ) : (
-                                ""
-                              )}
-                            </Button>
-                          </Stack>
-                        </Box>
-                      </form>
-                    )}
-                  </Formik>
-                </Stack>
-              </Flex>
-            </Container>
-          </Box>
+                              </FormLabel>
+                              <Input
+                                type="text"
+                                name="email"
+                                value={values.email}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                            </FormControl>
+                          </Box>
+                          <Box>
+                            <FormControl id="age">
+                              <FormLabel>
+                                Age{" "}
+                                <Text as={"span"} style={{ color: "red" }}>
+                                  *{" "}
+                                  <span
+                                    style={{
+                                      color: "red",
+                                      fontSize: "13px",
+                                      paddingBottom: "10px",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {errors.age && touched.age && errors.age}
+                                  </span>
+                                </Text>
+                              </FormLabel>
+                              <Input
+                                type="text"
+                                name="age"
+                                value={values.age}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                            </FormControl>
+                          </Box>
+                          <Box>
+                            <FormControl id="address">
+                              <FormLabel>
+                                Address{" "}
+                                <Text as={"span"} style={{ color: "red" }}>
+                                  *
+                                  <span
+                                    style={{
+                                      color: "red",
+                                      fontSize: "13px",
+                                      paddingBottom: "10px",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {errors.address &&
+                                      touched.address &&
+                                      errors.address}
+                                  </span>
+                                </Text>
+                              </FormLabel>
+                              <Input
+                                type="text"
+                                name="address"
+                                value={values.address}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                            </FormControl>
+                          </Box>
+                        </HStack>
+                        <HStack mt={6}>
+                          <Box>
+                            <FormControl id="firstName">
+                              <FormLabel>
+                                Date,Time{" "}
+                                <Text as={"span"} style={{ color: "red" }}>
+                                  *
+                                  <span
+                                    style={{
+                                      color: "red",
+                                      fontSize: "13px",
+                                      paddingBottom: "10px",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {errors.datetime &&
+                                      touched.datetime &&
+                                      errors.datetime}
+                                  </span>
+                                </Text>
+                              </FormLabel>
+                              <Input
+                                type="datetime-local"
+                                name="datetime"
+                                value={values.datetime}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                            </FormControl>
+                          </Box>
+                          {/* <Box>
+                            <FormControl id="firstName">
+                              <FormLabel>Date of birth </FormLabel>
+                              <Input type="date" />
+                            </FormControl>
+                          </Box> */}
+                          <Box width={"250px"}>
+                            <FormControl id="firstName">
+                              <FormLabel>Select Id </FormLabel>
+                              <Select>
+                                <option value="option1">Aadhar Card</option>
+                                <option value="option2">Pan card </option>
+                                <option value="option3">Votar Id Card </option>
+                                <option value="option3">Passport </option>
+                              </Select>
+                            </FormControl>
+                          </Box>
+                          <Box>
+                            <FormControl id="firstName">
+                              <FormLabel>Id Number</FormLabel>
+                              <Input type="text" />
+                            </FormControl>
+                          </Box>
+                          {/* <Box>
+                            <FormControl id="firstName">
+                              <FormLabel>Visitor Photo</FormLabel>
+                              <Input type="file" />
+                            </FormControl>
+                          </Box> */}
+                        </HStack>
+                        <FormControl id="purposetovisit" mt={6}>
+                          <FormLabel>
+                            Purpose To Visit{" "}
+                            <Text as={"span"} style={{ color: "red" }}>
+                              *
+                              <span
+                                style={{
+                                  color: "red",
+                                  fontSize: "13px",
+                                  paddingBottom: "10px",
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {errors.purposetovisit &&
+                                  touched.purposetovisit &&
+                                  errors.purposetovisit}
+                              </span>
+                            </Text>
+                          </FormLabel>
+                          <Textarea
+                            placeholder="Here is a sample placeholder"
+                            size="sm"
+                            rows={2}
+                            name="purposetovisit"
+                            value={values.purposetovisit}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                          />
+                        </FormControl>
+                        <Stack pt={5}>
+                          <Button
+                            loadingText="Submitting"
+                            size="md"
+                            bg={"blue.400"}
+                            color={"white"}
+                            _hover={{
+                              bg: "blue.500",
+                            }}
+                            type="submit"
+                            disabled={isSubmitting}
+                          >
+                            Update Visitor
+                            {/* {this.state.showsnipper === true ? (
+                              <Spinner
+                                color="white.500"
+                                size="sm"
+                                style={{ marginLeft: "10px" }}
+                              />
+                            ) : (
+                              ""
+                            )} */}
+                          </Button>
+                        </Stack>
+                      </Box>
+                    </form>
+                  )}
+                </Formik>
+              </Stack>
+            </Flex>
+          </Container>
         </Box>
-        <ToastContainer />
-      </>
-    );
-  }
+      </Box>
+      <ToastContainer />
+    </>
+  );
 }
 
-const mapDispatchToProps = (store) => {
-  var registerData = store;
-  return registerData;
-};
-export default connect(mapDispatchToProps, { updatevisitor })(Updatevisitor);
+export default Editvisitor;
 
 const SidebarContent = () => {
   return (
