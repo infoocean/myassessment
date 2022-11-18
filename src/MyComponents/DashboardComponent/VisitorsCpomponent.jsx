@@ -44,6 +44,11 @@ import axios from "axios";
 import moment from "moment";
 import MaterialTable from "material-table";
 import { ThemeProvider, createTheme } from "@mui/material";
+import { Table } from "antd";
+import "antd/dist/reset.css";
+import { useTableSearch } from "./useTableSearch";
+import { userColumns } from "./columns";
+import Search from "antd/es/transfer/search";
 const getvisitorsendpoint = "getvisitors";
 
 const SideBarLinkItems = [
@@ -69,66 +74,18 @@ const SideBarLinkItems = [
   },
 ];
 
-const columns = [
-  { title: "Name", field: "Name" },
-  { title: "Email", field: "authors" },
-  { title: "Age", field: "num_pages" },
-  { title: "Address", field: "num_pages" },
-  { title: "visit", field: "num_pages" },
-  { title: "Chk-In D-T", field: "num_pages" },
-  { title: "Chk-Out D-T", field: "num_pages" },
-  { title: "Status", field: "rating" },
-];
+const fetchUsers = async () => {
+  const { data } = await axios.get(
+    "https://jsonplaceholder.typicode.com/users/"
+  );
+  return { data };
+};
 
-const datas = [
-  {
-    id: 1,
-    title: "The Hunger Games",
-    authors: "Suzanne Collins",
-    num_pages: 374,
-    rating: 4.33,
-  },
-  {
-    id: 2,
-    title: "Harry Potter and the Order of the Phoenix",
-    authors: "J.K. Rowling",
-    num_pages: 870,
-    rating: 4.48,
-  },
-  {
-    id: 3,
-    title: "To Kill a Mockingbird",
-    authors: "Harper Lee",
-    num_pages: 324,
-    rating: 4.27,
-  },
-  {
-    id: 4,
-    title: "Pride and Prejudice",
-    authors: "Jane Austen",
-    num_pages: 279,
-    rating: 4.25,
-  },
-  {
-    id: 5,
-    title: "Twilight",
-    authors: "Stephenie Meyer",
-    num_pages: 498,
-    rating: 3.58,
-  },
-  {
-    id: 6,
-    title: "The Book Thief",
-    authors: "Markus Zusak",
-    num_pages: 552,
-    rating: 4.36,
-  },
-];
+console.log(fetchUsers);
 
 function VisitorsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [totalrecentvisitors, settotalrecentvisitors] = useState(0);
-  const defaultMaterialTheme = createTheme();
   const getvisitorsdata = () => {
     var config = {
       method: "get",
@@ -152,13 +109,11 @@ function VisitorsPage() {
 
   console.log(totalrecentvisitors);
 
-  // const dt = totalrecentvisitors.map(getFullName);
-
-  // function getFullName(items) {
-  //   return [items.firstname, items.lastname];
-  // }
-
-  // console.log(dt);
+  const [searchVal, setSearchVal] = useState(null);
+  const { filteredData, loading } = useTableSearch({
+    searchVal,
+    retrieve: fetchUsers,
+  });
 
   return (
     <>
@@ -315,16 +270,28 @@ function VisitorsPage() {
               </tbody>
             </table> */}
             <div style={{ maxWidth: "100%" }}>
-              <ThemeProvider theme={defaultMaterialTheme}>
-                <MaterialTable
-                  columns={columns}
-                  data={datas}
-                  // other props
-                  options={{
-                    search: true,
+              <>
+                <Search
+                  onChange={(e) => setSearchVal(e.target.value)}
+                  placeholder="Search"
+                  enterButton
+                  style={{
+                    position: "sticky",
+                    top: "0",
+                    left: "0",
+                    width: "200px",
+                    marginTop: "2vh",
                   }}
                 />
-              </ThemeProvider>
+                <br /> <br />
+                <Table
+                  rowKey="name"
+                  dataSource={filteredData}
+                  columns={userColumns}
+                  loading={loading}
+                  pagination={false}
+                />
+              </>
             </div>
           </div>
         </Box>
