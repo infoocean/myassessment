@@ -80,8 +80,7 @@ const fetchUsers = async () => {
   );
   return { data };
 };
-
-console.log(fetchUsers);
+//console.log(fetchUsers);
 
 function VisitorsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -141,7 +140,7 @@ function VisitorsPage() {
         {/*main data component*/}
         <Box ml={{ base: 0, md: 60 }} p="4">
           {/*main data part */}
-          {/* <Container mb={5} maxW="6xl">
+          <Container mb={5} maxW="6xl">
             <Flex mb={4}>
               <Spacer />
               <Box>
@@ -189,9 +188,9 @@ function VisitorsPage() {
                 </HStack>
               </div>
             </div>
-          </Container> */}
+          </Container>
           <div>
-            {/* <table className="table align-middle mb-0 bg-white">
+            <table className="table align-middle mb-0 bg-white">
               <thead className="bg-light">
                 <tr>
                   <th>Name</th>
@@ -268,7 +267,7 @@ function VisitorsPage() {
                     );
                   })}
               </tbody>
-            </table> */}
+            </table>
             <div style={{ maxWidth: "100%" }}>
               <>
                 <Search

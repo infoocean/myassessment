@@ -111,6 +111,29 @@ function VisitorDetailsPage(props) {
       });
   }
 
+  function Checkout(id) {
+    //alert(id);
+    const data = { status: 0, checkindatetime: Date.now() };
+    var config = {
+      method: "patch",
+      url: `${api}editvisitor/${id}`,
+      headers: {
+        token: auth_token,
+      },
+      data: data,
+    };
+    axios(config)
+      .then(function (response) {
+        //console.log(JSON.stringify(response.data));
+        if (response.status === 202) {
+          toast.success("Visitor Check Out Successfully !");
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   return (
     <>
       <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
@@ -367,9 +390,18 @@ function VisitorDetailsPage(props) {
                         </span>
                         Visitor Here
                       </p>
-                      <Link to={`/dashboard/visitor/checkout/${id}`}>
-                        <Button colorScheme="facebook">Click Now</Button>
-                      </Link>
+                      {/* <Link to={`/dashboard/visitor/checkout/${id}`}> */}
+                      <Button
+                        colorScheme="facebook"
+                        onClick={() =>
+                          Checkout(
+                            visitor_det && visitor_det[0] && visitor_det[0]._id
+                          )
+                        }
+                      >
+                        Click Now
+                      </Button>
+                      {/* </Link> */}
                     </div>
                   </div>
                 </div>

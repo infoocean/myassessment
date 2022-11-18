@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   IconButton,
   Avatar,
@@ -32,6 +32,8 @@ import { IoIosPeople } from "react-icons/io";
 import { ImQrcode } from "react-icons/im";
 import { Link } from "react-router-dom";
 import Homepage from "./HomePage";
+import axios from "axios";
+import auth_token, { api } from "../../API/APIToken";
 
 const SideBarLinkItems = [
   {
@@ -56,7 +58,33 @@ const SideBarLinkItems = [
   },
 ];
 
+const getrecepoinistendpoint = "getreceptionist";
+
 export default function Dashboard() {
+  const getrecepionist = () => {
+    var config = {
+      method: "get",
+      url: `${api}${getrecepoinistendpoint}`,
+      headers: {
+        //token: auth_token,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      Credential: "include",
+    };
+    axios(config)
+      .then(function (response) {
+        console.log(response.data);
+        //settotalrecentvisitors(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getrecepionist();
+  }, []);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>

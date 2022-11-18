@@ -76,6 +76,8 @@ class LoginComponent extends Component {
                     };
                     this.props.login(reqdata, (response) => {
                       if (response.status === 200) {
+                        //console.log(response.data.token);
+                        //return false;
                         toast.success("Login Successfull !");
                         resetForm({ values: "" });
                         this.setState({ showsnipper: false });
@@ -163,7 +165,7 @@ class LoginComponent extends Component {
                           </InputRightElement>
                         </InputGroup>
                       </FormControl>
-                      <Stack h={2}> 
+                      <Stack h={2}>
                         <span
                           style={{
                             color: "red",
