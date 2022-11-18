@@ -102,7 +102,7 @@ function VisitorDetailsPage(props) {
     axios(config)
       .then(function (response) {
         //console.log(JSON.stringify(response.data));
-        if (response.status === 200) {
+        if (response.status === 202) {
           toast.success("Visitor Check In Successfully !");
         }
       })
@@ -149,18 +149,29 @@ function VisitorDetailsPage(props) {
                       </h5>
                       <p class="text-muted mb-1">Welcome To Our Hotel</p>
                       <p class="text-muted mb-4">Enjoy & Fun</p>
-                      <Button
-                        colorScheme="teal"
-                        variant="solid"
-                        size="sm"
-                        onClick={() =>
-                          Checkin(
-                            visitor_det && visitor_det[0] && visitor_det[0]._id
-                          )
-                        }
-                      >
-                        Check In Now
-                      </Button>
+
+                      {visitor_det &&
+                      visitor_det[0] &&
+                      visitor_det[0].status === 0 ? (
+                        <Button
+                          colorScheme="teal"
+                          variant="solid"
+                          size="sm"
+                          onClick={() =>
+                            Checkin(
+                              visitor_det &&
+                                visitor_det[0] &&
+                                visitor_det[0]._id
+                            )
+                          }
+                        >
+                          Check In Now
+                        </Button>
+                      ) : (
+                        <Button colorScheme="teal" variant="solid" size="sm">
+                          Check Out Now
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </div>
