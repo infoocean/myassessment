@@ -14,7 +14,6 @@ import {
   Spacer,
   InputGroup,
   InputRightElement,
-  Select,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
@@ -26,6 +25,7 @@ import "react-phone-input-2/lib/style.css";
 import { register } from "../../Redux/Actions/useractions";
 import { connect } from "react-redux";
 import { woocemmerceapi } from "../../API/APIToken";
+import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 
 class RegistrationComponent extends Component {
   constructor(props) {
@@ -42,47 +42,44 @@ class RegistrationComponent extends Component {
       number: "",
       number_val: "",
       country_code: "",
-      counrtries: "",
-      counrtriesbystates: "",
-      country: "",
-      mystate: "",
+      // counrtries: "",
+      // counrtriesbystates: "",
+      // country: "",
+      // mystate: "",
     };
-    this.handlecountryChange = this.handlecountryChange.bind(this);
-    this.handlestateChange = this.handlestateChange.bind(this);
+    // this.handlecountryChange = this.handlecountryChange.bind(this);
+    // this.handlestateChange = this.handlestateChange.bind(this);
   }
   handleNumberChange = (value, data, event, formattedValue) => {
     this.setState({ country_code: data.dialCode });
     this.setState({ number_val: value.slice(data.dialCode.length) });
   };
-
-  async componentDidMount() {
-    try {
-      let counrtries = await woocemmerceapi.get("data/countries", {});
-      //console.log(counrtries);
-      this.setState({ counrtries: counrtries.data });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async handlecountryChange(event) {
-    console.log(event.target.value);
-    this.setState({ country: event.target.value });
-    try {
-      let counrtriesstates = await woocemmerceapi.get(
-        `data/countries/${event.target.value}`,
-        {}
-      );
-      //console.log(counrtriesstates.data.states);
-      this.setState({ counrtriesbystates: counrtriesstates.data.states });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  handlestateChange(event) {
-    this.setState({ mystate: event.target.value });
-  }
+  // async componentDidMount() {
+  //   try {
+  //     let counrtries = await woocemmerceapi.get("data/countries", {});
+  //     //console.log(counrtries);
+  //     this.setState({ counrtries: counrtries.data });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+  // async handlecountryChange(event) {
+  //   console.log(event.target.value);
+  //   this.setState({ country: event.target.value });
+  //   try {
+  //     let counrtriesstates = await woocemmerceapi.get(
+  //       `data/countries/${event.target.value}`,
+  //       {}
+  //     );
+  //     //console.log(counrtriesstates.data.states);
+  //     this.setState({ counrtriesbystates: counrtriesstates.data.states });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+  // handlestateChange(event) {
+  //   this.setState({ mystate: event.target.value });
+  // }
 
   render() {
     return (
@@ -108,7 +105,7 @@ class RegistrationComponent extends Component {
                     address1: "",
                     address2: "",
                     country: "",
-                    mystate: "",
+                    state: "",
                     city: "",
                     postalcode: "",
                   }}
@@ -245,13 +242,13 @@ class RegistrationComponent extends Component {
                       errors.city = "City feild is required  **";
                     }
 
-                    if (this.state.mystate) {
+                    if (!values.state) {
                       errors.state = "State feild is required  **";
                     }
 
-                    // if (!this.state.country) {
-                    //   errors.country = "country feild is required  **";
-                    // }
+                    if (!values.country) {
+                      errors.country = "country feild is required  **";
+                    }
 
                     if (!values.postalcode) {
                       errors.postalcode = "Postal code feild is required  **";
@@ -281,12 +278,12 @@ class RegistrationComponent extends Component {
                       address1: values.address1,
                       address2: values.address2,
                       city: values.city,
-                      state: this.state.mystate,
-                      country: this.state.country,
+                      state: values.state,
+                      country: values.country,
                       postalcode: values.postalcode,
                     };
-                    // console.log(reqdata);
-                    // return false;
+                    console.log(reqdata);
+                    return false;
                     this.props.register(reqdata, (response) => {
                       //console.log(response);
                       //console.log(response.status);
@@ -421,7 +418,6 @@ class RegistrationComponent extends Component {
                             errors.username}
                         </span>
                       </Stack>
-
                       <FormControl id="email" mt={5}>
                         <FormLabel mb={0} pb={0}>
                           Email address{" "}
@@ -449,7 +445,7 @@ class RegistrationComponent extends Component {
                           {errors.email && touched.email && errors.email}
                         </span>
                       </Stack>
-                      <FormControl id="numbers" mt={5}>
+                      <FormControl id="number" mt={5}>
                         <FormLabel mb={0} pb={0}>
                           Phone Number{" "}
                           <Text as={"span"} style={{ color: "red" }}>
@@ -457,6 +453,7 @@ class RegistrationComponent extends Component {
                           </Text>
                         </FormLabel>
                         <PhoneInput
+                          style={{ width: "397px" }}
                           country={"us"}
                           value={this.state.number}
                           onChange={this.handleNumberChange}
@@ -716,8 +713,6 @@ class RegistrationComponent extends Component {
                           value={values.address1}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          size="sm"
-                          rows="2"
                         />
                       </FormControl>
                       <Stack h={2}>
@@ -742,8 +737,6 @@ class RegistrationComponent extends Component {
                           value={values.address2}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          size="sm"
-                          rows="2"
                         />
                       </FormControl>
                       <FormControl id="country" mt={5}>
@@ -753,17 +746,21 @@ class RegistrationComponent extends Component {
                             *
                           </Text>
                         </FormLabel>
-                        <Select
-                          value={this.state.country}
-                          onChange={this.handlecountryChange}
-                        >
-                          {this.state.counrtries &&
-                            this.state.counrtries.map((data, key) => {
-                              return (
-                                <option value={data.code}>{data.name}</option>
-                              );
-                            })}
-                        </Select>
+                        <CountryDropdown
+                          name="country"
+                          defaultOptionLabel="Select a country"
+                          value={values.country}
+                          onChange={(_, e) => handleChange(e)}
+                          onBlur={handleBlur}
+                          style={{
+                            width: "400px",
+                            height: "42px",
+                            borderRadius: "4px",
+                            border: "0.5px solid #d0dfe3",
+                          }}
+                        />
+                      </FormControl>
+                      <Stack h={2}>
                         <span
                           style={{
                             color: "red",
@@ -774,7 +771,7 @@ class RegistrationComponent extends Component {
                         >
                           {errors.country && touched.country && errors.country}
                         </span>
-                      </FormControl>
+                      </Stack>
                       <FormControl id="state" mt={5}>
                         <FormLabel mb={0} pb={0}>
                           State{" "}
@@ -782,19 +779,23 @@ class RegistrationComponent extends Component {
                             *
                           </Text>
                         </FormLabel>
-                        <Select
-                          value={this.state.country}
-                          onChange={this.handlestateChange}
-                        >
-                          {this.state.counrtriesbystates &&
-                            this.state.counrtriesbystates.map((stdata, key) => {
-                              return (
-                                <option value={stdata.code}>
-                                  {stdata.name}
-                                </option>
-                              );
-                            })}
-                        </Select>
+                        <RegionDropdown
+                          name="state"
+                          defaultOptionLabel="select a state"
+                          blankOptionLabel="Select a state"
+                          country={values.country}
+                          value={values.state}
+                          onChange={(_, e) => handleChange(e)}
+                          onBlur={handleBlur}
+                          style={{
+                            width: "400px",
+                            height: "42px",
+                            borderRadius: "4px",
+                            border: "0.5px solid #d0dfe3",
+                          }}
+                        />
+                      </FormControl>
+                      <Stack h={2}>
                         <span
                           style={{
                             color: "red",
@@ -803,9 +804,9 @@ class RegistrationComponent extends Component {
                             fontWeight: "bold",
                           }}
                         >
-                          {errors.mystate && touched.mystate && errors.mystate}
+                          {errors.state && touched.state && errors.state}
                         </span>
-                      </FormControl>
+                      </Stack>
                       <FormControl id="city" mt={5}>
                         <FormLabel mb={0} pb={0}>
                           City{" "}
