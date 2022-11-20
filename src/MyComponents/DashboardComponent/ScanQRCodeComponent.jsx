@@ -170,7 +170,7 @@ function ScanQRCodePage(props) {
                   />
                 </Box> */}
                 <QRCode
-                  value={`${api}visitors/visitordetails/${id}`}
+                  value={`${api}dashboard/visitors/visitordetails/${id}`}
                   style={{ marginRight: 50 }}
                 />
               </Stack>
