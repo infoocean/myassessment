@@ -104,6 +104,7 @@ function VisitorDetailsPage(props) {
         //console.log(JSON.stringify(response.data));
         if (response.status === 202) {
           toast.success("Visitor Check In Successfully !");
+          getvisitordet();
         }
       })
       .catch(function (error) {
@@ -113,7 +114,7 @@ function VisitorDetailsPage(props) {
 
   function Checkout(id) {
     //alert(id);
-    const data = { status: 0, checkindatetime: Date.now() };
+    const data = { status: 0, checkoutdatetime: Date.now() };
     var config = {
       method: "patch",
       url: `${api}editvisitor/${id}`,
@@ -127,6 +128,7 @@ function VisitorDetailsPage(props) {
         //console.log(JSON.stringify(response.data));
         if (response.status === 202) {
           toast.success("Visitor Check Out Successfully !");
+          getvisitordet();
         }
       })
       .catch(function (error) {
@@ -191,7 +193,18 @@ function VisitorDetailsPage(props) {
                           Check In Now
                         </Button>
                       ) : (
-                        <Button colorScheme="teal" variant="solid" size="sm">
+                        <Button
+                          colorScheme="teal"
+                          variant="solid"
+                          size="sm"
+                          onClick={() =>
+                            Checkout(
+                              visitor_det &&
+                                visitor_det[0] &&
+                                visitor_det[0]._id
+                            )
+                          }
+                        >
                           Check Out Now
                         </Button>
                       )}
@@ -299,7 +312,7 @@ function VisitorDetailsPage(props) {
                               visitor_det &&
                                 visitor_det[0] &&
                                 visitor_det[0].checkindatetime
-                            ).format("DD/MM/YYYY")}
+                            ).format("DD/MM/YYYY, hh:mm")}
                           </p>
                         </div>
                       </div>
@@ -314,7 +327,7 @@ function VisitorDetailsPage(props) {
                               visitor_det &&
                                 visitor_det[0] &&
                                 visitor_det[0].checkoutdatetime
-                            ).format("DD/MM/YYYY")}
+                            ).format("DD/MM/YYYY, hh:mm")}
                           </p>
                         </div>
                       </div>

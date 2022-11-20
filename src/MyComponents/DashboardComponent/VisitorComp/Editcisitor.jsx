@@ -41,8 +41,10 @@ import { IoIosPeople, IoMdArrowRoundBack } from "react-icons/io";
 import { ImQrcode } from "react-icons/im";
 import { Link } from "react-router-dom";
 import { Formik } from "formik";
-import { updatevisitor } from "../../../Redux/Actions/useractions";
-import { connect } from "react-redux";
+import moment from "moment";
+import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
+//import { updatevisitor } from "../../../Redux/Actions/useractions";
+//import { connect } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
@@ -75,7 +77,7 @@ function Editvisitor(props) {
   const id = props.match.params.id;
   //console.log(id);
   const [visitor_det, setvisitors_det] = useState([]);
-  let name;
+  const [showsnipper, setshowsnipper] = useState(false);
   const getvisitordet = () => {
     var config = {
       method: "get",
@@ -88,8 +90,6 @@ function Editvisitor(props) {
       .then(function (response) {
         //console.log(response.data);
         setvisitors_det(response.data.data);
-        name = response.data.data[0].name;
-        console.log(name);
       })
       .catch(function (error) {
         console.log(error);
@@ -98,9 +98,26 @@ function Editvisitor(props) {
   useEffect(() => {
     getvisitordet();
   }, [id]);
-
-  console.log(visitor_det);
+  //console.log(visitor_det);
   //console.log(visitor_det && visitor_det[0] && visitor_det[0].name);
+
+  const data = {
+    name: visitor_det && visitor_det[0] && visitor_det[0].name,
+    email: visitor_det && visitor_det[0] && visitor_det[0].email,
+    number: visitor_det && visitor_det[0] && visitor_det[0].number,
+    dob: visitor_det && visitor_det[0] && visitor_det[0].dob,
+    age: visitor_det && visitor_det[0] && visitor_det[0].age,
+    address: visitor_det && visitor_det[0] && visitor_det[0].address,
+    country: visitor_det && visitor_det[0] && visitor_det[0].country,
+    state: visitor_det && visitor_det[0] && visitor_det[0].state,
+    city: visitor_det && visitor_det[0] && visitor_det[0].city,
+    postalcode: visitor_det && visitor_det[0] && visitor_det[0].postalcode,
+    datetime: visitor_det && visitor_det[0] && visitor_det[0].datetime,
+    purposetovisit:
+      visitor_det && visitor_det[0] && visitor_det[0].purposetovisit,
+    assets: visitor_det && visitor_det[0] && visitor_det[0].assets,
+  };
+
   return (
     <>
       <Box minH="100vh" style={{ backgroundColor: "#efefef" }}>
@@ -158,22 +175,14 @@ function Editvisitor(props) {
             >
               <Stack maxW={"9xl"}>
                 <Formik
-                  initialValues={{
-                    name: name,
-                    email: "sj2585097@gmail.com",
-                    age: "",
-                    address: "",
-                    purposetovisit: "",
-                    datetime: "",
-                  }}
+                  enableReinitialize={true}
+                  initialValues={data}
                   validate={(values) => {
                     const errors = {};
-
                     if (!values.name) {
                       errors.name = " Required";
                     }
-
-                    if (!values.name) {
+                    if (!values.email) {
                       errors.email = " Required";
                     } else if (
                       !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
@@ -181,6 +190,14 @@ function Editvisitor(props) {
                       )
                     ) {
                       errors.email = " Invalid email";
+                    }
+
+                    if (!values.number) {
+                      errors.number = " Required";
+                    }
+
+                    if (!values.dob) {
+                      errors.dob = " Required";
                     }
 
                     if (!values.age) {
@@ -191,6 +208,22 @@ function Editvisitor(props) {
                       errors.address = "Required";
                     }
 
+                    if (!values.country) {
+                      errors.country = "Required";
+                    }
+
+                    if (!values.state) {
+                      errors.state = "Required";
+                    }
+
+                    if (!values.city) {
+                      errors.city = "Required";
+                    }
+
+                    if (!values.postalcode) {
+                      errors.postalcode = "Required";
+                    }
+
                     if (!values.datetime) {
                       errors.datetime = "Required";
                     }
@@ -199,37 +232,59 @@ function Editvisitor(props) {
                       errors.purposetovisit = "Required";
                     }
 
+                    if (!values.assets) {
+                      errors.assets = "Required";
+                    }
+
                     return errors;
                   }}
                   onSubmit={(values, { setSubmitting, resetForm }) => {
-                    this.setState({ showsnipper: true });
+                    setshowsnipper(true);
                     //console.log(values);
                     const reqdata = {
                       name: values.name,
                       email: values.email,
+                      number: values.number,
+                      dob: values.dob,
                       age: Number(values.age),
                       address: values.address,
+                      country: values.country,
+                      state: values.state,
+                      city: values.city,
+                      postalcode: values.postalcode,
+                      datetime: values.datetime,
                       purposetovisit: values.purposetovisit,
-                      checkindatetime: values.datetime,
+                      assets: values.assets,
                     };
-                    console.log(reqdata);
-                    // return false;
+                    //console.log(reqdata);
+                    //return false;
+                    axios({
+                      method: "post",
+                      url: `${api}editvisitor/${id}`,
+                      data: reqdata,
+                      headers: {
+                        token: auth_token,
+                      },
+                    })
+                      .then(function (response) {
+                        console.log(response);
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                      });
+
                     // this.props.visitorregistration(reqdata, (response) => {
                     //   //console.log(response);
                     //   //console.log(response.status);
                     //   if (response.status === 200) {
-                    //     toast.warning("Email allready registred");
-                    //     this.setState({ showsnipper: false });
-                    //   } else if (response.status === 201) {
                     //     toast.success(" Visitor Registration Successfull !");
-                    //     this.setState({ showsnipper: false });
+                    //     setshowsnipper(false);
                     //     resetForm({ values: "" });
-                    //   }
-                    //   if (response.status === 500) {
-                    //     this.setState({ showsnipper: false });
+                    //   } else if (response.status === 500) {
+                    //     setshowsnipper(false);
                     //     toast.error("server not responding");
                     //   }
-                    //   this.setState({ showsnipper: false });
+                    //   setshowsnipper(false);
                     // });
                     setSubmitting(false);
                   }}
@@ -308,6 +363,65 @@ function Editvisitor(props) {
                             </FormControl>
                           </Box>
                           <Box>
+                            <FormControl id="number">
+                              <FormLabel>
+                                Number{" "}
+                                <Text as={"span"} style={{ color: "red" }}>
+                                  *
+                                </Text>
+                                <span
+                                  style={{
+                                    color: "red",
+                                    fontSize: "13px",
+                                    paddingBottom: "10px",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  {errors.number &&
+                                    touched.number &&
+                                    errors.number}
+                                </span>
+                              </FormLabel>
+                              <Input
+                                type="text"
+                                name="number"
+                                value={values.number}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                            </FormControl>
+                          </Box>
+                          <Box>
+                            <FormControl id="dob">
+                              <FormLabel>
+                                DOB{" "}
+                                <Text as={"span"} style={{ color: "red" }}>
+                                  *{" "}
+                                  <span
+                                    style={{
+                                      color: "red",
+                                      fontSize: "13px",
+                                      paddingBottom: "10px",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {errors.dob && touched.dob && errors.dob}
+                                  </span>
+                                </Text>
+                              </FormLabel>
+                              <Input
+                                style={{ width: "226px" }}
+                                type="date"
+                                name="dob"
+                                value={moment(values.dob).format("MM/DD/YYYY")}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                            </FormControl>
+                          </Box>
+                        </HStack>
+                        <HStack mt={6}>
+                          <Box>
                             <FormControl id="age">
                               <FormLabel>
                                 Age{" "}
@@ -363,8 +477,136 @@ function Editvisitor(props) {
                               />
                             </FormControl>
                           </Box>
+                          <Box>
+                            <FormControl id="country">
+                              <FormLabel>
+                                Country{" "}
+                                <Text as={"span"} style={{ color: "red" }}>
+                                  *
+                                </Text>
+                                <span
+                                  style={{
+                                    color: "red",
+                                    fontSize: "13px",
+                                    paddingBottom: "10px",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  {errors.country &&
+                                    touched.country &&
+                                    errors.country}
+                                </span>
+                              </FormLabel>
+                              <CountryDropdown
+                                name="country"
+                                defaultOptionLabel="Select a country"
+                                value={values.country}
+                                onChange={(_, e) => handleChange(e)}
+                                onBlur={handleBlur}
+                                style={{
+                                  width: "235px",
+                                  borderRadius: "4px",
+                                  height: "39px",
+                                  border: "0.5px solid #d0dfe3",
+                                }}
+                              />
+                            </FormControl>
+                          </Box>
+                          <Box>
+                            <FormControl id="state">
+                              <FormLabel>
+                                State{" "}
+                                <Text as={"span"} style={{ color: "red" }}>
+                                  *{" "}
+                                  <span
+                                    style={{
+                                      color: "red",
+                                      fontSize: "13px",
+                                      paddingBottom: "10px",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {errors.state &&
+                                      touched.state &&
+                                      errors.state}
+                                  </span>
+                                </Text>
+                              </FormLabel>
+                              <RegionDropdown
+                                name="state"
+                                defaultOptionLabel="select a state"
+                                blankOptionLabel="Select a state"
+                                country={values.country}
+                                value={values.state}
+                                onChange={(_, e) => handleChange(e)}
+                                onBlur={handleBlur}
+                                style={{
+                                  width: "235px",
+                                  borderRadius: "4px",
+                                  height: "39px",
+                                  border: "0.5px solid #d0dfe3",
+                                }}
+                              />
+                            </FormControl>
+                          </Box>
                         </HStack>
                         <HStack mt={6}>
+                          <Box>
+                            <FormControl id="city">
+                              <FormLabel>
+                                City{" "}
+                                <Text as={"span"} style={{ color: "red" }}>
+                                  *
+                                  <span
+                                    style={{
+                                      color: "red",
+                                      fontSize: "13px",
+                                      paddingBottom: "10px",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {errors.city && touched.city && errors.city}
+                                  </span>
+                                </Text>
+                              </FormLabel>
+                              <Input
+                                type="text"
+                                name="city"
+                                value={values.city}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                            </FormControl>
+                          </Box>
+                          <Box>
+                            <FormControl id="postalcode">
+                              <FormLabel>
+                                Postal Code{" "}
+                                <Text as={"span"} style={{ color: "red" }}>
+                                  *
+                                  <span
+                                    style={{
+                                      color: "red",
+                                      fontSize: "13px",
+                                      paddingBottom: "10px",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {errors.postalcode &&
+                                      touched.postalcode &&
+                                      errors.postalcode}
+                                  </span>
+                                </Text>
+                              </FormLabel>
+                              <Input
+                                type="text"
+                                name="postalcode"
+                                value={values.postalcode}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                            </FormControl>
+                          </Box>
                           <Box>
                             <FormControl id="firstName">
                               <FormLabel>
@@ -394,12 +636,6 @@ function Editvisitor(props) {
                               />
                             </FormControl>
                           </Box>
-                          {/* <Box>
-                            <FormControl id="firstName">
-                              <FormLabel>Date of birth </FormLabel>
-                              <Input type="date" />
-                            </FormControl>
-                          </Box> */}
                           <Box width={"250px"}>
                             <FormControl id="firstName">
                               <FormLabel>Select Id </FormLabel>
@@ -453,6 +689,36 @@ function Editvisitor(props) {
                             onBlur={handleBlur}
                           />
                         </FormControl>
+                        <FormControl id="assests" mt={6}>
+                          <FormLabel>
+                            Assets{" "}
+                            <Text as={"span"} style={{ color: "red" }}>
+                              *
+                              <span
+                                style={{
+                                  color: "red",
+                                  fontSize: "13px",
+                                  paddingBottom: "10px",
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {errors.assets &&
+                                  touched.assets &&
+                                  errors.assets}
+                              </span>
+                            </Text>
+                          </FormLabel>
+                          <Textarea
+                            placeholder="Here is a sample placeholder"
+                            size="sm"
+                            rows={2}
+                            type="text"
+                            name="assets"
+                            value={values.assets}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                          />
+                        </FormControl>
                         <Stack pt={5}>
                           <Button
                             loadingText="Submitting"
@@ -466,7 +732,7 @@ function Editvisitor(props) {
                             disabled={isSubmitting}
                           >
                             Update Visitor
-                            {/* {this.state.showsnipper === true ? (
+                            {showsnipper === true ? (
                               <Spinner
                                 color="white.500"
                                 size="sm"
@@ -474,7 +740,7 @@ function Editvisitor(props) {
                               />
                             ) : (
                               ""
-                            )} */}
+                            )}
                           </Button>
                         </Stack>
                       </Box>

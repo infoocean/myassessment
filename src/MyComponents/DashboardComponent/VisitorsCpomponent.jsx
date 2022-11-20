@@ -35,20 +35,14 @@ import {
   FiChevronDown,
   FiLogOut,
 } from "react-icons/fi";
+import { IoIosPeople, IoMdArrowRoundBack } from "react-icons/io";
 import { IconType } from "react-icons";
-import { IoIosPeople } from "react-icons/io";
 import { ImQrcode } from "react-icons/im";
 import { Link } from "react-router-dom";
 import auth_token, { api } from "../../API/APIToken";
 import axios from "axios";
 import moment from "moment";
-import MaterialTable from "material-table";
-import { ThemeProvider, createTheme } from "@mui/material";
-import { Table } from "antd";
-import "antd/dist/reset.css";
-import { useTableSearch } from "./useTableSearch";
-import { userColumns } from "./columns";
-import Search from "antd/es/transfer/search";
+import SearchApp from "./VisitorComp/Searchvisitortable";
 const getvisitorsendpoint = "getvisitors";
 
 const SideBarLinkItems = [
@@ -74,17 +68,10 @@ const SideBarLinkItems = [
   },
 ];
 
-const fetchUsers = async () => {
-  const { data } = await axios.get(
-    "https://jsonplaceholder.typicode.com/users/"
-  );
-  return { data };
-};
-//console.log(fetchUsers);
-
 function VisitorsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [totalrecentvisitors, settotalrecentvisitors] = useState(0);
+  const [getvisitors, setgetvisitors] = useState([]);
+
   const getvisitorsdata = () => {
     var config = {
       method: "get",
@@ -96,7 +83,7 @@ function VisitorsPage() {
     axios(config)
       .then(function (response) {
         //console.log(response.data);
-        settotalrecentvisitors(response.data.data);
+        setgetvisitors(response.data.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -106,13 +93,7 @@ function VisitorsPage() {
     getvisitorsdata();
   }, []);
 
-  console.log(totalrecentvisitors);
-
-  const [searchVal, setSearchVal] = useState(null);
-  const { filteredData, loading } = useTableSearch({
-    searchVal,
-    retrieve: fetchUsers,
-  });
+  console.log(getvisitors);
 
   return (
     <>
@@ -140,8 +121,22 @@ function VisitorsPage() {
         {/*main data component*/}
         <Box ml={{ base: 0, md: 60 }} p="4">
           {/*main data part */}
-          <Container mb={5} maxW="6xl">
-            <Flex mb={4}>
+          <Container maxW="7xl">
+            <Flex>
+              <Box>
+                <Link to="/dashboard/home">
+                  <Button
+                    type="submit"
+                    bg={"blue.400"}
+                    color={"white"}
+                    _hover={{
+                      bg: "blue.500",
+                    }}
+                  >
+                    <IoMdArrowRoundBack /> Recent Check In Visitor
+                  </Button>
+                </Link>
+              </Box>
               <Spacer />
               <Box>
                 <Link to="/dashboard/visitors/addvisitor">
@@ -158,7 +153,7 @@ function VisitorsPage() {
                 </Link>
               </Box>
             </Flex>
-            <div class="row text-center" style={{ backgroundColor: "#ffffff" }}>
+            {/* <div class="row text-center" style={{ backgroundColor: "#ffffff" }}>
               <div className="col-lg-9 p-4">
                 <HStack>
                   <FormControl id="email">
@@ -187,9 +182,10 @@ function VisitorsPage() {
                   </FormControl>
                 </HStack>
               </div>
-            </div>
+            </div> */}
           </Container>
-          <div>
+          <SearchApp data={getvisitors} />
+          {/* <div>
             <table className="table align-middle mb-0 bg-white">
               <thead className="bg-light">
                 <tr>
@@ -204,8 +200,8 @@ function VisitorsPage() {
                 </tr>
               </thead>
               <tbody>
-                {totalrecentvisitors &&
-                  totalrecentvisitors.map((visitordata, key) => {
+                {getvisitors &&
+                  getvisitors.map((visitordata, key) => {
                     return (
                       <tr key={key}>
                         <td>
@@ -268,31 +264,7 @@ function VisitorsPage() {
                   })}
               </tbody>
             </table>
-            <div style={{ maxWidth: "100%", marginTop: "20px" }}>
-              <>
-                <Search
-                  onChange={(e) => setSearchVal(e.target.value)}
-                  placeholder="Search"
-                  enterButton
-                  style={{
-                    position: "sticky",
-                    top: "0",
-                    left: "0",
-                    width: "200px",
-                    marginTop: "2vh",
-                  }}
-                />
-                <br /> <br />
-                <Table
-                  rowKey="name"
-                  dataSource={filteredData}
-                  columns={userColumns}
-                  loading={loading}
-                  pagination={false}
-                />
-              </>
-            </div>
-          </div>
+          </div> */}
         </Box>
       </Box>
     </>

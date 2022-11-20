@@ -1,5 +1,6 @@
 import axios from "axios";
 import auth_token from "../../API/APIToken";
+import {api} from '../../API/APIToken';
 import {
   USER_LOGIN_SUCCESS,
   USER_REGISTER_SUCCESS,
@@ -12,7 +13,7 @@ const updatevisitorendpoint = "editvisitor";
 
 export const register = (data, callback) => {
   const request = axios.post(
-    "http://localhost:5000/" + registrationendpoint,
+    `${api}` + registrationendpoint,
     data,
     {
       headers: {
@@ -36,7 +37,7 @@ export const register = (data, callback) => {
 };
 
 export const login = (data, callback) => {
-  const request = axios.post("http://localhost:5000/" + loginendpoint, data, {
+  const request = axios.post(`${api}` + loginendpoint, data, {
     headers: {
       token: auth_token,
     },
@@ -58,7 +59,7 @@ export const login = (data, callback) => {
 
 export const visitorregistration = (data, callback) => {
   const request = axios.post(
-    "http://localhost:5000/" + visitorregistrationendpoint,
+    `${api}` + visitorregistrationendpoint,
     data,
     {
       headers: {
@@ -83,7 +84,7 @@ export const visitorregistration = (data, callback) => {
 
 export const updatevisitor = (data, callback) => {
   const request = axios.post(
-    "http://localhost:5000/" + updatevisitorendpoint,
+    `${api}` + updatevisitorendpoint,
     data,
     {
       headers: {
