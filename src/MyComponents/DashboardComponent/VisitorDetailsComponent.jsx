@@ -75,6 +75,27 @@ function VisitorDetailsPage(props) {
   const [showsnipper, setshowsnipper] = useState(false);
   //console.log(id);
   const [visitor_det, setvisitors_det] = useState(0);
+  const [username, setusername] = useState("");
+
+  const userdata = () => {
+    var config = {
+      method: "get",
+      url: `${api}getreceptionistbytoken/${jwttoken}`,
+      headers: {
+        token: auth_token,
+      },
+    };
+    axios(config)
+      .then(function (response) {
+        //console.log(response.data);
+        setusername(response.data.user);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  //console.log(username);
+
   const getvisitordet = () => {
     var config = {
       method: "get",
@@ -93,13 +114,14 @@ function VisitorDetailsPage(props) {
       });
   };
   useEffect(() => {
+    userdata();
     getvisitordet();
   }, []);
   //console.log(visitor_det);
 
   function Checkin(id) {
-    //alert(id);
-    setshowsnipper(true);
+    alert("Are you sure to check in now");
+    //setshowsnipper(true);
     const data = { status: 1, checkindatetime: Date.now() };
     var config = {
       method: "patch",
@@ -115,7 +137,7 @@ function VisitorDetailsPage(props) {
         if (response.status === 202) {
           toast.success("Visitor Check In Successfully !");
           getvisitordet();
-          setshowsnipper(false);
+          //setshowsnipper(false);
         }
       })
       .catch(function (error) {
@@ -124,8 +146,8 @@ function VisitorDetailsPage(props) {
   }
 
   function Checkout(id) {
-    //alert(id);
-    setshowsnipper(true);
+    alert("Are you sure to check in now");
+    //setshowsnipper(true);
     const data = { status: 0, checkoutdatetime: Date.now() };
     var config = {
       method: "patch",
@@ -141,7 +163,7 @@ function VisitorDetailsPage(props) {
         if (response.status === 202) {
           toast.success("Visitor Check Out Successfully !");
           getvisitordet();
-          setshowsnipper(false);
+          //setshowsnipper(false);
         }
       })
       .catch(function (error) {
@@ -171,7 +193,7 @@ function VisitorDetailsPage(props) {
           </DrawerContent>
         </Drawer>
         {/* mobile nav */}
-        <MobileNav onOpen={onOpen} />
+        <MobileNav onOpen={onOpen} user={username} />
         {/*main data component*/}
         <Box ml={{ base: 0, md: 60 }} p="4">
           {/*main data part */}
@@ -335,6 +357,21 @@ function VisitorDetailsPage(props) {
                       <hr />
                       <div class="row">
                         <div class="col-sm-3">
+                          <p class="mb-0">Registration date time</p>
+                        </div>
+                        <div class="col-sm-9">
+                          <p class="text-muted mb-0">
+                            {moment(
+                              visitor_det &&
+                                visitor_det[0] &&
+                                visitor_det[0].datetime
+                            ).format("DD/MM/YYYY, hh:mm")}
+                          </p>
+                        </div>
+                      </div>
+                      <hr />
+                      <div class="row">
+                        <div class="col-sm-3">
                           <p class="mb-0">Check In date time</p>
                         </div>
                         <div class="col-sm-9">
@@ -343,7 +380,13 @@ function VisitorDetailsPage(props) {
                               visitor_det &&
                                 visitor_det[0] &&
                                 visitor_det[0].checkindatetime
-                            ).format("DD/MM/YYYY, hh:mm")}
+                            ).format("DD/MM/YYYY") === "01/01/1970"
+                              ? ""
+                              : moment(
+                                  visitor_det &&
+                                    visitor_det[0] &&
+                                    visitor_det[0].checkindatetime
+                                ).format("DD/MM/YYYY,hh:mm")}
                           </p>
                         </div>
                       </div>
@@ -357,8 +400,14 @@ function VisitorDetailsPage(props) {
                             {moment(
                               visitor_det &&
                                 visitor_det[0] &&
-                                visitor_det[0].checkoutdatetime
-                            ).format("DD/MM/YYYY, hh:mm")}
+                                visitor_det[0].checkindatetime
+                            ).format("DD/MM/YYYY") === "01/01/1970"
+                              ? ""
+                              : moment(
+                                  visitor_det &&
+                                    visitor_det[0] &&
+                                    visitor_det[0].checkoutdatetime
+                                ).format("DD/MM/YYYY, hh:mm")}
                           </p>
                         </div>
                       </div>
@@ -562,7 +611,7 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+const MobileNav = (props, { onOpen, ...rest }: MobileProps) => {
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -617,7 +666,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">UserName</Text>
+                  <Text fontSize="sm">{props.user}</Text>
                   <Text fontSize="xs" color="gray.600">
                     Position
                   </Text>

@@ -23,10 +23,13 @@ class SearchApp extends React.Component {
 
     if (searchString.length > 0) {
       // We are searching. Filter the results.
-      visitors = visitors.filter((e) =>
-        e.name.toLowerCase().match(searchString)
+      visitors = visitors.filter(
+        (e) =>
+          e.name.toLowerCase().match(searchString) ||
+          e.email.toLowerCase().match(searchString)
       );
     }
+
     // Set the `update` property of the `UserInput` element
     return (
       <div className="container" style={{ marginTop: "30px" }}>
@@ -103,14 +106,20 @@ class Table extends React.Component {
                   <td>{d.address}</td>
                   <td>{d.purposetovisit}</td>
                   <td>
-                    {moment(d.checkindatetime).format("DD/MM/YYYY") +
-                      " - " +
-                      moment(d.checkindatetime).format("h:mm a")}
+                    {moment(d.checkindatetime).format("DD/MM/YYYY") ===
+                    "01/01/1970"
+                      ? ""
+                      : moment(d.checkindatetime).format("DD/MM/YYYY") +
+                        " - " +
+                        moment(d.checkindatetime).format("h:mm a")}
                   </td>
                   <td>
-                    {moment(d.checkoutdatetime).format("DD/MM/YYYY") +
-                      " - " +
-                      moment(d.checkindatetime).format("h:mm a")}
+                    {moment(d.checkoutdatetime).format("DD/MM/YYYY") ===
+                    "01/01/1970"
+                      ? ""
+                      : moment(d.checkoutdatetime).format("DD/MM/YYYY") +
+                        " - " +
+                        moment(d.checkindatetime).format("h:mm a")}
                   </td>
                   <td>
                     {d.status === 1 ? (
@@ -118,9 +127,23 @@ class Table extends React.Component {
                         Check In
                       </span>
                     ) : (
+                      ""
+                    )}
+                    {moment(d.checkoutdatetime).format("DD/MM/YYYY") ===
+                      "01/01/1970" && d.status !== 1 ? (
+                      <span className="badge badge-pill badge-info">
+                        Registred
+                      </span>
+                    ) : (
+                      ""
+                    )}
+                    {moment(d.checkoutdatetime).format("DD/MM/YYYY") !==
+                    "01/01/1970" ? (
                       <span className="badge badge-pill badge-info">
                         Check Out
                       </span>
+                    ) : (
+                      ""
                     )}
                   </td>
                   <td>

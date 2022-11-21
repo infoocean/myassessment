@@ -71,13 +71,34 @@ const SideBarLinkItems = [
 ];
 
 function VisitorsPage(props) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [getvisitors, setgetvisitors] = useState([]);
+  const [username, setusername] = useState("");
   const jwttoken = cookies.get("jwttoken");
   //console.log(jwttoken);
   if (jwttoken === undefined) {
     props.history.push("/loginpage");
   }
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [getvisitors, setgetvisitors] = useState([]);
+
+  const userdata = () => {
+    var config = {
+      method: "get",
+      url: `${api}getreceptionistbytoken/${jwttoken}`,
+      headers: {
+        token: auth_token,
+      },
+    };
+    axios(config)
+      .then(function (response) {
+        console.log(response.data);
+        setusername(response.data.user);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  //console.log(username);
 
   const getvisitorsdata = () => {
     var config = {
@@ -98,6 +119,7 @@ function VisitorsPage(props) {
   };
   useEffect(() => {
     getvisitorsdata();
+    userdata();
   }, []);
 
   //console.log(getvisitors);
@@ -124,7 +146,7 @@ function VisitorsPage(props) {
           </DrawerContent>
         </Drawer>
         {/* mobile nav */}
-        <MobileNav onOpen={onOpen} />
+        <MobileNav onOpen={onOpen} user={username} />
         {/*main data component*/}
         <Box ml={{ base: 0, md: 60 }} p="4">
           {/*main data part */}
@@ -353,7 +375,7 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+const MobileNav = (props, { onOpen, ...rest }: MobileProps) => {
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -408,7 +430,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">UserName</Text>
+                  <Text fontSize="sm">{props.user}</Text>
                   <Text fontSize="xs" color="gray.600">
                     Position
                   </Text>

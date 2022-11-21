@@ -47,6 +47,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import Cookies from "universal-cookie";
+import auth_token, { api } from "../../../API/APIToken";
+import axios from "axios";
 const cookies = new Cookies();
 
 const SideBarLinkItems = [
@@ -77,12 +79,32 @@ class Addvisitor extends Component {
     super(props);
     this.state = {
       showsnipper: false,
+      username: "",
     };
     const jwttoken = cookies.get("jwttoken");
     //console.log(jwttoken);
     if (jwttoken === undefined) {
       props.history.push("/loginpage");
     }
+    const userdata = () => {
+      var config = {
+        method: "get",
+        url: `${api}getreceptionistbytoken/${jwttoken}`,
+        headers: {
+          token: auth_token,
+        },
+      };
+      axios(config)
+        .then(function (response) {
+          //console.log(response.data);
+          this.setState({ username: response.data.user });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    };
+    userdata();
+    console.log(this.props.username);
   }
 
   render() {

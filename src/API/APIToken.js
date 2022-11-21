@@ -3,12 +3,16 @@ const auth_token =
 
 export default auth_token;
 //online server
-// const api = "https://mytaskbackendserver.herokuapp.com/";
-// export { api };
-//local server
-const api = "http://localhost:5000/";
+const api = "https://mytaskbackendserver.herokuapp.com/";
 export { api };
+//local server
+// const api = "http://localhost:5000/";
+// export { api };
 
-const React_PUBLIC_URL = "http://localhost:3000/";
+//local
+// const React_PUBLIC_URL = "http://localhost:3000/";
+// export { React_PUBLIC_URL };
 
+//online
+const React_PUBLIC_URL = "https://myassessment.vercel.app/";
 export { React_PUBLIC_URL };

@@ -68,7 +68,7 @@ export default function Dashboard(props) {
   if (jwttoken === undefined) {
     props.history.push("/loginpage");
   }
-  const getvisitorsdata = () => {
+  const userdata = () => {
     var config = {
       method: "get",
       url: `${api}getreceptionistbytoken/${jwttoken}`,
@@ -78,7 +78,7 @@ export default function Dashboard(props) {
     };
     axios(config)
       .then(function (response) {
-        console.log(response.data);
+        //console.log(response.data);
         setusername(response.data.user);
       })
       .catch(function (error) {
@@ -86,7 +86,7 @@ export default function Dashboard(props) {
       });
   };
   useEffect(() => {
-    getvisitorsdata();
+    userdata();
   }, []);
   //console.log(username);
 

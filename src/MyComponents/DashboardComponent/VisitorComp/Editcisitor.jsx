@@ -49,6 +49,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import auth_token, { api } from "../../../API/APIToken";
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
 const SideBarLinkItems = [
   {
@@ -78,6 +80,36 @@ function Editvisitor(props) {
   //console.log(id);
   const [visitor_det, setvisitors_det] = useState([]);
   const [showsnipper, setshowsnipper] = useState(false);
+  const [username, setusername] = useState("");
+
+  const jwttoken = cookies.get("jwttoken");
+  //console.log(jwttoken);
+  if (jwttoken === undefined) {
+    props.history.push("/loginpage");
+  }
+
+  const userdata = () => {
+    var config = {
+      method: "get",
+      url: `${api}getreceptionistbytoken/${jwttoken}`,
+      headers: {
+        token: auth_token,
+      },
+    };
+    axios(config)
+      .then(function (response) {
+        //console.log(response.data);
+        setusername(response.data.user);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    userdata();
+  }, []);
+  //console.log(username);
+
   const getvisitordet = () => {
     var config = {
       method: "get",
@@ -140,7 +172,7 @@ function Editvisitor(props) {
           </DrawerContent>
         </Drawer>
         {/* mobile nav */}
-        <MobileNav />
+        <MobileNav user={username} />
         {/*main data component*/}
         <Box ml={{ base: 0, md: 60 }} p="4">
           {/*main data part */}
@@ -843,7 +875,7 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+const MobileNav = (props, { onOpen, ...rest }: MobileProps) => {
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -898,7 +930,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">UserName</Text>
+                  <Text fontSize="sm">{props.user}</Text>
                   <Text fontSize="xs" color="gray.600">
                     Position
                   </Text>
