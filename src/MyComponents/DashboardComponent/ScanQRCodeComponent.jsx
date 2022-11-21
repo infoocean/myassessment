@@ -64,38 +64,23 @@ const SideBarLinkItems = [
 function ScanQRCodePage(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const id = props.match.params.id;
-  const [visitor_det, setvisitors_det] = useState("");
+  useEffect(() => {
+    sendmail();
+  }, []);
 
-  const getvisitordet = () => {
-    var config = {
-      method: "post",
-      url: `${api}generateqrcodevisitor/${id}`,
-      // headers: {
-      //   token: auth_token,
-      // },
-    };
-    axios(config)
-      .then(function (response) {
-        //console.log(response.data);
-        setvisitors_det(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
-  const data = {
-    name: "shubham",
+  const visitordet = {
+    id: id,
+    qrcode: `dashboard/visitors/visitordetails/${id}`,
   };
 
   const sendmail = () => {
     var config = {
       method: "post",
       url: `${api}sendmail`,
-      // headers: {
-      //   token: auth_token,
-      // },
-      data: data,
+      headers: {
+        token: auth_token,
+      },
+      data: visitordet,
     };
     axios(config)
       .then(function (response) {
@@ -105,13 +90,6 @@ function ScanQRCodePage(props) {
         console.log(error);
       });
   };
-
-  useEffect(() => {
-    getvisitordet();
-    sendmail();
-  }, []);
-
-  console.log(visitor_det);
 
   return (
     <>
@@ -170,7 +148,7 @@ function ScanQRCodePage(props) {
                   />
                 </Box> */}
                 <QRCode
-                  value={`${api}dashboard/visitors/visitordetails/${id}`}
+                  value={`dashboard/visitors/visitordetails/${id}`}
                   style={{ marginRight: 50 }}
                 />
               </Stack>
