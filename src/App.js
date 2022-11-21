@@ -11,6 +11,7 @@ import VisitorDetailsPage from "./MyComponents/DashboardComponent/VisitorDetails
 import VisitorsPage from "./MyComponents/DashboardComponent/VisitorsCpomponent";
 import Checkoutvisitor from "./MyComponents/DashboardComponent/VisitorComp/Checkoutvisitor";
 import Editvisitor from "./MyComponents/DashboardComponent/VisitorComp/Editcisitor";
+import Profile from "./MyComponents/DashboardComponent/Profile";
 const cookies = new Cookies();
 
 function App() {
@@ -55,6 +56,7 @@ function App() {
           path="/dashboard/visitors/visitordetails/:id"
           component={VisitorDetailsPage}
         />
+        <Route exact path="/Profile/:id" component={Profile} />
       </Switch>
     </div>
   );
