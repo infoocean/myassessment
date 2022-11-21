@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   IconButton,
   Avatar,
@@ -32,6 +32,10 @@ import { IoIosPeople } from "react-icons/io";
 import { ImQrcode } from "react-icons/im";
 import { Link } from "react-router-dom";
 import Homepage from "./HomePage";
+import Cookies from "universal-cookie";
+import auth_token, { api } from "../../API/APIToken";
+import axios from "axios";
+const cookies = new Cookies();
 
 const SideBarLinkItems = [
   {
@@ -56,8 +60,36 @@ const SideBarLinkItems = [
   },
 ];
 
-export default function Dashboard() {
+export default function Dashboard(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [username, setusername] = useState("");
+  const jwttoken = cookies.get("jwttoken");
+  //console.log(jwttoken);
+  if (jwttoken === undefined) {
+    props.history.push("/loginpage");
+  }
+  const getvisitorsdata = () => {
+    var config = {
+      method: "get",
+      url: `${api}getreceptionistbytoken/${jwttoken}`,
+      headers: {
+        token: auth_token,
+      },
+    };
+    axios(config)
+      .then(function (response) {
+        console.log(response.data);
+        setusername(response.data.user);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getvisitorsdata();
+  }, []);
+  //console.log(username);
+
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       {/*sidebar data component */}
@@ -79,7 +111,7 @@ export default function Dashboard() {
         </DrawerContent>
       </Drawer>
       {/* mobile nav */}
-      <MobileNav onOpen={onOpen} />
+      <MobileNav onOpen={onOpen} user={username} />
       {/*main data component*/}
       <Box ml={{ base: 0, md: 60 }} p="4">
         {/*main data part */}
@@ -163,7 +195,8 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+const MobileNav = (props, { onOpen, ...rest }: MobileProps) => {
+  //console.log(props);
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -218,7 +251,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">UserName</Text>
+                  <Text fontSize="sm">{props.user}</Text>
                   <Text fontSize="xs" color="gray.600">
                     Position
                   </Text>
@@ -233,7 +266,9 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               borderColor={useColorModeValue("gray.200", "gray.700")}
             >
               <MenuItem>Profile</MenuItem>
-              <MenuItem>Sign out</MenuItem>
+              <Link to="/logout">
+                <MenuItem>Sign out</MenuItem>
+              </Link>
             </MenuList>
           </Menu>
         </Flex>

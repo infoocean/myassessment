@@ -43,6 +43,8 @@ import auth_token, { api } from "../../API/APIToken";
 import axios from "axios";
 import moment from "moment";
 import SearchApp from "./VisitorComp/Searchvisitortable";
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 const getvisitorsendpoint = "getvisitors";
 
 const SideBarLinkItems = [
@@ -68,7 +70,12 @@ const SideBarLinkItems = [
   },
 ];
 
-function VisitorsPage() {
+function VisitorsPage(props) {
+  const jwttoken = cookies.get("jwttoken");
+  //console.log(jwttoken);
+  if (jwttoken === undefined) {
+    props.history.push("/loginpage");
+  }
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [getvisitors, setgetvisitors] = useState([]);
 
@@ -93,7 +100,7 @@ function VisitorsPage() {
     getvisitorsdata();
   }, []);
 
-  console.log(getvisitors);
+  //console.log(getvisitors);
 
   return (
     <>

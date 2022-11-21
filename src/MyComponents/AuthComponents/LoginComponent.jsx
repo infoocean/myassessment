@@ -20,7 +20,8 @@ import {
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { connect } from "react-redux";
 import { login } from "../../Redux/Actions/useractions";
-
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 class LoginComponent extends Component {
   constructor(props) {
     super(props);
@@ -79,6 +80,7 @@ class LoginComponent extends Component {
                         //console.log(response.data.token);
                         //return false;
                         toast.success("Login Successfull !");
+                        cookies.set("jwttoken", response.data.token);
                         resetForm({ values: "" });
                         this.setState({ showsnipper: false });
                         setTimeout(() => {

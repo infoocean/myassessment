@@ -46,6 +46,8 @@ import { connect } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
 const SideBarLinkItems = [
   {
@@ -76,6 +78,11 @@ class Addvisitor extends Component {
     this.state = {
       showsnipper: false,
     };
+    const jwttoken = cookies.get("jwttoken");
+    //console.log(jwttoken);
+    if (jwttoken === undefined) {
+      props.history.push("/loginpage");
+    }
   }
 
   render() {

@@ -37,6 +37,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import auth_token, { api } from "../../API/APIToken";
 import QRCode from "qrcode.react";
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
 const SideBarLinkItems = [
   {
@@ -62,6 +64,11 @@ const SideBarLinkItems = [
 ];
 
 function ScanQRCodePage(props) {
+  const jwttoken = cookies.get("jwttoken");
+  //console.log(jwttoken);
+  if (jwttoken === undefined) {
+    props.history.push("/loginpage");
+  }
   const { isOpen, onOpen, onClose } = useDisclosure();
   const id = props.match.params.id;
   useEffect(() => {

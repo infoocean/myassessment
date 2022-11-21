@@ -8,3 +8,7 @@ export default auth_token;
 //local server
 const api = "http://localhost:5000/";
 export { api };
+
+const React_PUBLIC_URL = "http://localhost:3000/";
+
+export { React_PUBLIC_URL };

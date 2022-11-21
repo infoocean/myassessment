@@ -1,5 +1,6 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
+import Cookies from "universal-cookie";
 import LoginComponent from "./MyComponents/AuthComponents/LoginComponent";
 import Logoutpage from "./MyComponents/AuthComponents/Logout";
 import RegistrationComponent from "./MyComponents/AuthComponents/RegistrationComponent";
@@ -10,13 +11,16 @@ import VisitorDetailsPage from "./MyComponents/DashboardComponent/VisitorDetails
 import VisitorsPage from "./MyComponents/DashboardComponent/VisitorsCpomponent";
 import Checkoutvisitor from "./MyComponents/DashboardComponent/VisitorComp/Checkoutvisitor";
 import Editvisitor from "./MyComponents/DashboardComponent/VisitorComp/Editcisitor";
+const cookies = new Cookies();
 
 function App() {
+  const jwttoken = cookies.get("jwttoken");
+  //console.log(jwttoken);
   return (
     <div className="App">
       <Switch>
-        <Route exact path="/" component={LoginComponent} />
         <Route exact path="/loginpage" component={LoginComponent} />
+        <Route exact path="/" component={LoginComponent} />
         <Route
           exact
           path="/registrationpage"

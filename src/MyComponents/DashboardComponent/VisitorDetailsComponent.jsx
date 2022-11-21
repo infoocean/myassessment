@@ -38,6 +38,8 @@ import axios from "axios";
 import moment from "moment";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
 const SideBarLinkItems = [
   {
@@ -63,6 +65,11 @@ const SideBarLinkItems = [
 ];
 
 function VisitorDetailsPage(props) {
+  const jwttoken = cookies.get("jwttoken");
+  //console.log(jwttoken);
+  if (jwttoken === undefined) {
+    props.history.push("/loginpage");
+  }
   const { isOpen, onOpen, onClose } = useDisclosure();
   const id = props.match.params.id;
   const [showsnipper, setshowsnipper] = useState(false);
