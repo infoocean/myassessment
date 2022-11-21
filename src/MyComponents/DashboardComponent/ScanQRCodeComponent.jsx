@@ -70,7 +70,7 @@ function ScanQRCodePage(props) {
 
   const visitordet = {
     id: id,
-    qrcode: `dashboard/visitors/visitordetails/${id}`,
+    qrcode: `https://myassessment.vercel.app/dashboard/visitors/visitordetails/${id}`,
   };
 
   const sendmail = () => {
@@ -148,7 +148,7 @@ function ScanQRCodePage(props) {
                   />
                 </Box> */}
                 <QRCode
-                  value={`dashboard/visitors/visitordetails/${id}`}
+                  value={`https://myassessment.vercel.app/dashboard/visitors/visitordetails/${id}`}
                   style={{ marginRight: 50 }}
                 />
               </Stack>
