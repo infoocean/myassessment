@@ -20,6 +20,7 @@ import {
   MenuItem,
   Button,
   MenuList,
+  Spinner,
 } from "@chakra-ui/react";
 import {
   FiHome,
@@ -64,6 +65,7 @@ const SideBarLinkItems = [
 function VisitorDetailsPage(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const id = props.match.params.id;
+  const [showsnipper, setshowsnipper] = useState(false);
   //console.log(id);
   const [visitor_det, setvisitors_det] = useState(0);
   const getvisitordet = () => {
@@ -90,6 +92,7 @@ function VisitorDetailsPage(props) {
 
   function Checkin(id) {
     //alert(id);
+    setshowsnipper(true);
     const data = { status: 1, checkindatetime: Date.now() };
     var config = {
       method: "patch",
@@ -105,6 +108,7 @@ function VisitorDetailsPage(props) {
         if (response.status === 202) {
           toast.success("Visitor Check In Successfully !");
           getvisitordet();
+          setshowsnipper(false);
         }
       })
       .catch(function (error) {
@@ -114,6 +118,7 @@ function VisitorDetailsPage(props) {
 
   function Checkout(id) {
     //alert(id);
+    setshowsnipper(true);
     const data = { status: 0, checkoutdatetime: Date.now() };
     var config = {
       method: "patch",
@@ -129,6 +134,7 @@ function VisitorDetailsPage(props) {
         if (response.status === 202) {
           toast.success("Visitor Check Out Successfully !");
           getvisitordet();
+          setshowsnipper(false);
         }
       })
       .catch(function (error) {
@@ -190,7 +196,16 @@ function VisitorDetailsPage(props) {
                             )
                           }
                         >
-                          Check In Now
+                          Check In Now{" "}
+                          {showsnipper === true ? (
+                            <Spinner
+                              color="white.500"
+                              size="sm"
+                              style={{ marginLeft: "10px" }}
+                            />
+                          ) : (
+                            ""
+                          )}
                         </Button>
                       ) : (
                         <Button
@@ -205,7 +220,16 @@ function VisitorDetailsPage(props) {
                             )
                           }
                         >
-                          Check Out Now
+                          Check Out Now{" "}
+                          {showsnipper === true ? (
+                            <Spinner
+                              color="white.500"
+                              size="sm"
+                              style={{ marginLeft: "10px" }}
+                            />
+                          ) : (
+                            ""
+                          )}
                         </Button>
                       )}
                     </div>
@@ -412,7 +436,16 @@ function VisitorDetailsPage(props) {
                           )
                         }
                       >
-                        Click Now
+                        Click Now{" "}
+                        {showsnipper === true ? (
+                          <Spinner
+                            color="white.500"
+                            size="sm"
+                            style={{ marginLeft: "10px" }}
+                          />
+                        ) : (
+                          ""
+                        )}
                       </Button>
                       {/* </Link> */}
                     </div>

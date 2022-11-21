@@ -259,7 +259,7 @@ function Editvisitor(props) {
                     //console.log(reqdata);
                     //return false;
                     axios({
-                      method: "post",
+                      method: "patch",
                       url: `${api}editvisitor/${id}`,
                       data: reqdata,
                       headers: {
@@ -267,10 +267,20 @@ function Editvisitor(props) {
                       },
                     })
                       .then(function (response) {
-                        console.log(response);
+                        //console.log(response);
+                        if (response.status === 202) {
+                          toast.success(" Visitor Data updated Successfull !");
+                          setshowsnipper(false);
+                          //resetForm({ values: "" });
+                          getvisitordet();
+                        } else if (response.status === 500) {
+                          setshowsnipper(false);
+                          toast.error("server not responding");
+                        }
                       })
                       .catch(function (error) {
-                        console.log(error);
+                        setshowsnipper(false);
+                        toast.error("server not responding");
                       });
 
                     // this.props.visitorregistration(reqdata, (response) => {
