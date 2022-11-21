@@ -397,7 +397,25 @@ function VisitorDetailsPage(props) {
                         QR Code For Detail
                       </p>
                       <Link to={`/dashboard/scanqrcode/${id}`}>
-                        <Button colorScheme="facebook">Click Now</Button>
+                        <Button
+                          colorScheme="facebook"
+                          // onClick={() =>
+                          //   SensmailandGenQRcode(
+                          //     visitor_det && visitor_det[0] && visitor_det[0]._id
+                          //   )
+                          // }
+                        >
+                          Click Now{" "}
+                          {showsnipper === true ? (
+                            <Spinner
+                              color="white.500"
+                              size="sm"
+                              style={{ marginLeft: "10px" }}
+                            />
+                          ) : (
+                            ""
+                          )}
+                        </Button>
                       </Link>
                     </div>
                   </div>

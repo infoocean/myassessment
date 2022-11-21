@@ -64,54 +64,54 @@ const SideBarLinkItems = [
 function ScanQRCodePage(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const id = props.match.params.id;
-  //const [visitor_det, setvisitors_det] = useState("");
+  const [visitor_det, setvisitors_det] = useState("");
 
-  // const getvisitordet = () => {
-  //   var config = {
-  //     method: "post",
-  //     url: `${api}generateqrcodevisitor/${id}`,
-  //     // headers: {
-  //     //   token: auth_token,
-  //     // },
-  //   };
-  //   axios(config)
-  //     .then(function (response) {
-  //       //console.log(response.data);
-  //       setvisitors_det(response.data.data);
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // };
+  const getvisitordet = () => {
+    var config = {
+      method: "post",
+      url: `${api}generateqrcodevisitor/${id}`,
+      // headers: {
+      //   token: auth_token,
+      // },
+    };
+    axios(config)
+      .then(function (response) {
+        //console.log(response.data);
+        setvisitors_det(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
-  // const data = {
-  //   name: "shubham",
-  // };
+  const data = {
+    name: "shubham",
+  };
 
-  // const sendmail = () => {
-  //   var config = {
-  //     method: "post",
-  //     url: `${api}sendmail`,
-  //     // headers: {
-  //     //   token: auth_token,
-  //     // },
-  //     data: data,
-  //   };
-  //   axios(config)
-  //     .then(function (response) {
-  //       console.log(response.data);
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // };
+  const sendmail = () => {
+    var config = {
+      method: "post",
+      url: `${api}sendmail`,
+      // headers: {
+      //   token: auth_token,
+      // },
+      data: data,
+    };
+    axios(config)
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
-  // useEffect(() => {
-  //   getvisitordet();
-  //   sendmail();
-  // }, []);
+  useEffect(() => {
+    getvisitordet();
+    sendmail();
+  }, []);
 
-  //console.log(visitor_det);
+  console.log(visitor_det);
 
   return (
     <>
