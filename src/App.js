@@ -56,7 +56,7 @@ function App() {
           path="/dashboard/visitors/visitordetails/:id"
           component={VisitorDetailsPage}
         />
-        <Route exact path="/Profile/:id" component={Profile} />
+        <Route exact path="/Profile" component={Profile} />
       </Switch>
     </div>
   );

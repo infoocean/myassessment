@@ -40,11 +40,13 @@ class Addvisitor extends Component {
       showsnipper: false,
       username: "",
     };
+
     const jwttoken = cookies.get("jwttoken");
     //console.log(jwttoken);
     if (jwttoken === undefined) {
       props.history.push("/loginpage");
     }
+
     const userdata = () => {
       var config = {
         method: "get",
@@ -56,7 +58,7 @@ class Addvisitor extends Component {
       axios(config)
         .then(function (response) {
           //console.log(response.data);
-          this.setState({ username: response.data.user });
+          this.setState({ username: response.data.userdata.firstname });
         })
         .catch(function (error) {
           console.log(error);
@@ -232,6 +234,9 @@ class Addvisitor extends Component {
                           this.setState({ showsnipper: false });
                         } else if (response.status === 201) {
                           toast.success(" Visitor Registration Successfull !");
+                          setTimeout(() => {
+                            this.props.history.push("/dashboard/visitors");
+                          }, "1000");
                           this.setState({ showsnipper: false });
                           resetForm({ values: "" });
                         }

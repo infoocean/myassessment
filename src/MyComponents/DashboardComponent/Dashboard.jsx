@@ -17,11 +17,12 @@ const cookies = new Cookies();
 export default function Dashboard(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [username, setusername] = useState("");
+
   const jwttoken = cookies.get("jwttoken");
-  //console.log(jwttoken);
   if (jwttoken === undefined) {
     props.history.push("/loginpage");
   }
+
   const userdata = () => {
     var config = {
       method: "get",
@@ -33,7 +34,11 @@ export default function Dashboard(props) {
     axios(config)
       .then(function (response) {
         //console.log(response.data);
-        setusername(response.data.user);
+        setusername(
+          response.data.userdata.firstname +
+            " " +
+            response.data.userdata.lastname
+        );
       })
       .catch(function (error) {
         console.log(error);

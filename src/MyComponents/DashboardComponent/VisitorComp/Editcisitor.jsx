@@ -56,15 +56,16 @@ function Editvisitor(props) {
     axios(config)
       .then(function (response) {
         //console.log(response.data);
-        setusername(response.data.user);
+        setusername(
+          response.data.userdata.firstname +
+            " " +
+            response.data.userdata.lastname
+        );
       })
       .catch(function (error) {
         console.log(error);
       });
   };
-  useEffect(() => {
-    userdata();
-  }, []);
   //console.log(username);
 
   const getvisitordet = () => {
@@ -84,11 +85,12 @@ function Editvisitor(props) {
         console.log(error);
       });
   };
+  //console.log(visitor_det);
+
   useEffect(() => {
     getvisitordet();
-  }, [id]);
-  //console.log(visitor_det);
-  //console.log(visitor_det && visitor_det[0] && visitor_det[0].name);
+    userdata();
+  }, []);
 
   const data = {
     name: visitor_det && visitor_det[0] && visitor_det[0].name,
@@ -412,7 +414,7 @@ function Editvisitor(props) {
                                 style={{ width: "226px" }}
                                 type="date"
                                 name="dob"
-                                value={moment(values.dob).format("MM/DD/YYYY")}
+                                value={values.dob}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                               />

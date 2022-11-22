@@ -39,11 +39,11 @@ const SideBarLinkItems = [
     path: "dashboard/visitors",
     icon: IoIosPeople,
   },
-  {
-    name: "Scan QR code",
-    path: "dashboard/scanqrcode",
-    icon: ImQrcode,
-  },
+  // {
+  //   name: "Scan QR code",
+  //   path: "dashboard/scanqrcode",
+  //   icon: ImQrcode,
+  // },
   {
     name: "Logout",
     path: "logout",

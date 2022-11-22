@@ -17,14 +17,15 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 function ScanQRCodePage(props) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const id = props.match.params.id;
+  const [username, setusername] = useState("");
+
   const jwttoken = cookies.get("jwttoken");
   //console.log(jwttoken);
   if (jwttoken === undefined) {
     props.history.push("/loginpage");
   }
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const id = props.match.params.id;
-  const [username, setusername] = useState("");
 
   useEffect(() => {
     sendmail();
@@ -42,7 +43,11 @@ function ScanQRCodePage(props) {
     axios(config)
       .then(function (response) {
         //console.log(response.data);
-        setusername(response.data.user);
+        setusername(
+          response.data.userdata.firstname +
+            " " +
+            response.data.userdata.lastname
+        );
       })
       .catch(function (error) {
         console.log(error);
@@ -54,7 +59,6 @@ function ScanQRCodePage(props) {
     id: id,
     qrcode: `https://myassessment.vercel.app/dashboard/visitors/visitordetails/${id}`,
   };
-
   const sendmail = () => {
     var config = {
       method: "post",

@@ -9,6 +9,7 @@ import {
   Spacer,
   Box,
   Button,
+  Text,
 } from "@chakra-ui/react";
 
 import { IoMdArrowRoundBack } from "react-icons/io";
@@ -25,6 +26,8 @@ function VisitorsPage(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [getvisitors, setgetvisitors] = useState([]);
   const [username, setusername] = useState("");
+  const [datamsg, setdatamsg] = useState("");
+
   const jwttoken = cookies.get("jwttoken");
   //console.log(jwttoken);
   if (jwttoken === undefined) {
@@ -41,14 +44,17 @@ function VisitorsPage(props) {
     };
     axios(config)
       .then(function (response) {
-        console.log(response.data);
-        setusername(response.data.user);
+        //console.log(response.data);
+        setusername(
+          response.data.userdata.firstname +
+            " " +
+            response.data.userdata.lastname
+        );
       })
       .catch(function (error) {
         console.log(error);
       });
   };
-
   //console.log(username);
 
   const getvisitorsdata = () => {
@@ -66,6 +72,7 @@ function VisitorsPage(props) {
       })
       .catch(function (error) {
         console.log(error);
+        setdatamsg("Data Not Found");
       });
   };
   useEffect(() => {
@@ -132,38 +139,11 @@ function VisitorsPage(props) {
                 </Link>
               </Box>
             </Flex>
-            {/* <div class="row text-center" style={{ backgroundColor: "#ffffff" }}>
-              <div className="col-lg-9 p-4">
-                <HStack>
-                  <FormControl id="email">
-                    <FormLabel>Visitor Name</FormLabel>
-                    <Input type="email" size="sm" />
-                  </FormControl>
-                  <FormControl id="email">
-                    <FormLabel>Visitor Email</FormLabel>
-                    <Input type="email" size="sm" />
-                  </FormControl>
-                  <FormControl pt={8}>
-                    <Checkbox>Check In</Checkbox>
-                  </FormControl>
-                  <FormControl pt={8}>
-                    <Button
-                      type="submit"
-                      bg={"blue.400"}
-                      color={"white"}
-                      _hover={{
-                        bg: "blue.500",
-                      }}
-                      // disabled={isSubmitting}
-                    >
-                      Search
-                    </Button>
-                  </FormControl>
-                </HStack>
-              </div>
-            </div> */}
           </Container>
-          <SearchApp data={getvisitors} />
+          <SearchApp data={getvisitors} datamsg={datamsg} />
+          <Text ml={5} mt={2}>
+            {datamsg !== "" ? <tr>{datamsg}</tr> : ""}
+          </Text>
         </Box>
       </Box>
     </>

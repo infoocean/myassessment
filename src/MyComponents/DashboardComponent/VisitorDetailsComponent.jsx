@@ -20,17 +20,17 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 function VisitorDetailsPage(props) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const id = props.match.params.id;
+  const [showsnipper, setshowsnipper] = useState(false);
+  const [visitor_det, setvisitors_det] = useState(0);
+  const [username, setusername] = useState("");
+
   const jwttoken = cookies.get("jwttoken");
   //console.log(jwttoken);
   if (jwttoken === undefined) {
     props.history.push("/loginpage");
   }
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const id = props.match.params.id;
-  const [showsnipper, setshowsnipper] = useState(false);
-  //console.log(id);
-  const [visitor_det, setvisitors_det] = useState(0);
-  const [username, setusername] = useState("");
 
   const userdata = () => {
     var config = {
@@ -43,7 +43,11 @@ function VisitorDetailsPage(props) {
     axios(config)
       .then(function (response) {
         //console.log(response.data);
-        setusername(response.data.user);
+        setusername(
+          response.data.userdata.firstname +
+            " " +
+            response.data.userdata.lastname
+        );
       })
       .catch(function (error) {
         console.log(error);
@@ -68,11 +72,12 @@ function VisitorDetailsPage(props) {
         console.log(error);
       });
   };
+  //console.log(visitor_det);
+
   useEffect(() => {
     userdata();
     getvisitordet();
   }, []);
-  //console.log(visitor_det);
 
   function Checkin(id) {
     alert("Are you sure to check in now");
@@ -101,7 +106,7 @@ function VisitorDetailsPage(props) {
   }
 
   function Checkout(id) {
-    alert("Are you sure to check in now");
+    alert("Are you sure to check out now");
     //setshowsnipper(true);
     const data = { status: 0, checkoutdatetime: Date.now() };
     var config = {
@@ -180,7 +185,7 @@ function VisitorDetailsPage(props) {
                             )
                           }
                         >
-                          Check In Now{" "}
+                          Check In{" "}
                           {showsnipper === true ? (
                             <Spinner
                               color="white.500"
@@ -204,7 +209,7 @@ function VisitorDetailsPage(props) {
                             )
                           }
                         >
-                          Check Out Now{" "}
+                          Check Out{" "}
                           {showsnipper === true ? (
                             <Spinner
                               color="white.500"
@@ -416,7 +421,7 @@ function VisitorDetailsPage(props) {
                           //   )
                           // }
                         >
-                          Click Now{" "}
+                          Generate QR Code{" "}
                           {showsnipper === true ? (
                             <Spinner
                               color="white.500"
@@ -439,10 +444,10 @@ function VisitorDetailsPage(props) {
                           {" "}
                           <b>Edit</b>
                         </span>
-                        Visitor Here
+                        Visitor
                       </p>
                       <Link to={`/dashboard/visitor/editvisitor/${id}`}>
-                        <Button colorScheme="facebook">Click Now</Button>
+                        <Button colorScheme="facebook">Edit</Button>
                       </Link>
                     </div>
                   </div>
@@ -454,7 +459,7 @@ function VisitorDetailsPage(props) {
                         <span class="text-primary font-italic me-1">
                           <b>Checkout</b>
                         </span>
-                        Visitor Here
+                        Visitor
                       </p>
                       {/* <Link to={`/dashboard/visitor/checkout/${id}`}> */}
                       <Button
@@ -465,7 +470,7 @@ function VisitorDetailsPage(props) {
                           )
                         }
                       >
-                        Click Now{" "}
+                        Check Out{" "}
                         {showsnipper === true ? (
                           <Spinner
                             color="white.500"

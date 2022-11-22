@@ -13,7 +13,6 @@ class SearchApp extends React.Component {
   handleChange(event) {
     // Get event value
     let searchValue = event.target.value;
-    // Set the state to trigger a re-rendering
     this.setState({ search: searchValue });
   }
   render() {

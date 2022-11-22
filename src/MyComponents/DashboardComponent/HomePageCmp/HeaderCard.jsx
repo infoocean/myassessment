@@ -2,7 +2,15 @@ import React, { useEffect, useState } from "react";
 import { api } from "../../../API/APIToken";
 import auth_token from "../../../API/APIToken";
 import axios from "axios";
-import { Box, Button, Flex, Heading, Spacer, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Spacer,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { BiEdit, BiShow } from "react-icons/bi";
 import moment from "moment";
@@ -12,7 +20,7 @@ const getrecvisitorsendpoint = "getrecentcheckingvisitors";
 function Headercard() {
   const [recentvisitors, setrecentvisitors] = useState([]);
   const [totalrecentvisitors, settotalrecentvisitors] = useState(0);
-
+  const [datamsg, setdatamsg] = useState("");
   const getrecentvisitors = () => {
     var config = {
       method: "get",
@@ -29,6 +37,7 @@ function Headercard() {
       })
       .catch(function (error) {
         console.log(error);
+        setdatamsg("Data Not Found");
       });
   };
 
@@ -134,6 +143,10 @@ function Headercard() {
                 </tr>
               );
             })}
+          <Text mt={2} mb={2} ml={1}>
+            {" "}
+            {datamsg !== "" ? <tr>{datamsg}</tr> : ""}
+          </Text>
         </tbody>
       </table>
     </>

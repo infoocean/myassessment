@@ -36,14 +36,13 @@ class LoginComponent extends Component {
       this.props &&
       this.props.userLoginReducer &&
       this.props.userLoginReducer.userInfo &&
-      this.props.userLoginReducer.userInfo.savedata &&
-      this.props.userLoginReducer.userInfo.savedata.email
+      this.props.userLoginReducer.userInfo.data.email
     ) {
-      autofillemail = this.props.userLoginReducer.userInfo.savedata.email;
+      autofillemail = this.props.userLoginReducer.userInfo.data.email;
     } else {
       autofillemail = "";
     }
-
+    //console.log(this.props.userLoginReducer.userInfo.data.email);
     return (
       <>
         <Flex minH={"90vh"} align={"center"} justify={"center"}>
