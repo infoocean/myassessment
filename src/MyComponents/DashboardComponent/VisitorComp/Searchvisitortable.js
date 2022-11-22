@@ -1,3 +1,4 @@
+import { Checkbox } from "@chakra-ui/react";
 import moment from "moment";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -13,6 +14,7 @@ class SearchApp extends React.Component {
   handleChange(event) {
     // Get event value
     let searchValue = event.target.value;
+    //alert(searchValue);
     this.setState({ search: searchValue });
   }
   render() {
@@ -47,13 +49,23 @@ class UserInput extends React.Component {
   }
   render() {
     return (
-      <div>
-        <input
-          className="form-control mb-3"
-          placeholder="Search Visitor....."
-          onChange={(e) => this.props.update(e)}
-        />
-      </div>
+      <>
+        <div>
+          <input
+            className="form-control mb-2"
+            placeholder="Search Visitor....."
+            onChange={(e) => this.props.update(e)}
+          />
+          <Checkbox
+            as={"span"}
+            mb={2}
+            value="1"
+            onChange={(e) => this.props.update(e)}
+          >
+            Check In
+          </Checkbox>
+        </div>
+      </>
     );
   }
 }

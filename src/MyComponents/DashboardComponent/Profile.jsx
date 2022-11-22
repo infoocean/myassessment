@@ -18,6 +18,8 @@ import { AiFillLock } from "react-icons/ai";
 import { FaUserAlt } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import moment from "moment";
+import { Link } from "react-router-dom";
 const cookies = new Cookies();
 
 function Profile(props) {
@@ -96,6 +98,7 @@ function Profile(props) {
           if (response.status === 202) {
             toast.success(" User Profile updated  !");
             setshowsnipper(false);
+            userdata();
             //resetForm({ values: "" });
           } else if (response.status === 500) {
             setshowsnipper(false);
@@ -150,13 +153,15 @@ function Profile(props) {
                       <h6 class="user-email">{usersdata.email}</h6>
                     </div>
                     <div>
-                      <Button
-                        leftIcon={<AiFillLock />}
-                        colorScheme="teal"
-                        variant="solid"
-                      >
-                        Change Password
-                      </Button>
+                      <Link to="/resetpassword">
+                        <Button
+                          leftIcon={<AiFillLock />}
+                          colorScheme="teal"
+                          variant="solid"
+                        >
+                          Change Password
+                        </Button>
+                      </Link>
                     </div>
                     <div className="mt-3">
                       <Button
@@ -225,7 +230,13 @@ function Profile(props) {
                       </div>
                       <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
                         <div class="form-group">
-                          <label for="Street">Date Of Birth</label>
+                          <label for="Street">
+                            Date Of Birth{" "}
+                            <span style={{ color: "#8e0fdd" }}>
+                              (Note! your dob :{" "}
+                              {moment(formik.values.dob).format("DD/MM/YYYY")})
+                            </span>
+                          </label>
                           <input
                             type="date"
                             name="dob"

@@ -36,6 +36,7 @@ class LoginComponent extends Component {
       this.props &&
       this.props.userLoginReducer &&
       this.props.userLoginReducer.userInfo &&
+      this.props.userLoginReducer.userInfo.data &&
       this.props.userLoginReducer.userInfo.data.email
     ) {
       autofillemail = this.props.userLoginReducer.userInfo.data.email;

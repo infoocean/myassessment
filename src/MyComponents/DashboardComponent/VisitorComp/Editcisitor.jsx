@@ -408,7 +408,16 @@ function Editvisitor(props) {
                                   >
                                     {errors.dob && touched.dob && errors.dob}
                                   </span>
-                                </Text>
+                                </Text>{" "}
+                                <span
+                                  style={{
+                                    color: "#8e0fdd",
+                                    fontSize: "12.5px",
+                                  }}
+                                >
+                                  (Note! your dob :{" "}
+                                  {moment(values.dob).format("DD/MM/YYYY")})
+                                </span>
                               </FormLabel>
                               <Input
                                 style={{ width: "226px" }}
@@ -613,7 +622,7 @@ function Editvisitor(props) {
                               <FormLabel>
                                 Date,Time{" "}
                                 <Text as={"span"} style={{ color: "red" }}>
-                                  *
+                                  *{" "}
                                   <span
                                     style={{
                                       color: "red",
@@ -627,6 +636,18 @@ function Editvisitor(props) {
                                       errors.datetime}
                                   </span>
                                 </Text>
+                                <span
+                                  style={{
+                                    color: "#8e0fdd",
+                                    fontSize: "11.5px",
+                                  }}
+                                >
+                                  (
+                                  {moment(values.datetime).format(
+                                    "DD/MM/YYYY:H:M-a"
+                                  )}
+                                  )
+                                </span>
                               </FormLabel>
                               <Input
                                 type="datetime-local"
