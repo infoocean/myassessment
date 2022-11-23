@@ -20,6 +20,7 @@ import auth_token, { api } from "../../API/APIToken";
 export default function ForgotPasswordForm() {
   const [showsnipper, setshowsnipper] = useState(false);
   const [emailerr, setemailerr] = useState("");
+  const [emailsuccess, setemailsuccess] = useState("");
   const validate = (values) => {
     const errors = {};
 
@@ -58,7 +59,8 @@ export default function ForgotPasswordForm() {
 
       axios(config)
         .then(function (response) {
-          console.log(response.data);
+          //console.log(response.data);
+          setemailsuccess("Link Send Successfully Ckech Your Email ");
           setshowsnipper(false);
         })
         .catch(function (error) {
@@ -102,6 +104,14 @@ export default function ForgotPasswordForm() {
           <Alert status="error" mt={1} mb={1}>
             <AlertIcon />
             {emailerr}
+          </Alert>
+        ) : (
+          ""
+        )}
+        {emailsuccess !== "" ? (
+          <Alert status="success">
+            <AlertIcon />
+            {emailsuccess}
           </Alert>
         ) : (
           ""
