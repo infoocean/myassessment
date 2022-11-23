@@ -163,15 +163,6 @@ function Profile(props) {
                         </Button>
                       </Link>
                     </div>
-                    <div className="mt-3">
-                      <Button
-                        leftIcon={<FaUserAlt />}
-                        colorScheme="pink"
-                        variant="solid"
-                      >
-                        Change Username
-                      </Button>
-                    </div>
                   </div>
                 </div>
               </div>

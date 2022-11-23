@@ -13,6 +13,7 @@ import Checkoutvisitor from "./MyComponents/DashboardComponent/VisitorComp/Check
 import Editvisitor from "./MyComponents/DashboardComponent/VisitorComp/Editcisitor";
 import Profile from "./MyComponents/DashboardComponent/Profile";
 import ForgotPasswordForm from "./MyComponents/AuthComponents/ResetPassword";
+import SetNewPasswordForm from "./MyComponents/AuthComponents/SetNewPassword";
 const cookies = new Cookies();
 
 function App() {
@@ -24,6 +25,12 @@ function App() {
         <Route exact path="/loginpage" component={LoginComponent} />
         <Route exact path="/" component={LoginComponent} />
         <Route exact path="/resetpassword" component={ForgotPasswordForm} />
+        <Route
+          exact
+          path="/setnewpassword/:id"
+          component={SetNewPasswordForm}
+        />
+
         <Route
           exact
           path="/registrationpage"
