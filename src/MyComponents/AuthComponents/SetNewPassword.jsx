@@ -5,6 +5,8 @@ import {
   FormLabel,
   Heading,
   Input,
+  InputGroup,
+  InputRightElement,
   Spinner,
   Stack,
   Text,
@@ -16,12 +18,14 @@ import { useState } from "react";
 import auth_token, { api } from "../../API/APIToken";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 export default function SetNewPasswordForm(props) {
   const id = props.match.params.id;
   //console.log(id);
   const [showsnipper, setshowsnipper] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showcPassword, setShowcPassword] = useState(false);
   const validate = (values) => {
     const errors = {};
 
@@ -112,15 +116,27 @@ export default function SetNewPasswordForm(props) {
                 *
               </Text>
             </FormLabel>
-            <Input
-              _placeholder={{ color: "gray.500" }}
-              type="password"
-              id="password"
-              name="password"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.password}
-            />
+            <InputGroup>
+              <Input
+                _placeholder={{ color: "gray.500" }}
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
+              />
+              <InputRightElement h={"full"}>
+                <Button
+                  variant={"ghost"}
+                  onClick={() =>
+                    setShowPassword((showPassword) => !showPassword)
+                  }
+                >
+                  {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
           </FormControl>
 
           <span
@@ -142,14 +158,27 @@ export default function SetNewPasswordForm(props) {
                 *
               </Text>
             </FormLabel>
-            <Input
-              type="password"
-              id="confirmpassword"
-              name="confirmpassword"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.confirmpassword}
-            />
+            <InputGroup>
+              <Input
+                _placeholder={{ color: "gray.500" }}
+                type={showcPassword ? "text" : "password"}
+                id="confirmpassword"
+                name="confirmpassword"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.confirmpassword}
+              />
+              <InputRightElement h={"full"}>
+                <Button
+                  variant={"ghost"}
+                  onClick={() =>
+                    setShowcPassword((showcPassword) => !showcPassword)
+                  }
+                >
+                  {showcPassword ? <ViewIcon /> : <ViewOffIcon />}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
           </FormControl>
           <Stack h={2}>
             <span

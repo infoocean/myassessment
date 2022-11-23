@@ -15,6 +15,8 @@ import {
   Spinner,
   Stack,
   Text,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 import axios from "axios";
 import auth_token, { api } from "../../API/APIToken";
@@ -22,22 +24,24 @@ import { SidebarContent, MobileNav } from "../Templates/HeaderComponent";
 import Cookies from "universal-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 const cookies = new Cookies();
+
 function ChangePasswordComp(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [username, setusername] = useState("");
   const [usersdata, setuserdata] = useState("");
   const [showsnipper, setshowsnipper] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showcPassword, setShowcPassword] = useState(false);
   const jwttoken = cookies.get("jwttoken");
   //console.log(jwttoken);
   if (jwttoken === undefined) {
     props.history.push("/loginpage");
   }
-
   useEffect(() => {
     userdata();
   }, []);
-
   const userdata = () => {
     var config = {
       method: "get",
@@ -62,26 +66,27 @@ function ChangePasswordComp(props) {
   };
   //console.log(username);
   //console.log(usersdata);
-
   const validate = (values) => {
     const errors = {};
-
+    const strongRegex = new RegExp(
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{10,})"
+    );
     if (!values.password) {
-      errors.password = "Current Password feild is required  **";
+      errors.password = "Password feild is required  **";
+    } else if (!strongRegex.test(values.password)) {
+      errors.password =
+        "Password should have at least 10 character and contain one uppercase, one lowercase, one number and one special character**";
     }
 
     if (!values.confirmpassword) {
       errors.confirmpassword = "Confirm password feild is required  **";
     }
 
-    const strongRegex = new RegExp(
-      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{10,})"
-    );
-    if (!values.password) {
-      errors.password = "password feild is required  **";
-    } else if (!strongRegex.test(values.password)) {
-      errors.password =
-        "Password should have at least 10 character and contain one uppercase, one lowercase, one number and one special character**";
+    if (values.confirmpassword) {
+      if (values.password !== values.confirmpassword) {
+        errors.confirmpassword =
+          "Password and Confirm Password are not match **";
+      }
     }
 
     return errors;
@@ -199,15 +204,26 @@ function ChangePasswordComp(props) {
                           *
                         </Text>
                       </FormLabel>
-                      <Input
-                        _placeholder={{ color: "gray.500" }}
-                        type="password"
-                        id="password"
-                        name="password"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.password}
-                      />
+                      <InputGroup>
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          id="password"
+                          name="password"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.password}
+                        />
+                        <InputRightElement h={"full"}>
+                          <Button
+                            variant={"ghost"}
+                            onClick={() =>
+                              setShowPassword((showPassword) => !showPassword)
+                            }
+                          >
+                            {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                          </Button>
+                        </InputRightElement>
+                      </InputGroup>
                     </FormControl>
                     <span
                       style={{
@@ -227,14 +243,28 @@ function ChangePasswordComp(props) {
                           *
                         </Text>
                       </FormLabel>
-                      <Input
-                        type="password"
-                        id="confirmpassword"
-                        name="confirmpassword"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.confirmpassword}
-                      />
+                      <InputGroup>
+                        <Input
+                          type={showcPassword ? "text" : "password"}
+                          id="confirmpassword"
+                          name="confirmpassword"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.confirmpassword}
+                        />
+                        <InputRightElement h={"full"}>
+                          <Button
+                            variant={"ghost"}
+                            onClick={() =>
+                              setShowcPassword(
+                                (showcPassword) => !showcPassword
+                              )
+                            }
+                          >
+                            {showcPassword ? <ViewIcon /> : <ViewOffIcon />}
+                          </Button>
+                        </InputRightElement>
+                      </InputGroup>
                     </FormControl>
                     <Stack h={2}>
                       <span
