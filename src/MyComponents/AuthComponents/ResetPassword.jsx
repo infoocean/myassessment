@@ -45,9 +45,8 @@ export default function ForgotPasswordForm() {
       //alert(JSON.stringify(values, null, 2));
       const data = {
         email: values.email,
-        link: `https://myassessment.vercel.app/setnewpassword/`,
+        link: `https://myassessment.vercel.app/setnewpassword`,
       };
-
       var config = {
         method: "post",
         url: `${api}sendresetpasswordemail`,
@@ -62,6 +61,9 @@ export default function ForgotPasswordForm() {
           //console.log(response.data);
           setemailsuccess("Link Send Successfully Ckech Your Email ");
           setshowsnipper(false);
+          setTimeout(() => {
+            setemailsuccess("");
+          }, 10000);
         })
         .catch(function (error) {
           console.log(error);

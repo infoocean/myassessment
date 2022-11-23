@@ -5,12 +5,79 @@ import {
   FormLabel,
   Heading,
   Input,
+  Spinner,
   Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import axios from "axios";
+import { useFormik } from "formik";
+import { useState } from "react";
+import auth_token, { api } from "../../API/APIToken";
 
-export default function SetNewPasswordForm() {
+export default function SetNewPasswordForm(props) {
+  const id = props.match.params.id;
+  const [showsnipper, setshowsnipper] = useState(false);
+
+  const validate = (values) => {
+    const errors = {};
+
+    const strongRegex = new RegExp(
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{10,})"
+    );
+    if (!values.password) {
+      errors.password = "Password feild is required  **";
+    } else if (!strongRegex.test(values.password)) {
+      errors.password =
+        "Password should have at least 10 character and contain one uppercase, one lowercase, one number and one special character**";
+    }
+    if (!values.confirmpassword) {
+      errors.confirmpassword = "Confirm pasword feild is required **";
+    }
+
+    if (values.confirmpassword) {
+      if (values.password !== values.confirmpassword) {
+        errors.confirmpassword =
+          "Password and Confirm Password are not match **";
+      }
+    }
+
+    return errors;
+  };
+  const formik = useFormik({
+    initialValues: {
+      password: "",
+      confirmpassword: "",
+    },
+    validate,
+    onSubmit: (values) => {
+      setshowsnipper(true);
+      //alert(JSON.stringify(values, null, 2));
+      const data = {
+        id: id,
+        password: values.password,
+        confirmpassword: values.confirmpassword,
+      };
+
+      var config = {
+        method: "post",
+        url: `${api}setnewpassword`,
+        headers: {
+          token: auth_token,
+        },
+        data: data,
+      };
+
+      axios(config)
+        .then(function (response) {
+          console.log(response.data);
+          setshowsnipper(false);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+  });
   return (
     <Flex
       minH={"100vh"}
@@ -31,35 +98,88 @@ export default function SetNewPasswordForm() {
         <Heading lineHeight={1.1} fontSize={{ base: "2xl", md: "3xl" }} mb={3}>
           Create new password
         </Heading>
-        <FormControl id="email" mb={5}>
-          <FormLabel>
-            Password{" "}
-            <Text as={"span"} style={{ color: "red" }}>
-              *
-            </Text>
-          </FormLabel>
-          <Input _placeholder={{ color: "gray.500" }} type="password" />
-        </FormControl>
-        <FormControl id="cpassword">
-          <FormLabel>
-            Confirm Password{" "}
-            <Text as={"span"} style={{ color: "red" }}>
-              *
-            </Text>
-          </FormLabel>
-          <Input type="password" />
-        </FormControl>
-        <Stack spacing={6}>
-          <Button
-            bg={"blue.400"}
-            color={"white"}
-            _hover={{
-              bg: "blue.500",
+        <form onSubmit={formik.handleSubmit}>
+          <FormControl id="password">
+            <FormLabel mb={0} pb={0}>
+              Password{" "}
+              <Text as={"span"} style={{ color: "red" }}>
+                *
+              </Text>
+            </FormLabel>
+            <Input
+              _placeholder={{ color: "gray.500" }}
+              type="password"
+              id="password"
+              name="password"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+            />
+          </FormControl>
+
+          <span
+            style={{
+              color: "red",
+              fontSize: "13px",
+              fontWeight: "bold",
             }}
           >
-            Submit
-          </Button>
-        </Stack>
+            {formik.errors.password ? (
+              <div>{formik.errors.password}</div>
+            ) : null}
+          </span>
+
+          <FormControl id="cpassword" mt={4}>
+            <FormLabel mb={0} pb={0}>
+              Confirm Password{" "}
+              <Text as={"span"} style={{ color: "red" }}>
+                *
+              </Text>
+            </FormLabel>
+            <Input
+              type="password"
+              id="confirmpassword"
+              name="confirmpassword"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.confirmpassword}
+            />
+          </FormControl>
+          <Stack h={2}>
+            <span
+              style={{
+                color: "red",
+                fontSize: "13px",
+                fontWeight: "bold",
+              }}
+            >
+              {formik.errors.confirmpassword ? (
+                <div>{formik.errors.confirmpassword}</div>
+              ) : null}
+            </span>
+          </Stack>
+          <Stack spacing={6} mt={5}>
+            <Button
+              bg={"blue.400"}
+              color={"white"}
+              _hover={{
+                bg: "blue.500",
+              }}
+              type="submit"
+            >
+              Submit{" "}
+              {showsnipper === true ? (
+                <Spinner
+                  color="white.500"
+                  size="sm"
+                  style={{ marginLeft: "10px" }}
+                />
+              ) : (
+                ""
+              )}
+            </Button>
+          </Stack>
+        </form>
       </Stack>
     </Flex>
   );
