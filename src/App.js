@@ -12,8 +12,9 @@ import VisitorsPage from "./MyComponents/DashboardComponent/VisitorsCpomponent";
 import Checkoutvisitor from "./MyComponents/DashboardComponent/VisitorComp/Checkoutvisitor";
 import Editvisitor from "./MyComponents/DashboardComponent/VisitorComp/Editcisitor";
 import Profile from "./MyComponents/DashboardComponent/Profile";
-import ForgotPasswordForm from "./MyComponents/AuthComponents/ResetPassword";
 import SetNewPasswordForm from "./MyComponents/AuthComponents/SetNewPassword";
+import ForgotPasswordForm from "./MyComponents/AuthComponents/ForgatPassword";
+import ChangePasswordComp from "./MyComponents/DashboardComponent/ChangePassword";
 const cookies = new Cookies();
 
 function App() {
@@ -24,18 +25,18 @@ function App() {
       <Switch>
         <Route exact path="/loginpage" component={LoginComponent} />
         <Route exact path="/" component={LoginComponent} />
-        <Route exact path="/resetpassword" component={ForgotPasswordForm} />
         <Route
           exact
           path="/setnewpassword/:id"
           component={SetNewPasswordForm}
         />
-
+        <Route exact path="/forgotpassword" component={ForgotPasswordForm} />
         <Route
           exact
           path="/registrationpage"
           component={RegistrationComponent}
         />
+
         <Route exact path="/logout" component={Logoutpage} />
         <Route exact path="/dashboard" component={Dashboard} />
         <Route exact path="/dashboard/home" component={Dashboard} />
@@ -66,6 +67,11 @@ function App() {
           component={VisitorDetailsPage}
         />
         <Route exact path="/Profile" component={Profile} />
+        <Route
+          exact
+          path="/profile/setnewpassword"
+          component={ChangePasswordComp}
+        />
       </Switch>
     </div>
   );

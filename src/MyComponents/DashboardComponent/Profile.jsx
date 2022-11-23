@@ -153,7 +153,7 @@ function Profile(props) {
                       <h6 class="user-email">{usersdata.email}</h6>
                     </div>
                     <div>
-                      <Link to="/resetpassword">
+                      <Link to={`profile/setnewpassword`}>
                         <Button
                           leftIcon={<AiFillLock />}
                           colorScheme="teal"

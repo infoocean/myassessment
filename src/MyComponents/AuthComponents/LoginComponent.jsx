@@ -16,6 +16,7 @@ import {
   Spinner,
   InputGroup,
   InputRightElement,
+  Checkbox,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { connect } from "react-redux";
@@ -181,7 +182,17 @@ class LoginComponent extends Component {
                             errors.password}
                         </span>
                       </Stack>
-                      <Stack spacing={10} mt={4}>
+                      <Stack spacing={5} mt={3}>
+                        <Stack
+                          direction={{ base: "column", sm: "row" }}
+                          align={"start"}
+                          justify={"space-between"}
+                        >
+                          <Checkbox>Remember me</Checkbox>
+                          <Link to="/forgotpassword">
+                            <Text color={"blue.500"}>Forgot password?</Text>
+                          </Link>
+                        </Stack>
                         <Button
                           type="submit"
                           bg={"blue.400"}
