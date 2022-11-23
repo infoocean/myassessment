@@ -17,6 +17,7 @@ import auth_token, { api } from "../../API/APIToken";
 
 export default function SetNewPasswordForm(props) {
   const id = props.match.params.id;
+  console.log(id);
   const [showsnipper, setshowsnipper] = useState(false);
 
   const validate = (values) => {
@@ -54,14 +55,13 @@ export default function SetNewPasswordForm(props) {
       setshowsnipper(true);
       //alert(JSON.stringify(values, null, 2));
       const data = {
-        id: id,
         password: values.password,
         confirmpassword: values.confirmpassword,
       };
 
       var config = {
         method: "post",
-        url: `${api}setnewpassword`,
+        url: `${api}setnewpassword/${id}`,
         headers: {
           token: auth_token,
         },

@@ -3,11 +3,11 @@ const auth_token =
 
 export default auth_token;
 //online server
-// const api = "https://mytaskbackendserver.herokuapp.com/";
-// export { api };
-//local server
-const api = "http://localhost:5000/";
+const api = "https://mytaskbackendserver.herokuapp.com/";
 export { api };
+//local server
+// const api = "http://localhost:5000/";
+// export { api };
 
 //local
 // const React_PUBLIC_URL = "http://localhost:3000/";
