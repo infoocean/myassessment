@@ -14,10 +14,12 @@ import axios from "axios";
 import { useFormik } from "formik";
 import { useState } from "react";
 import auth_token, { api } from "../../API/APIToken";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function SetNewPasswordForm(props) {
   const id = props.match.params.id;
-  console.log(id);
+  //console.log(id);
   const [showsnipper, setshowsnipper] = useState(false);
 
   const validate = (values) => {
@@ -70,8 +72,12 @@ export default function SetNewPasswordForm(props) {
 
       axios(config)
         .then(function (response) {
-          console.log(response.data);
+          //console.log(response.data);
           setshowsnipper(false);
+          toast.success("Password Updated Successfull please login !");
+          setTimeout(() => {
+            props.history.push("/loginpage");
+          }, "1000");
         })
         .catch(function (error) {
           console.log(error);
@@ -181,6 +187,7 @@ export default function SetNewPasswordForm(props) {
           </Stack>
         </form>
       </Stack>
+      <ToastContainer />
     </Flex>
   );
 }
