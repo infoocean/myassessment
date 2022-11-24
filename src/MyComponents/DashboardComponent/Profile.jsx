@@ -132,6 +132,7 @@ function Profile(props) {
       data: imgdata,
       headers: {
         token: auth_token,
+        "Content-Type": "multipart/form-data",
       },
     })
       .then(function (response) {
