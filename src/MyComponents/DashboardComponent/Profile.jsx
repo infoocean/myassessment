@@ -207,7 +207,7 @@ function Profile(props) {
                                   <div
                                     id="imagePreview"
                                     style={{
-                                      backgroundImage: `url(${api}${usersdata.image})`,
+                                      backgroundImage: `url('http://i.pravatar.cc/500?img=7')`,
                                     }}
                                   ></div>
                                   <Button
