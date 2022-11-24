@@ -20,6 +20,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import { MdCloudUpload } from "react-icons/md";
 const cookies = new Cookies();
 
 function Profile(props) {
@@ -28,8 +29,9 @@ function Profile(props) {
   const [username, setusername] = useState("");
   const [usersdata, setuserdata] = useState("");
   const [showsnipper, setshowsnipper] = useState(false);
+  const [isloading, setisloading] = useState(false);
   const jwttoken = cookies.get("jwttoken");
-  const [img, setimg] = useState("");
+  const [image, setImage] = useState("");
   //console.log(jwttoken);
   if (jwttoken === undefined) {
     props.history.push("/loginpage");
@@ -63,11 +65,6 @@ function Profile(props) {
   };
   //console.log(username);
   //console.log(usersdata);
-
-  function onFileChange(e) {
-    //console.log(e.target.value);
-    setimg(e.target.value);
-  }
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -118,18 +115,23 @@ function Profile(props) {
     },
   });
 
+  function uploadHandler(event) {
+    setImage(event.target.files[0]);
+  }
+  //console.log(image);
+
   function ImageUpload(id) {
-    alert(id);
-    //console.log(img);
-
-    const imgdata = {
-      image: img,
-    };
-
+    setisloading(true);
+    //alert(id);
+    //console.log(image);
+    let formData = new FormData();
+    formData.append("image", image);
+    //console.log(formData);
+    //return false;
     axios({
-      method: "patch",
-      url: `${api}receptionistregistration/${id}`,
-      data: imgdata,
+      method: "put",
+      url: `${api}profileimgupload/${id}`,
+      data: formData,
       headers: {
         token: auth_token,
         "Content-Type": "multipart/form-data",
@@ -139,17 +141,19 @@ function Profile(props) {
         //console.log(response);
         if (response.status === 202) {
           toast.success(" User Profile picture updated  !");
-          setshowsnipper(false);
+          setisloading(false);
           userdata();
           //resetForm({ values: "" });
         } else if (response.status === 500) {
           setshowsnipper(false);
           toast.error("server not responding");
+          setisloading(false);
         }
       })
       .catch(function (error) {
         setshowsnipper(false);
         toast.error("server not responding");
+        setisloading(false);
       });
   }
 
@@ -187,26 +191,48 @@ function Profile(props) {
                       <div class="user-profile">
                         <div class="user-avatar">
                           <div class="container">
-                            <div class="avatar-upload">
-                              <div class="avatar-edit">
-                                <input
-                                  type="file"
-                                  value={img}
-                                  onChange={onFileChange}
-                                  id="imageUpload"
-                                  accept=".png, .jpg, .jpeg"
-                                />
-                                <label for="imageUpload"></label>
-                              </div>
-                              <div class="avatar-preview">
-                                <div
-                                  id="imagePreview"
-                                  style={{
-                                    backgroundImage: `url(
-                                    ${usersdata.image}
-                                  )`,
-                                  }}
-                                ></div>
+                            <div class="container">
+                              <div class="avatar-upload">
+                                <div class="avatar-edit">
+                                  <input
+                                    type="file"
+                                    id="imageUpload"
+                                    accept=".png, .jpg, .jpeg"
+                                    onChange={uploadHandler}
+                                  />
+                                  <label for="imageUpload"></label>
+                                </div>
+                                <div class="avatar-preview">
+                                  <div
+                                    id="imagePreview"
+                                    style={{
+                                      backgroundImage: `url('http://i.pravatar.cc/500?img=7')`,
+                                    }}
+                                  ></div>
+                                  <Button
+                                    colorScheme="blue"
+                                    size="sm"
+                                    onClick={() => ImageUpload(usersdata._id)}
+                                  >
+                                    {isloading === true ? (
+                                      <Spinner
+                                        color="white.500"
+                                        size="sm"
+                                        style={{ marginRight: "10px" }}
+                                      />
+                                    ) : (
+                                      <span
+                                        style={{
+                                          fontSize: "20px",
+                                          marginRight: "5px",
+                                        }}
+                                      >
+                                        <MdCloudUpload />
+                                      </span>
+                                    )}
+                                    Upload
+                                  </Button>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -399,7 +425,6 @@ function Profile(props) {
                             id="submit"
                             name="submit"
                             class="btn btn-primary w-100"
-                            onClick={() => ImageUpload(usersdata._id)}
                           >
                             <b>
                               Update{" "}

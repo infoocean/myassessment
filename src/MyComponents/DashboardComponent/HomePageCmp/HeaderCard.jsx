@@ -63,9 +63,10 @@ function Headercard() {
       axios(config)
         .then(function (response) {
           console.log(response);
+          setrecentvisitors("");
+          getrecentvisitors();
           if (response.status === 200) {
             toast.success(" Visitor Deleted Successfull !");
-            getrecentvisitors();
           }
         })
         .catch(function (error) {

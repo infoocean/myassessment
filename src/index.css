@@ -173,7 +173,7 @@ code {
 .avatar-upload .avatar-edit input + label:after {
   content: "\f040";
   font-family: "FontAwesome";
-  color: #757575;
+  color: #493232;
   position: absolute;
   top: 10px;
   left: 0;
@@ -182,8 +182,8 @@ code {
   margin: auto;
 }
 .avatar-upload .avatar-preview {
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
   position: relative;
   border-radius: 100%;
   border: 6px solid #f8f8f8;
