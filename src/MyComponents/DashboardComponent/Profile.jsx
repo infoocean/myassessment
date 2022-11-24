@@ -70,7 +70,7 @@ function Profile(props) {
       lastname: usersdata.lastname,
       email: usersdata.email,
       number: usersdata.number,
-      dob: usersdata.dob,
+      dob: moment(usersdata.dob).format("YYYY-MM-DD"),
       age: usersdata.age,
       address1: usersdata.address1,
       address2: usersdata.address2,
@@ -221,13 +221,7 @@ function Profile(props) {
                       </div>
                       <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
                         <div class="form-group">
-                          <label for="Street">
-                            Date Of Birth{" "}
-                            <span style={{ color: "#8e0fdd" }}>
-                              (Note! your dob :{" "}
-                              {moment(formik.values.dob).format("DD/MM/YYYY")})
-                            </span>
-                          </label>
+                          <label for="Street">Date Of Birth </label>
                           <input
                             type="date"
                             name="dob"

@@ -35,7 +35,6 @@ function ChangePasswordComp(props) {
   const [showPassword, setShowPassword] = useState(false);
   const [showcPassword, setShowcPassword] = useState(false);
   const jwttoken = cookies.get("jwttoken");
-  //console.log(jwttoken);
   if (jwttoken === undefined) {
     props.history.push("/loginpage");
   }
@@ -64,8 +63,7 @@ function ChangePasswordComp(props) {
         console.log(error);
       });
   };
-  //console.log(username);
-  //console.log(usersdata);
+
   const validate = (values) => {
     const errors = {};
     const strongRegex = new RegExp(
@@ -100,7 +98,6 @@ function ChangePasswordComp(props) {
     validate,
     onSubmit: (values) => {
       setshowsnipper(true);
-      //alert(JSON.stringify(values, null, 2));
       const data = {
         password: values.password,
         confirmpassword: values.confirmpassword,
@@ -117,9 +114,8 @@ function ChangePasswordComp(props) {
 
       axios(config)
         .then(function (response) {
-          //console.log(response.data);
           setshowsnipper(false);
-          toast.success("Password Change Successfull!");
+          toast.success("Password Change Successfully!");
           setTimeout(() => {
             props.history.push("/profile");
           }, "2000");
@@ -232,7 +228,7 @@ function ChangePasswordComp(props) {
                         fontWeight: "bold",
                       }}
                     >
-                      {formik.errors.password ? (
+                      {formik.touched.password && formik.errors.password ? (
                         <div>{formik.errors.password}</div>
                       ) : null}
                     </span>
@@ -274,7 +270,8 @@ function ChangePasswordComp(props) {
                           fontWeight: "bold",
                         }}
                       >
-                        {formik.errors.confirmpassword ? (
+                        {formik.touched.confirmpassword &&
+                        formik.errors.confirmpassword ? (
                           <div>{formik.errors.confirmpassword}</div>
                         ) : null}
                       </span>

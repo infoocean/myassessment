@@ -96,14 +96,18 @@ function Editvisitor(props) {
     name: visitor_det && visitor_det[0] && visitor_det[0].name,
     email: visitor_det && visitor_det[0] && visitor_det[0].email,
     number: visitor_det && visitor_det[0] && visitor_det[0].number,
-    dob: visitor_det && visitor_det[0] && visitor_det[0].dob,
+    dob: moment(visitor_det && visitor_det[0] && visitor_det[0].dob).format(
+      "YYYY-MM-DD"
+    ),
     age: visitor_det && visitor_det[0] && visitor_det[0].age,
     address: visitor_det && visitor_det[0] && visitor_det[0].address,
     country: visitor_det && visitor_det[0] && visitor_det[0].country,
     state: visitor_det && visitor_det[0] && visitor_det[0].state,
     city: visitor_det && visitor_det[0] && visitor_det[0].city,
     postalcode: visitor_det && visitor_det[0] && visitor_det[0].postalcode,
-    datetime: visitor_det && visitor_det[0] && visitor_det[0].datetime,
+    datetime: moment(
+      visitor_det && visitor_det[0] && visitor_det[0].datetime
+    ).format("YYYY-MM-DDThh:mm"),
     purposetovisit:
       visitor_det && visitor_det[0] && visitor_det[0].purposetovisit,
     assets: visitor_det && visitor_det[0] && visitor_det[0].assets,
@@ -409,15 +413,6 @@ function Editvisitor(props) {
                                     {errors.dob && touched.dob && errors.dob}
                                   </span>
                                 </Text>{" "}
-                                <span
-                                  style={{
-                                    color: "#8e0fdd",
-                                    fontSize: "12.5px",
-                                  }}
-                                >
-                                  (Note! your dob :{" "}
-                                  {moment(values.dob).format("DD/MM/YYYY")})
-                                </span>
                               </FormLabel>
                               <Input
                                 style={{ width: "226px" }}
@@ -636,18 +631,6 @@ function Editvisitor(props) {
                                       errors.datetime}
                                   </span>
                                 </Text>
-                                <span
-                                  style={{
-                                    color: "#8e0fdd",
-                                    fontSize: "11.5px",
-                                  }}
-                                >
-                                  (
-                                  {moment(values.datetime).format(
-                                    "DD/MM/YYYY:H:M-a"
-                                  )}
-                                  )
-                                </span>
                               </FormLabel>
                               <Input
                                 type="datetime-local"

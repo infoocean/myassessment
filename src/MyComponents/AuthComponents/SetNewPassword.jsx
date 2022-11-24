@@ -81,7 +81,7 @@ export default function SetNewPasswordForm(props) {
           toast.success("Password Updated Successfull please login !");
           setTimeout(() => {
             props.history.push("/loginpage");
-          }, "1000");
+          }, "2000");
         })
         .catch(function (error) {
           console.log(error);
@@ -146,7 +146,7 @@ export default function SetNewPasswordForm(props) {
               fontWeight: "bold",
             }}
           >
-            {formik.errors.password ? (
+            {formik.touched.password && formik.errors.password ? (
               <div>{formik.errors.password}</div>
             ) : null}
           </span>
@@ -188,7 +188,8 @@ export default function SetNewPasswordForm(props) {
                 fontWeight: "bold",
               }}
             >
-              {formik.errors.confirmpassword ? (
+              {formik.touched.confirmpassword &&
+              formik.errors.confirmpassword ? (
                 <div>{formik.errors.confirmpassword}</div>
               ) : null}
             </span>
