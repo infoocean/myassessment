@@ -183,80 +183,80 @@ function Profile(props) {
         <MobileNav onOpen={onOpen} user={username} />
         {/*main data component*/}
         <Box ml={{ base: 0, md: 60 }} p="4">
-          <form onSubmit={formik.handleSubmit}>
-            <div class="row gutters">
-              <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-                <div class="card ">
-                  <div class="card-body">
-                    <div class="account-settings">
-                      <div class="user-profile">
-                        <div class="user-avatar">
+          <div class="row gutters">
+            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+              <div class="card ">
+                <div class="card-body">
+                  <div class="account-settings">
+                    <div class="user-profile">
+                      <div class="user-avatar">
+                        <div class="container">
                           <div class="container">
-                            <div class="container">
-                              <div class="avatar-upload">
-                                <div class="avatar-edit">
-                                  <input
-                                    type="file"
-                                    id="imageUpload"
-                                    accept=".png, .jpg, .jpeg"
-                                    onChange={uploadHandler}
-                                  />
-                                  <label for="imageUpload"></label>
-                                </div>
-                                <div class="avatar-preview">
-                                  <div
-                                    id="imagePreview"
-                                    style={{
-                                      backgroundImage: `url('http://i.pravatar.cc/500?img=7')`,
-                                    }}
-                                  ></div>
-                                  <Button
-                                    colorScheme="blue"
-                                    size="sm"
-                                    onClick={() => ImageUpload(usersdata._id)}
-                                  >
-                                    {isloading === true ? (
-                                      <Spinner
-                                        color="white.500"
-                                        size="sm"
-                                        style={{ marginRight: "10px" }}
-                                      />
-                                    ) : (
-                                      <span
-                                        style={{
-                                          fontSize: "20px",
-                                          marginRight: "5px",
-                                        }}
-                                      >
-                                        <MdCloudUpload />
-                                      </span>
-                                    )}
-                                    Upload
-                                  </Button>
-                                </div>
+                            <div class="avatar-upload">
+                              <div class="avatar-edit">
+                                <input
+                                  type="file"
+                                  id="imageUpload"
+                                  accept=".png, .jpg, .jpeg"
+                                  onChange={uploadHandler}
+                                />
+                                <label for="imageUpload"></label>
+                              </div>
+                              <div class="avatar-preview">
+                                <div
+                                  id="imagePreview"
+                                  style={{
+                                    backgroundImage: `url('http://i.pravatar.cc/500?img=7')`,
+                                  }}
+                                ></div>
+                                <Button
+                                  colorScheme="blue"
+                                  size="sm"
+                                  onClick={() => ImageUpload(usersdata._id)}
+                                >
+                                  {isloading === true ? (
+                                    <Spinner
+                                      color="white.500"
+                                      size="sm"
+                                      style={{ marginRight: "10px" }}
+                                    />
+                                  ) : (
+                                    <span
+                                      style={{
+                                        fontSize: "20px",
+                                        marginRight: "5px",
+                                      }}
+                                    >
+                                      <MdCloudUpload />
+                                    </span>
+                                  )}
+                                  Upload
+                                </Button>
                               </div>
                             </div>
                           </div>
                         </div>
-                        <h5 class="user-name">Hii, {usersdata.firstname}</h5>
-                        <h6 class="user-email">{usersdata.email}</h6>
                       </div>
-                      <div>
-                        <Link to={`profile/setnewpassword`}>
-                          <Button
-                            leftIcon={<AiFillLock />}
-                            colorScheme="teal"
-                            variant="solid"
-                          >
-                            Change Password
-                          </Button>
-                        </Link>
-                      </div>
+                      <h5 class="user-name">Hii, {usersdata.firstname}</h5>
+                      <h6 class="user-email">{usersdata.email}</h6>
+                    </div>
+                    <div>
+                      <Link to={`profile/setnewpassword`}>
+                        <Button
+                          leftIcon={<AiFillLock />}
+                          colorScheme="teal"
+                          variant="solid"
+                        >
+                          Change Password
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+            </div>
+            <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+              <form onSubmit={formik.handleSubmit}>
                 <div class="card ">
                   <div class="card-body">
                     <div class="row gutters">
@@ -445,9 +445,9 @@ function Profile(props) {
                     </div>
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
-          </form>
+          </div>
         </Box>
       </Box>
       <ToastContainer />
