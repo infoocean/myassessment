@@ -65,6 +65,7 @@ function Profile(props) {
   };
   //console.log(username);
   //console.log(usersdata);
+  //console.log(usersdata.image);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -209,6 +210,7 @@ function Profile(props) {
                                       backgroundImage: `url('http://i.pravatar.cc/500?img=7')`,
                                     }}
                                   ></div>
+                                  <img src={`${api}${usersdata.image}`}></img>
                                   <Button
                                     colorScheme="blue"
                                     size="sm"
