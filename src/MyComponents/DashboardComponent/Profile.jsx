@@ -29,6 +29,7 @@ function Profile(props) {
   const [usersdata, setuserdata] = useState("");
   const [showsnipper, setshowsnipper] = useState(false);
   const jwttoken = cookies.get("jwttoken");
+  const [img, setimg] = useState("");
   //console.log(jwttoken);
   if (jwttoken === undefined) {
     props.history.push("/loginpage");
@@ -62,6 +63,11 @@ function Profile(props) {
   };
   //console.log(username);
   //console.log(usersdata);
+
+  function onFileChange(e) {
+    //console.log(e.target.value);
+    setimg(e.target.value);
+  }
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -112,6 +118,40 @@ function Profile(props) {
     },
   });
 
+  function ImageUpload(id) {
+    alert(id);
+    //console.log(img);
+
+    const imgdata = {
+      image: img,
+    };
+
+    axios({
+      method: "patch",
+      url: `${api}receptionistregistration/${id}`,
+      data: imgdata,
+      headers: {
+        token: auth_token,
+      },
+    })
+      .then(function (response) {
+        //console.log(response);
+        if (response.status === 202) {
+          toast.success(" User Profile picture updated  !");
+          setshowsnipper(false);
+          userdata();
+          //resetForm({ values: "" });
+        } else if (response.status === 500) {
+          setshowsnipper(false);
+          toast.error("server not responding");
+        }
+      })
+      .catch(function (error) {
+        setshowsnipper(false);
+        toast.error("server not responding");
+      });
+  }
+
   return (
     <>
       <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
@@ -137,38 +177,58 @@ function Profile(props) {
         <MobileNav onOpen={onOpen} user={username} />
         {/*main data component*/}
         <Box ml={{ base: 0, md: 60 }} p="4">
-          <div class="row gutters">
-            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-              <div class="card ">
-                <div class="card-body">
-                  <div class="account-settings">
-                    <div class="user-profile">
-                      <div class="user-avatar">
-                        <img
-                          src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                          alt="Maxwell Admin"
-                        />
+          <form onSubmit={formik.handleSubmit}>
+            <div class="row gutters">
+              <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+                <div class="card ">
+                  <div class="card-body">
+                    <div class="account-settings">
+                      <div class="user-profile">
+                        <div class="user-avatar">
+                          <div class="container">
+                            <div class="avatar-upload">
+                              <div class="avatar-edit">
+                                <input
+                                  type="file"
+                                  value={img}
+                                  onChange={onFileChange}
+                                  id="imageUpload"
+                                  accept=".png, .jpg, .jpeg"
+                                />
+                                <label for="imageUpload"></label>
+                              </div>
+                              <div class="avatar-preview">
+                                <div
+                                  id="imagePreview"
+                                  style={{
+                                    backgroundImage: `url(
+                                    ${usersdata.image}
+                                  )`,
+                                  }}
+                                ></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <h5 class="user-name">Hii, {usersdata.firstname}</h5>
+                        <h6 class="user-email">{usersdata.email}</h6>
                       </div>
-                      <h5 class="user-name">Hii, {usersdata.firstname}</h5>
-                      <h6 class="user-email">{usersdata.email}</h6>
-                    </div>
-                    <div>
-                      <Link to={`profile/setnewpassword`}>
-                        <Button
-                          leftIcon={<AiFillLock />}
-                          colorScheme="teal"
-                          variant="solid"
-                        >
-                          Change Password
-                        </Button>
-                      </Link>
+                      <div>
+                        <Link to={`profile/setnewpassword`}>
+                          <Button
+                            leftIcon={<AiFillLock />}
+                            colorScheme="teal"
+                            variant="solid"
+                          >
+                            Change Password
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
-              <form onSubmit={formik.handleSubmit}>
+              <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
                 <div class="card ">
                   <div class="card-body">
                     <div class="row gutters">
@@ -338,6 +398,7 @@ function Profile(props) {
                             id="submit"
                             name="submit"
                             class="btn btn-primary w-100"
+                            onClick={() => ImageUpload(usersdata._id)}
                           >
                             <b>
                               Update{" "}
@@ -357,9 +418,9 @@ function Profile(props) {
                     </div>
                   </div>
                 </div>
-              </form>
+              </div>
             </div>
-          </div>
+          </form>
         </Box>
       </Box>
       <ToastContainer />

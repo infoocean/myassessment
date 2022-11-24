@@ -15,12 +15,16 @@ import { AiTwotoneDelete } from "react-icons/ai";
 import { BiEdit, BiShow } from "react-icons/bi";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const getrecvisitorsendpoint = "getrecentcheckingvisitors";
+const deletevisitorsendpoint = "deletevisitor";
 
 function Headercard() {
   const [recentvisitors, setrecentvisitors] = useState([]);
   const [totalrecentvisitors, settotalrecentvisitors] = useState(0);
   const [datamsg, setdatamsg] = useState("");
+
   const getrecentvisitors = () => {
     var config = {
       method: "get",
@@ -41,14 +45,34 @@ function Headercard() {
       });
   };
 
-  function Deletevisitor(id) {
-    //alert(id);
-     window.confirm("hii");
-  }
-
   useEffect(() => {
     getrecentvisitors();
   }, []);
+
+  function Deletevisitor(id) {
+    //alert(id);
+    const visitordelete = window.confirm("Are You Sure To Delete ");
+    if (visitordelete) {
+      var config = {
+        method: "delete",
+        url: `${api}${deletevisitorsendpoint}/${id}`,
+        headers: {
+          token: auth_token,
+        },
+      };
+      axios(config)
+        .then(function (response) {
+          console.log(response);
+          if (response.status === 200) {
+            toast.success(" Visitor Deleted Successfull !");
+            getrecentvisitors();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  }
 
   return (
     <>
@@ -148,6 +172,7 @@ function Headercard() {
           </Text>
         </tbody>
       </table>
+      <ToastContainer />
     </>
   );
 }

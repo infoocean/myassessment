@@ -80,55 +80,59 @@ function VisitorDetailsPage(props) {
   }, []);
 
   function Checkin(id) {
-    alert("Are you sure to check in now");
+    const visitorcheckin = window.confirm("Are You Sure To Check In ");
     //setshowsnipper(true);
-    const data = { status: 1, checkindatetime: Date.now() };
-    var config = {
-      method: "patch",
-      url: `${api}editvisitor/${id}`,
-      headers: {
-        token: auth_token,
-      },
-      data: data,
-    };
-    axios(config)
-      .then(function (response) {
-        //console.log(JSON.stringify(response.data));
-        if (response.status === 202) {
-          toast.success("Visitor Check In Successfully !");
-          getvisitordet();
-          //setshowsnipper(false);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    if (visitorcheckin) {
+      const data = { status: 1, checkindatetime: Date.now() };
+      var config = {
+        method: "patch",
+        url: `${api}editvisitor/${id}`,
+        headers: {
+          token: auth_token,
+        },
+        data: data,
+      };
+      axios(config)
+        .then(function (response) {
+          //console.log(JSON.stringify(response.data));
+          if (response.status === 202) {
+            toast.success("Visitor Check In Successfully !");
+            getvisitordet();
+            //setshowsnipper(false);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   }
 
   function Checkout(id) {
-    alert("Are you sure to check out now");
+    const visitorcheckout = window.confirm("Are You Sure To Check Out ");
     //setshowsnipper(true);
-    const data = { status: 0, checkoutdatetime: Date.now() };
-    var config = {
-      method: "patch",
-      url: `${api}editvisitor/${id}`,
-      headers: {
-        token: auth_token,
-      },
-      data: data,
-    };
-    axios(config)
-      .then(function (response) {
-        //console.log(JSON.stringify(response.data));
-        if (response.status === 202) {
-          toast.success("Visitor Check Out Successfully !");
-          getvisitordet();
-          //setshowsnipper(false);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    if (visitorcheckout) {
+      const data = { status: 0, checkoutdatetime: Date.now() };
+      var config = {
+        method: "patch",
+        url: `${api}editvisitor/${id}`,
+        headers: {
+          token: auth_token,
+        },
+        data: data,
+      };
+      axios(config)
+        .then(function (response) {
+          //console.log(JSON.stringify(response.data));
+          if (response.status === 202) {
+            toast.success("Visitor Check Out Successfully !");
+            getvisitordet();
+            //setshowsnipper(false);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   }
 
   return (
