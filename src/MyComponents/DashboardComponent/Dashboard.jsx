@@ -17,7 +17,7 @@ const cookies = new Cookies();
 export default function Dashboard(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [username, setusername] = useState("");
-
+  const [userimg, setuserimg] = useState("");
   const jwttoken = cookies.get("jwttoken");
   if (jwttoken === undefined) {
     props.history.push("/loginpage");
@@ -39,6 +39,7 @@ export default function Dashboard(props) {
             " " +
             response.data.userdata.lastname
         );
+        setuserimg(response.data.userdata.image);
       })
       .catch(function (error) {
         console.log(error);
@@ -70,7 +71,7 @@ export default function Dashboard(props) {
         </DrawerContent>
       </Drawer>
       {/* mobile nav */}
-      <MobileNav onOpen={onOpen} user={username} />
+      <MobileNav onOpen={onOpen} user={username} userimg={userimg} />
       {/*main data component*/}
       <Box ml={{ base: 0, md: 60 }} p="4">
         {/*main data part */}

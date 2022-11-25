@@ -38,7 +38,7 @@ function Editvisitor(props) {
   const [visitor_det, setvisitors_det] = useState([]);
   const [showsnipper, setshowsnipper] = useState(false);
   const [username, setusername] = useState("");
-
+  const [userimg, setuserimg] = useState("");
   const jwttoken = cookies.get("jwttoken");
   //console.log(jwttoken);
   if (jwttoken === undefined) {
@@ -61,6 +61,7 @@ function Editvisitor(props) {
             " " +
             response.data.userdata.lastname
         );
+        setuserimg(response.data.userdata.image);
       })
       .catch(function (error) {
         console.log(error);
@@ -135,7 +136,7 @@ function Editvisitor(props) {
           </DrawerContent>
         </Drawer>
         {/* mobile nav */}
-        <MobileNav user={username} />
+        <MobileNav user={username} userimg={userimg} />
         {/*main data component*/}
         <Box ml={{ base: 0, md: 60 }} p="4">
           {/*main data part */}

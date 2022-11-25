@@ -27,6 +27,7 @@ import { IconType } from "react-icons";
 import { IoIosPeople } from "react-icons/io";
 import { ImQrcode } from "react-icons/im";
 import { Link } from "react-router-dom";
+import { api } from "../../API/APIToken";
 
 const SideBarLinkItems = [
   {
@@ -127,6 +128,7 @@ interface MobileProps extends FlexProps {
 }
 const MobileNav = (props, { onOpen, ...rest }: MobileProps) => {
   //console.log(props);
+  console.log(props.userimg);
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -169,7 +171,7 @@ const MobileNav = (props, { onOpen, ...rest }: MobileProps) => {
               _focus={{ boxShadow: "none" }}
             >
               <HStack>
-                <Avatar size={"sm"} src={props.img} />
+                <Avatar size={"sm"} src={`${api}${props.userimg}`} />
                 <VStack
                   display={{ base: "none", md: "flex" }}
                   alignItems="flex-start"

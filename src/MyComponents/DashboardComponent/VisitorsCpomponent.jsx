@@ -26,6 +26,7 @@ function VisitorsPage(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [getvisitors, setgetvisitors] = useState([]);
   const [username, setusername] = useState("");
+  const [userimg, setuserimg] = useState("");
   const [datamsg, setdatamsg] = useState("");
 
   const jwttoken = cookies.get("jwttoken");
@@ -50,6 +51,7 @@ function VisitorsPage(props) {
             " " +
             response.data.userdata.lastname
         );
+        setuserimg(response.data.userdata.image);
       })
       .catch(function (error) {
         console.log(error);
@@ -103,7 +105,7 @@ function VisitorsPage(props) {
           </DrawerContent>
         </Drawer>
         {/* mobile nav */}
-        <MobileNav onOpen={onOpen} user={username} />
+        <MobileNav onOpen={onOpen} user={username} userimg={userimg} />
         {/*main data component*/}
         <Box ml={{ base: 0, md: 60 }} p="4">
           {/*main data part */}

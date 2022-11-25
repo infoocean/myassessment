@@ -15,7 +15,6 @@ import { SidebarContent, MobileNav } from "../Templates/HeaderComponent";
 import Cookies from "universal-cookie";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 import { AiFillLock } from "react-icons/ai";
-import { FaUserAlt } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
@@ -24,14 +23,16 @@ import { MdCloudUpload } from "react-icons/md";
 const cookies = new Cookies();
 
 function Profile(props) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const id = props.match.params.id;
-  const [username, setusername] = useState("");
-  const [usersdata, setuserdata] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [showsnipper, setshowsnipper] = useState(false);
   const [isloading, setisloading] = useState(false);
-  const jwttoken = cookies.get("jwttoken");
+  const [username, setusername] = useState("");
+  const [usersdata, setuserdata] = useState("");
+  const [userimg, setuserimg] = useState("");
   const [image, setImage] = useState("");
+
+  const jwttoken = cookies.get("jwttoken");
   //console.log(jwttoken);
   if (jwttoken === undefined) {
     props.history.push("/loginpage");
@@ -58,14 +59,15 @@ function Profile(props) {
             " " +
             response.data.userdata.lastname
         );
+        setuserimg(response.data.userdata.image);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
   //console.log(username);
+  //console.log(userimg);
   //console.log(usersdata);
-  //console.log(usersdata.image);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -100,16 +102,16 @@ function Profile(props) {
         .then(function (response) {
           //console.log(response);
           if (response.status === 202) {
-            toast.success(" User Profile updated  !");
+            toast.success(" User Profile updated successfully !");
             setshowsnipper(false);
             userdata();
-            //resetForm({ values: "" });
           } else if (response.status === 500) {
             setshowsnipper(false);
             toast.error("server not responding");
           }
         })
         .catch(function (error) {
+          console.log(error);
           setshowsnipper(false);
           toast.error("server not responding");
         });
@@ -141,10 +143,9 @@ function Profile(props) {
       .then(function (response) {
         //console.log(response);
         if (response.status === 202) {
-          toast.success(" User Profile picture updated  !");
+          toast.success(" User Profile picture updated successfully  !");
           setisloading(false);
           userdata();
-          //resetForm({ values: "" });
         } else if (response.status === 500) {
           setshowsnipper(false);
           toast.error("server not responding");
@@ -152,8 +153,8 @@ function Profile(props) {
         }
       })
       .catch(function (error) {
-        setshowsnipper(false);
         toast.error("server not responding");
+        setshowsnipper(false);
         setisloading(false);
       });
   }
@@ -180,7 +181,7 @@ function Profile(props) {
           </DrawerContent>
         </Drawer>
         {/* mobile nav */}
-        <MobileNav onOpen={onOpen} user={username} />
+        <MobileNav onOpen={onOpen} user={username} userimg={userimg} />
         {/*main data component*/}
         <Box ml={{ base: 0, md: 60 }} p="4">
           <div class="row gutters">
@@ -206,7 +207,7 @@ function Profile(props) {
                                 <div
                                   id="imagePreview"
                                   style={{
-                                    backgroundImage: `url('http://i.pravatar.cc/500?img=7')`,
+                                    backgroundImage: `url('${api}${userimg}')`,
                                   }}
                                 ></div>
                                 <Button
@@ -268,6 +269,8 @@ function Profile(props) {
                           <label for="fullName">First Name </label>
                           <input
                             type="text"
+                            id="firstname"
+                            name="firstname"
                             class="form-control"
                             onChange={formik.handleChange}
                             value={formik.values.firstname}
@@ -279,6 +282,8 @@ function Profile(props) {
                           <label for="eMail">Last Name</label>
                           <input
                             type="text"
+                            name="lastname"
+                            id="lastname"
                             class="form-control"
                             onChange={formik.handleChange}
                             value={formik.values.lastname}
@@ -290,6 +295,8 @@ function Profile(props) {
                           <label for="phone">Email</label>
                           <input
                             type="email"
+                            id="email"
+                            name="email"
                             class="form-control"
                             onChange={formik.handleChange}
                             value={formik.values.email}
@@ -301,6 +308,8 @@ function Profile(props) {
                           <label for="website">Number</label>
                           <input
                             type="text"
+                            name="number"
+                            id="number"
                             class="form-control"
                             onChange={formik.handleChange}
                             value={formik.values.number}
@@ -313,6 +322,7 @@ function Profile(props) {
                           <input
                             type="date"
                             name="dob"
+                            id="dob"
                             class="form-control"
                             onChange={formik.handleChange}
                             value={formik.values.dob}
@@ -324,6 +334,8 @@ function Profile(props) {
                           <label for="ciTy">Age</label>
                           <input
                             type="text"
+                            id="age"
+                            name="age"
                             class="form-control"
                             onChange={formik.handleChange}
                             value={formik.values.age}
@@ -340,6 +352,8 @@ function Profile(props) {
                           <label for="Street">Address1</label>
                           <input
                             type="text"
+                            id="address1"
+                            name="address1"
                             class="form-control"
                             onChange={formik.handleChange}
                             value={formik.values.address1}
@@ -351,6 +365,8 @@ function Profile(props) {
                           <label for="ciTy">Address2</label>
                           <input
                             type="text"
+                            id="address2"
+                            name="address2"
                             class="form-control"
                             onChange={formik.handleChange}
                             value={formik.values.address2}
@@ -401,6 +417,8 @@ function Profile(props) {
                           <input
                             type="text"
                             class="form-control"
+                            id="city"
+                            name="city"
                             onChange={formik.handleChange}
                             value={formik.values.city}
                           />
@@ -411,6 +429,8 @@ function Profile(props) {
                           <label for="ciTy">Postal Code</label>
                           <input
                             type="text"
+                            id="postalcode"
+                            name="postalcode"
                             class="form-control"
                             onChange={formik.handleChange}
                             value={formik.values.postalcode}
