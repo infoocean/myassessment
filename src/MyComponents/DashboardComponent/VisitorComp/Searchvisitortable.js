@@ -17,6 +17,11 @@ class SearchApp extends React.Component {
     //alert(searchValue);
     this.setState({ search: searchValue });
   }
+
+  handleCheck(event) {
+    let searchValue = event.target.value;
+    alert(searchValue);
+  }
   render() {
     // Filter the table data
     let visitors = this.props.data,
@@ -24,6 +29,13 @@ class SearchApp extends React.Component {
 
     if (searchString.length > 0) {
       // We are searching. Filter the results.
+      let searchcheckin;
+      if (searchString === "check in") {
+        searchcheckin = 1;
+      } else {
+        searchcheckin = 0;
+      }
+      //console.log(searchcheckin);
       visitors = visitors.filter(
         (e) =>
           e.name.toLowerCase().match(searchString) ||
@@ -56,14 +68,6 @@ class UserInput extends React.Component {
             placeholder="Search Visitor....."
             onChange={(e) => this.props.update(e)}
           />
-          <Checkbox
-            as={"span"}
-            mb={2}
-            value="1"
-            onChange={(e) => this.props.update(e)}
-          >
-            Check In
-          </Checkbox>
         </div>
       </>
     );
