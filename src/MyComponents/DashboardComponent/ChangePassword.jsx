@@ -162,7 +162,7 @@ function ChangePasswordComp(props) {
                   <div class="account-settings">
                     <div class="user-profile">
                       <div class="user-avatar">
-                        <img src={userimg} alt="Maxwell Admin" />
+                        <img src={`${api}${userimg}`} alt="Maxwell Admin" />
                       </div>
                       <h5 class="user-name">Hii, {usersdata.firstname}</h5>
                       <h6 class="user-email">{usersdata.email}</h6>
