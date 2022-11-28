@@ -69,7 +69,7 @@ export default function SetNewPasswordForm(props) {
         method: "post",
         url: `${api}setnewpassword/${id}`,
         headers: {
-          token: auth_token,
+          Authorization: auth_token,
         },
         data: data,
       };

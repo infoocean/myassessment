@@ -48,9 +48,10 @@ function Editvisitor(props) {
   const userdata = () => {
     var config = {
       method: "get",
-      url: `${api}getreceptionistbytoken/${jwttoken}`,
+      url: `${api}getreceptionistbytoken`,
       headers: {
-        token: auth_token,
+        Authorization: auth_token,
+        "x-access-token": jwttoken,
       },
     };
     axios(config)
@@ -74,7 +75,7 @@ function Editvisitor(props) {
       method: "get",
       url: `${api}getvisitorbyid/${id}`,
       headers: {
-        token: auth_token,
+        Authorization: auth_token,
       },
     };
     axios(config)
@@ -259,7 +260,7 @@ function Editvisitor(props) {
                       url: `${api}editvisitor/${id}`,
                       data: reqdata,
                       headers: {
-                        token: auth_token,
+                        Authorization: auth_token,
                       },
                     })
                       .then(function (response) {

@@ -50,9 +50,10 @@ class Addvisitor extends Component {
     const userdata = () => {
       var config = {
         method: "get",
-        url: `${api}getreceptionistbytoken/${jwttoken}`,
+        url: `${api}getreceptionistbytoken`,
         headers: {
-          token: auth_token,
+          Authorization: auth_token,
+          "x-access-token": jwttoken,
         },
       };
       axios(config)

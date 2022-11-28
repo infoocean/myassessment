@@ -128,7 +128,7 @@ interface MobileProps extends FlexProps {
 }
 const MobileNav = (props, { onOpen, ...rest }: MobileProps) => {
   //console.log(props);
-  console.log(props.userimg);
+  //console.log(props.userimg);
   return (
     <Flex
       ml={{ base: 0, md: 60 }}

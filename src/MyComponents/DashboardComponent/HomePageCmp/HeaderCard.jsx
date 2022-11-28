@@ -30,7 +30,7 @@ function Headercard() {
       method: "get",
       url: `${api}${getrecvisitorsendpoint}`,
       headers: {
-        token: auth_token,
+        Authorization: auth_token,
       },
     };
     axios(config)
@@ -57,7 +57,7 @@ function Headercard() {
         method: "delete",
         url: `${api}${deletevisitorsendpoint}/${id}`,
         headers: {
-          token: auth_token,
+          Authorization: auth_token,
         },
       };
       axios(config)

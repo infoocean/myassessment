@@ -51,7 +51,7 @@ export default function ForgotPasswordForm() {
         method: "post",
         url: `${api}sendresetpasswordemail`,
         headers: {
-          token: auth_token,
+          Authorization: auth_token,
         },
         data: data,
       };

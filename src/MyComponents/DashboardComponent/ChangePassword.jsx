@@ -30,6 +30,7 @@ const cookies = new Cookies();
 function ChangePasswordComp(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [username, setusername] = useState("");
+  const [userimg, setuserimg] = useState("");
   const [usersdata, setuserdata] = useState("");
   const [showsnipper, setshowsnipper] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -44,9 +45,10 @@ function ChangePasswordComp(props) {
   const userdata = () => {
     var config = {
       method: "get",
-      url: `${api}getreceptionistbytoken/${jwttoken}`,
+      url: `${api}getreceptionistbytoken`,
       headers: {
-        token: auth_token,
+        Authorization: auth_token,
+        "x-access-token": jwttoken,
       },
     };
     axios(config)
@@ -58,6 +60,7 @@ function ChangePasswordComp(props) {
             " " +
             response.data.userdata.lastname
         );
+        setuserimg(response.data.userdata.image);
       })
       .catch(function (error) {
         console.log(error);
@@ -105,9 +108,10 @@ function ChangePasswordComp(props) {
 
       var config = {
         method: "post",
-        url: `${api}changepassword/${usersdata._id}`,
+        url: `${api}changepassword`,
         headers: {
-          token: auth_token,
+          Authorization: auth_token,
+          "x-access-token": jwttoken,
         },
         data: data,
       };
@@ -148,7 +152,7 @@ function ChangePasswordComp(props) {
           </DrawerContent>
         </Drawer>
         {/* mobile nav */}
-        <MobileNav onOpen={onOpen} user={username} />
+        <MobileNav onOpen={onOpen} user={username} userimg={userimg} />
         {/*main data component*/}
         <Box ml={{ base: 0, md: 60 }} p="4">
           <div class="row gutters">

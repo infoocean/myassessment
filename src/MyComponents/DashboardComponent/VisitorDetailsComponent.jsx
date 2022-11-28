@@ -36,9 +36,10 @@ function VisitorDetailsPage(props) {
   const userdata = () => {
     var config = {
       method: "get",
-      url: `${api}getreceptionistbytoken/${jwttoken}`,
+      url: `${api}getreceptionistbytoken`,
       headers: {
-        token: auth_token,
+        Authorization: auth_token,
+        "x-access-token": jwttoken,
       },
     };
     axios(config)
@@ -62,7 +63,7 @@ function VisitorDetailsPage(props) {
       method: "get",
       url: `${api}getvisitorbyid/${id}`,
       headers: {
-        token: auth_token,
+        Authorization: auth_token,
       },
     };
     axios(config)
@@ -90,7 +91,7 @@ function VisitorDetailsPage(props) {
         method: "patch",
         url: `${api}editvisitor/${id}`,
         headers: {
-          token: auth_token,
+          Authorization: auth_token,
         },
         data: data,
       };
@@ -118,7 +119,7 @@ function VisitorDetailsPage(props) {
         method: "patch",
         url: `${api}editvisitor/${id}`,
         headers: {
-          token: auth_token,
+          Authorization: auth_token,
         },
         data: data,
       };

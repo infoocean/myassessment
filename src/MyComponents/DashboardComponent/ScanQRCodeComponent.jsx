@@ -20,6 +20,7 @@ function ScanQRCodePage(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const id = props.match.params.id;
   const [username, setusername] = useState("");
+  const [userimg, setuserimg] = useState("");
 
   const jwttoken = cookies.get("jwttoken");
   //console.log(jwttoken);
@@ -35,9 +36,10 @@ function ScanQRCodePage(props) {
   const userdata = () => {
     var config = {
       method: "get",
-      url: `${api}getreceptionistbytoken/${jwttoken}`,
+      url: `${api}getreceptionistbytoken`,
       headers: {
-        token: auth_token,
+        Authorization: auth_token,
+        "x-access-token": jwttoken,
       },
     };
     axios(config)
@@ -48,6 +50,7 @@ function ScanQRCodePage(props) {
             " " +
             response.data.userdata.lastname
         );
+        setuserimg(response.data.userdata.image);
       })
       .catch(function (error) {
         console.log(error);
@@ -64,7 +67,7 @@ function ScanQRCodePage(props) {
       method: "post",
       url: `${api}sendmail`,
       headers: {
-        token: auth_token,
+        Authorization: auth_token,
       },
       data: visitordet,
     };
@@ -99,7 +102,7 @@ function ScanQRCodePage(props) {
           </DrawerContent>
         </Drawer>
         {/* mobile nav */}
-        <MobileNav onOpen={onOpen} user={username} />
+        <MobileNav onOpen={onOpen} user={username} userimg={userimg} />
         {/*main data component*/}
         <Box ml={{ base: 0, md: 60 }} p="4">
           {/*main data part */}

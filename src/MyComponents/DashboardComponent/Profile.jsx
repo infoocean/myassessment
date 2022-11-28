@@ -45,9 +45,10 @@ function Profile(props) {
   const userdata = () => {
     var config = {
       method: "get",
-      url: `${api}getreceptionistbytoken/${jwttoken}`,
+      url: `${api}getreceptionistbytoken`,
       headers: {
-        token: auth_token,
+        Authorization: auth_token,
+        "x-access-token": jwttoken,
       },
     };
     axios(config)
@@ -96,7 +97,8 @@ function Profile(props) {
         url: `${api}updatereceptionist/${usersdata._id}`,
         data: data,
         headers: {
-          token: auth_token,
+          Authorization: auth_token,
+          "x-access-token": jwttoken,
         },
       })
         .then(function (response) {
@@ -133,10 +135,11 @@ function Profile(props) {
     //return false;
     axios({
       method: "put",
-      url: `${api}profileimgupload/${id}`,
+      url: `${api}profileimgupload`,
       data: formData,
       headers: {
-        token: auth_token,
+        Authorization: auth_token,
+        "x-access-token": jwttoken,
         "Content-Type": "multipart/form-data",
       },
     })
